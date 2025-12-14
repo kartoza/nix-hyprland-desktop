@@ -7,6 +7,9 @@
 
 let
   wayfireEnabled = config.programs.wayfire.enable or false;
+  
+  # Allow configuration of icon theme, with Papirus as default
+  iconThemeName = config.kartoza.theme.iconTheme.name or "Papirus";
 in
 {
 
@@ -30,7 +33,8 @@ in
   security.polkit.enable = true;
 
   environment.systemPackages = with pkgs; [
-    # Icon theme managed centrally via kartoza.nix
+    # Default icon theme (Papirus) - can be overridden by kartoza.nix or other configs
+    papirus-icon-theme
     # Cursor theme is managed by home-manager (see home/default.nix)
     # Add these for better app compatibility
     audio-recorder
@@ -229,14 +233,14 @@ in
   # Icon theme is centrally managed via kartoza.nix
   environment.etc."gtk-3.0/settings.ini".text = ''
     [Settings]
-    gtk-icon-theme-name=${config.kartoza.theme.iconTheme.name}
+    gtk-icon-theme-name=${iconThemeName}
     gtk-theme-name=Adwaita
     gtk-application-prefer-dark-theme=false
   '';
 
   environment.etc."gtk-4.0/settings.ini".text = ''
     [Settings]
-    gtk-icon-theme-name=${config.kartoza.theme.iconTheme.name}
+    gtk-icon-theme-name=${iconThemeName}
   '';
 
   # Deploy Wayfire configuration files system-wide
