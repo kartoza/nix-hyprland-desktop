@@ -1,0 +1,18 @@
+# Nix build outputs
+result
+result-*
+
+# Development environment
+.direnv/
+.envrc
+
+# Editor files
+.vscode/
+.vim/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db

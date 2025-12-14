@@ -1,0 +1,5 @@
+{"custom/keyboard-layout": {
+  "format": " {}",
+  "tooltip": false,
+  "exec": "/etc/waybar/scripts/kblayout.sh"
+}}

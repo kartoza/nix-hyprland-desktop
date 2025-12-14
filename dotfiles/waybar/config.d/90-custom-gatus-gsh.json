@@ -1,0 +1,10 @@
+{
+  "custom/gatus-gsh": {
+    "format": "{}",
+    "return-type": "json",
+    "interval": 30,
+    "exec": "$HOME/.config/waybar/scripts/gatus-monitor.sh GSH",
+    "on-click": "firefox https://gsh-gatus.do.kartoza.com/",
+    "tooltip": true
+  }
+}

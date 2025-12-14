@@ -1,0 +1,9 @@
+{"cpu": {
+  "format": " {usage}%",
+  "on-click": "kitty -e btop",
+  "states": {
+    "moderate": 25,
+    "high": 50,
+    "critical": 75
+  }
+}}

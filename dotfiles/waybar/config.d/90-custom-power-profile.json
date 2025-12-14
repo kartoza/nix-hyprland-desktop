@@ -1,0 +1,8 @@
+{"custom/power-profile": {
+  "format": "{}",
+  "return-type": "json",
+  "interval": 10,
+  "exec": "/etc/waybar/scripts/power-profile.sh",
+  "on-click": "/etc/waybar/scripts/power-profile.sh cycle",
+  "tooltip": true
+}}

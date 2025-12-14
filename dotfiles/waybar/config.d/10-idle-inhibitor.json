@@ -1,0 +1,12 @@
+{
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "󰌾",
+            "deactivated": "󰌿"
+        },
+        "tooltip": true,
+        "tooltip-format-activated": "Screen lock is DISABLED\nYour screen will not auto-lock during inactivity",
+        "tooltip-format-deactivated": "Screen lock is ENABLED\nYour screen will auto-lock after inactivity"
+    }
+}

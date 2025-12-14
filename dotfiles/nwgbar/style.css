@@ -1,0 +1,57 @@
+/* nwgbar Kartoza Theme - Power Menu Style */
+
+/* Main window styling */
+window {
+    background-color: rgba(22, 33, 39, 0.95);
+    border: 2px solid #569FC6;
+    border-radius: 8px;
+    padding: 12px;
+}
+
+/* Button container */
+box {
+    background-color: transparent;
+}
+
+/* Power menu buttons */
+button {
+    background: #1F2D35;
+    border: 1px solid #569FC6;
+    border-radius: 6px;
+    margin: 6px;
+    padding: 12px 16px;
+    min-width: 120px;
+}
+
+button:hover {
+    background: #569FC6;
+    border-color: #6AAFD6;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+button:active {
+    background: #4A8DB0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Button labels */
+button label {
+    color: #E6F7F6;
+    font-family: "JetBrainsMono Nerd Font", sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+button:hover label {
+    color: #FFFFFF;
+}
+
+/* Icon styling */
+image {
+    margin-right: 8px;
+    color: #E6F7F6;
+}
+
+button:hover image {
+    color: #FFFFFF;
+}

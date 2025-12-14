@@ -1,0 +1,6 @@
+{"custom/clipboard": {
+  "format": "<span font='16'>C</span>",
+  "on-click": "kitty -e clipse",
+  "tooltip": true,
+  "tooltip-format": "Clipboard Manager (Super+V)"
+}}

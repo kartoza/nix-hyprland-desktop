@@ -1,0 +1,18 @@
+{
+  "backlight": {
+    "format": "{icon} {percent}%",
+    "format-icons": [
+      "󰃞",
+      "󰃟",
+      "󰃠"
+    ],
+    "on-scroll-down": "brightnessctl -c backlight set 5%-",
+    "on-scroll-up": "brightnessctl -c backlight set 5%+",
+    "on-click": "/etc/waybar/scripts/light.sh $(cat /tmp/SUNSET_CHANGE_STATE_VAR)",
+    "states": {
+      "low": 33,
+      "medium": 66,
+      "high": 100
+    }
+  }
+}

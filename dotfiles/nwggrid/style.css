@@ -1,0 +1,61 @@
+/* nwggrid Kartoza Theme - Simple Dark Style */
+
+/* Main window background - matches waybar */
+window {
+    background-color: #162127;
+    border-radius: 6px;
+}
+
+/* Application buttons - override GTK defaults */
+button {
+    background: transparent;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    margin: 2px;
+    padding: 4px;
+}
+
+button:hover {
+    background: rgba(86, 159, 198, 0.2);
+    background-color: rgba(86, 159, 198, 0.2);
+    border-radius: 4px;
+}
+
+button:active, button:focus {
+    background: rgba(86, 159, 198, 0.3);
+    background-color: rgba(86, 159, 198, 0.3);
+    border-radius: 4px;
+}
+
+/* Application labels */
+button label {
+    color: #E6F7F6;
+    font-family: "JetBrainsMono Nerd Font", sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+button:hover label {
+    color: #6AAFD6;
+}
+
+/* Search box if present */
+entry {
+    background-color: #1F2D35;
+    color: #E6F7F6;
+    border: 1px solid #569FC6;
+    border-radius: 4px;
+    padding: 6px;
+}
+
+/* Grid container */
+grid {
+    background-color: transparent;
+}
+
+/* Flowbox for app icons */
+flowbox {
+    background-color: transparent;
+}

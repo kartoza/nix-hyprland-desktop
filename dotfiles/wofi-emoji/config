@@ -1,0 +1,11 @@
+# Wofi-emoji configuration
+# Shows ONLY emoji glyphs (no descriptions) - big and clear
+
+[wofi]
+# Use custom wofi styling
+config_file = ~/.config/wofi/config
+style_file = ~/.config/wofi/style.css
+
+[emoji]
+# Show only emoji glyphs, no descriptions
+emoji_only = true

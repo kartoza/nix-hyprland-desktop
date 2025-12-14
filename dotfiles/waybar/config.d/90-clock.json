@@ -1,0 +1,7 @@
+{"clock": {
+  "format": "{:%d %b %H:%M}",
+  "format-alt": "  {:%a %d %b  %H:%M}",
+  "tooltip-format": "<big>{:%B %Y}</big>\n<tt>{calendar}</tt>",
+  "interval": 1,
+  "on-click": "bash -c 'if pgrep -f \"khal interactive\" > /dev/null; then pkill -f \"khal interactive\"; else kitty -- khal interactive; fi'"
+}}

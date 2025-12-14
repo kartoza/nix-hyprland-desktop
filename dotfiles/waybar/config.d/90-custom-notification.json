@@ -1,0 +1,26 @@
+{"custom/notification-count": {
+  "tooltip": true,
+  "format": "{icon} {text}",
+  "format-icons": {
+    "enabled": "󰛱",
+    "disabled": "󰚣",
+    "error": "󰍢"
+  },
+  "return-type": "json",
+  "exec": "/etc/waybar/scripts/mako-count.sh",
+  "on-click": "/etc/waybar/scripts/mako-show.sh",
+  "interval": 2
+},
+"custom/notification-toggle": {
+  "tooltip": true,
+  "format": "{icon}",
+  "format-icons": {
+    "enabled": "󰂚",
+    "disabled": "󰂛",
+    "error": "󰀦"
+  },
+  "return-type": "json",
+  "exec": "/etc/waybar/scripts/mako-status.sh",
+  "on-click": "/etc/waybar/scripts/mako-toggle.sh",
+  "interval": 5
+}}

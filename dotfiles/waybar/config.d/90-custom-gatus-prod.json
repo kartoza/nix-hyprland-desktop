@@ -1,0 +1,10 @@
+{
+  "custom/gatus-prod": {
+    "format": "{}",
+    "return-type": "json",
+    "interval": 30,
+    "exec": "$HOME/.config/waybar/scripts/gatus-monitor.sh PROD",
+    "on-click": "firefox https://gatus.do.kartoza.com/",
+    "tooltip": true
+  }
+}

@@ -1,0 +1,10 @@
+{"temperature": {
+  "critical-threshold": 80,
+  "format": "{temperatureC}°C ",
+  "states": {
+    "normal": 50,
+    "warm": 65,
+    "hot": 80,
+    "critical": 80
+  }
+}}

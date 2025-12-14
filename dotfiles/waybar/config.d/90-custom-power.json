@@ -1,0 +1,5 @@
+{"custom/power": {
+  "format": " ⏻ ",
+  "on-click": "nwgbar",
+  "tooltip": false
+}}

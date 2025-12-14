@@ -1,0 +1,10 @@
+{"network": {
+  "format": "⚠ Disabled",
+  "format-wifi": " ",
+  "format-ethernet": " {ifname}",
+  "format-disconnected": "⚠ Disconnected",
+  "on-click": "networkmanager_dmenu",
+  "tooltip": true,
+  "tooltip-format": "{ifname}\n{ipaddr}",
+  "tooltip-format-wifi": "{essid} {ifname}\n{ipaddr}\nstrength: {signalStrength}%"
+}}

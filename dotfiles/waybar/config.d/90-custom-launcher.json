@@ -1,0 +1,6 @@
+{"custom/launcher": {
+  "format": "<span font='16'></span>",
+  "on-click": "exec nwggrid -b 162127 -s 200 -g Adwaita-dark",
+  "tooltip": true,
+  "tooltip-format": "Application Launcher"
+}}

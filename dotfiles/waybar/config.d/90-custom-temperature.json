@@ -1,0 +1,7 @@
+{"custom/temperature": {
+  "format": "{}",
+  "return-type": "json",
+  "interval": 5,
+  "exec": "/etc/waybar/scripts/temperature.sh",
+  "tooltip": true
+}}

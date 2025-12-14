@@ -1,0 +1,428 @@
+/* Beautiful Kartoza Waybar Theme - Pure GTK CSS */
+
+* {
+    color: #aeaeae;
+    border: none;
+    border-radius: 2px;
+    padding: 0px 0px;
+}
+
+/* Main waybar container */
+window#waybar {
+    background-color: #162127; 
+    border-bottom: 2px solid rgba(86, 159, 198, 0.15);
+    border-top: 2px solid rgba(86, 159, 198, 0.15);
+    opacity: 0.95;
+}
+
+/* Window title styling */
+#window {
+    background-color: rgba(86, 159, 198, 0.15);
+    color: #569FC6;
+    border-radius: 0px 2px 2px 0px;
+    padding: 4px 12px;
+    margin: 4px 0px;
+}
+
+/* ====== SHARED WIDGET STYLING ====== */
+
+/* Base widget styling - clean modern look */
+#language,
+#battery,
+#cpu,
+#memory,
+#idle_inhibitor,
+#custom-notification,
+#temperature,
+#backlight,
+#network,
+#pulseaudio,
+#mode,
+#disk,
+#custom-stub,
+#clock,
+#custom-gatus-prod,
+#custom-gatus-gsh,
+#custom-power-profile,
+#custom-temperature,
+#tray,
+#custom-launcher,
+#custom-clipboard,
+#custom-nwg-look,
+#scratchpad,
+#custom-power,
+#custom-notification-count,
+#custom-notification-toggle, 
+#custom-recorder {
+    /* orange kartoza colour but with some transparency */
+    min-height: 12px;
+    padding: 6px 10px;
+    font-family: "Norito", sans-serif;
+}
+
+/* Hover effects */
+#language:hover,
+#battery:hover,
+#cpu:hover,
+#memory:hover,
+#idle_inhibitor:hover,
+#custom-notification:hover,
+#temperature:hover,
+#backlight:hover,
+#network:hover,
+#pulseaudio:hover,
+#mode:hover,
+#disk:hover,
+#custom-stub:hover,
+#clock:hover,
+#custom-gatus-prod:hover,
+#custom-gatus-gsh:hover,
+#custom-power-profile:hover,
+#custom-temperature:hover,
+#tray:hover,
+#custom-launcher:hover,
+#custom-clipboard:hover,
+#custom-nwg-look:hover,
+#scratchpad:hover,
+#custom-power:hover,
+#custom-recorder:hover {
+    color: #6AAFD6;
+}
+
+/* ====== LEFT MODULES ====== */
+
+/* Application launcher - distinctive Kartoza branding */
+#custom-launcher {
+    background-image: url("kartoza-logo-neon.png");
+    background-size: 32px 32px;
+    background-repeat: no-repeat;
+    background-position: center;
+    color: transparent;
+    padding: 8px;
+    margin: 4px 4px 4px 4px;
+    min-width: 28px;
+    border: none;
+}
+
+#custom-launcher:hover {
+    color: #0D1A1F;
+    background-color: #162127; 
+    background-image: url("kartoza-logo-neon-bright.png");
+}
+
+/* Spacer stub - subtle divider */
+#custom-stub {
+    background-color: transparent;
+    color: rgba(86, 159, 198, 0.4);
+    border: none;
+    padding: 6px 4px;
+    margin: 4px 1px;
+    font-size: 10px;
+}
+
+/* Scratchpad indicator - special highlight */
+#scratchpad {
+    background-color: rgba(223, 158, 47, 0.15);
+    color: #DF9E2F;
+    border-color: rgba(223, 158, 47, 0.4);
+    font-weight: 600;
+}
+
+#scratchpad:hover {
+    background-color: rgba(223, 158, 47, 0.25);
+    border-color: #DF9E2F;
+    color: #EFB05F;
+}
+
+/* Workspaces - clean button style */
+#workspaces {
+    background-color: transparent;
+    margin: 0px 4px;
+}
+
+#workspaces button {
+    background-color: rgba(86, 159, 198, 0.1);
+    color: #569FC6;
+    border: 1px solid rgba(86, 159, 198, 0.2);
+    border-radius: 2px;
+    padding: 6px 10px;
+    margin: 2px;
+    min-width: 20px;
+}
+
+#workspaces button.focused {
+    color: #0D1A1F;
+    border-color: #6AAFD6;
+    font-weight: 700;
+}
+
+#workspaces button.urgent {
+    color: #0D1A1F;
+    border-color: #EFB05F;
+}
+
+#workspaces button:hover {
+    border-color: #569FC6;
+}
+
+/* Taskbar - clean app icons */
+#taskbar {
+    background-color: transparent;
+    margin: 0px 4px;
+}
+
+#taskbar button {
+    background-color: rgba(86, 159, 198, 0.05);
+    color: #569FC6;
+    border: 1px solid rgba(86, 159, 198, 0.15);
+    border-radius: 2px;
+    padding: 4px 8px;
+    margin: 2px 1px;
+}
+
+#taskbar button.active {
+    color: #6AAFD6;
+}
+
+#taskbar button:hover {
+    border-color: rgba(86, 159, 198, 0.4);
+}
+
+#taskbar button.minimized {
+    opacity: 0.6;
+}
+
+#taskbar button.urgent {
+    color: #DF9E2F;
+}
+
+/* ====== CENTER MODULE ====== */
+
+/* Clock - prominent centerpiece */
+#clock {
+  
+  /* make the clock pill shaped */ 
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 6px 16px;
+    margin: 4px 0px;
+    /* kartoza orange backkground and with norito font */ 
+    background-color: rgba(86, 159, 198, 0.1); 
+    color: #569FC6;
+    border: 1px solid rgba(86, 159, 198, 0.3);
+
+}
+
+#clock:hover {
+    background-color: #1F2D35;
+    border-color: #6AAFD6;
+    color: #6AAFD6;
+}
+
+/* ====== RIGHT MODULES ====== */
+
+/* System tray - subtle integration */
+#tray {
+    border-radius: 2px;
+    padding: 4px 8px;
+    margin: 4px 2px;
+}
+
+/* Idle inhibitor states */
+#idle_inhibitor.activated {
+    color: #E74C3C;
+}
+
+#idle_inhibitor.deactivated {
+    color: #569FC6;
+}
+
+/* Notification states */
+
+#custom-notification.disabled {
+    color: #DF9E2F;
+}
+
+/* Screen recorder states */
+#custom-recorder.recording {
+    color: #FF4444;
+}
+
+#custom-recorder.stopped {
+    color: #8A8B8B;
+}
+
+#custom-recorder.idle {
+    color: #8A8B8B;
+}
+
+
+/* Brightness states */
+#backlight.low {
+    color: #8A8B8B;
+}
+
+#backlight.medium {
+    color: #569FC6;
+}
+
+#backlight.high {
+    color: #DF9E2F;
+}
+
+/* Power profile states */
+#custom-power-profile.power-saver {
+    color: #7FBA00;
+}
+
+#custom-power-profile.balanced {
+    color: #569FC6;
+}
+
+#custom-power-profile.performance {
+    color: #DF9E2F;
+}
+
+/* Temperature states */
+#custom-temperature.normal {
+    color: #569FC6;
+}
+
+#custom-temperature.warm {
+    color: #6AAFD6;
+}
+
+#custom-temperature.hot {
+    color: #8A8B8B;
+}
+
+#custom-temperature.critical {
+    color: #DF9E2F;
+}
+
+/* CPU usage states */
+#cpu.moderate {
+    color: #6AAFD6;
+}
+
+#cpu.high {
+    color: #7FC0E6;
+}
+
+#cpu.critical {
+    color: #DF9E2F;
+}
+
+/* Memory - uses base styling */
+
+/* Audio states */
+#pulseaudio.muted {
+    color: #8A8B8B;
+}
+
+#pulseaudio.medium {
+    color: #6AAFD6;
+}
+
+#pulseaudio.high {
+    color: #DF9E2F;
+}
+
+/* Gatus monitoring states */
+#custom-gatus-prod.perfect,
+#custom-gatus-gsh.perfect {
+    color: #00FF00;
+}
+
+#custom-gatus-prod.recovering,
+#custom-gatus-gsh.recovering {
+    color: #569FC6;
+}
+
+#custom-gatus-prod.warning,
+#custom-gatus-gsh.warning {
+    color: #DF9E2F;
+}
+
+#custom-gatus-prod.critical,
+#custom-gatus-gsh.critical {
+    color: #CC0403;
+}
+
+#custom-gatus-prod.unknown,
+#custom-gatus-prod.error,
+#custom-gatus-gsh.unknown,
+#custom-gatus-gsh.error {
+    color: #8A8B8B;
+}
+
+/* Battery states */
+#battery {
+}
+
+#battery.critical:not(.charging) {
+    color: #DF9E2F;
+}
+
+#battery.warning:not(.charging) {
+    color: #DF9E2F;
+}
+
+#battery.charging {
+    color: #6AAFD6;
+}
+
+/* Power button - distinctive styling */
+#custom-power {
+    color: #DF9E2F;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 8px 12px;
+    margin: 4px 8px 4px 2px;
+}
+
+#custom-power:hover {
+    color: #EFB05F;
+}
+
+/* ====== ADDITIONAL ELEMENTS ====== */
+
+/* Disk usage */
+#disk {
+    color: #569FC6;
+}
+
+/* Language selector */
+#language {
+}
+
+/* Mode indicator */
+#mode {
+    color: #DF9E2F;
+}
+
+/* Hardware temperature */
+#temperature.critical {
+    color: #DF9E2F;
+}
+
+/* Network states */
+#network.disabled {
+    color: #8A8B8B;
+}
+
+/* ====== TOOLTIPS ====== */
+
+tooltip {
+    background-color: #0D1A1F;
+    color: #E6F7F6;
+    border: 2px solid #569FC6;
+    border-radius: 2px;
+    padding: 8px 12px;
+    font-weight: 500;
+}
+
+tooltip label {
+    color: #E6F7F6;
+}

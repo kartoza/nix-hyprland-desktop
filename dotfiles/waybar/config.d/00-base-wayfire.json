@@ -1,0 +1,29 @@
+{
+    "layer": "top",
+    "position": "bottom",
+    "margin-bottom": -1,
+    "modules-left": [
+        "custom/launcher",
+        "custom/recorder",
+        "custom/gatus-prod",
+        "custom/gatus-gsh",
+        "wlr/taskbar"
+    ],
+    "modules-center": [
+        "clock"
+    ],
+    "modules-right": [
+        "idle_inhibitor",
+        "battery",
+        "backlight",
+        "custom/power-profile",
+        "custom/temperature",
+        "cpu",
+        "memory",
+        "pulseaudio",
+        "custom/notification-count",
+        "custom/notification-toggle",
+        "tray",
+        "custom/power"
+    ]
+}

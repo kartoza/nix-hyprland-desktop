@@ -1,0 +1,6 @@
+{"custom/nwg-look": {
+  "format": "<span font='16'>⚙</span>",
+  "on-click": "nwg-look",
+  "tooltip": true,
+  "tooltip-format": "GTK Theme Settings"
+}}
