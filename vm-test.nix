@@ -39,8 +39,6 @@
     extraGroups = [ "wheel" "networkmanager" "video" "audio" ];
   };
 
-  # Wayland environment is handled by the main wayfire-desktop module
-
   # Enable sudo for test user
   security.sudo.wheelNeedsPassword = false;
 
@@ -61,11 +59,11 @@
   # Auto-login for convenience in VM testing
   services.greetd.settings = {
     default_session = lib.mkForce {
-      command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd wayfire";
+      command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd 'wayfire -c /etc/xdg/wayfire/wayfire.ini'";
       user = "greeter";
     };
     initial_session = {
-      command = "wayfire";
+      command = "wayfire -c /etc/xdg/wayfire/wayfire.ini";
       user = "testuser";
     };
   };

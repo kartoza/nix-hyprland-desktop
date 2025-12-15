@@ -98,8 +98,36 @@ in {
     xdg-desktop-portal-gtk
     xdg-desktop-portal-wlr # For screen sharing in Wayfire
     zenity # GUI dialogs for keyring unlock
+    # Wallpaper and screen management
+    swww # Efficient animated wallpaper daemon for wayland
+    swayidle # Idle management daemon for Wayland
+    swaylock # Screen locker for Wayland
+    # Cursor theme
+    vanilla-dmz # Default cursor theme
+    # Image processing for wallpapers
+    imagemagick # For creating default wallpaper
     # Deploy script for system-wide Wayfire config management
     jq # Required for waybar config building
+    # Wallpaper setup script
+    (writeScriptBin "setup-wallpaper" ''
+      #!/usr/bin/env bash
+      
+      # Create wallpapers directory
+      mkdir -p "$HOME/wallpapers"
+      
+      # If no wallpaper exists, create a simple colored background
+      if [[ ! -f "$HOME/wallpapers/timos-wallpaper.png" ]]; then
+        # Use convert from imagemagick to create a simple gradient
+        ${pkgs.imagemagick}/bin/convert -size 1920x1080 \
+          gradient:'#2d3748-#4a5568' \
+          "$HOME/wallpapers/timos-wallpaper.png"
+        echo "Created default gradient wallpaper"
+      fi
+      
+      # Initialize swww and set wallpaper
+      swww init || true
+      swww img "$HOME/wallpapers/timos-wallpaper.png"
+    '')
     # Keyring unlock script for login
     (writeScriptBin "unlock-keyring" ''
       #!/usr/bin/env bash
@@ -178,6 +206,15 @@ in {
   };
 
   environment.variables = {
+    # XDG environment for finding configs
+    XDG_CONFIG_DIRS = "/etc/xdg";
+    XDG_DATA_DIRS = mkDefault "/etc/xdg:/usr/local/share:/usr/share";
+    # Ensure Wayfire finds its config
+    WAYFIRE_CONFIG = "/etc/xdg/wayfire/wayfire.ini";
+    # Cursor theme
+    XCURSOR_THEME = "Vanilla-DMZ";
+    XCURSOR_SIZE = "24";
+    
     # Environment variables for better Wayland app compatibility
     QT_QPA_PLATFORM = "wayland";
     MOZ_ENABLE_WAYLAND = "1";
@@ -210,8 +247,15 @@ in {
 
   # Deploy Wayfire configuration files system-wide using standard paths
   environment.etc = {
-    # Wayfire main config - standard location
-    "xdg/wayfire/wayfire.ini".source = ../dotfiles/wayfire/wayfire.ini;
+    # Wayfire main config - standard location with wallpaper fix
+    "xdg/wayfire/wayfire.ini" = {
+      source = pkgs.runCommand "wayfire-config" {} ''
+        src=${../dotfiles/wayfire/wayfire.ini}
+        # Replace hardcoded wallpaper command with our setup script
+        sed 's|swww init && swww img ~/wallpapers/timos-wallpaper.png|setup-wallpaper|g' "$src" > $out
+      '';
+    };
+    "xdg/wayfire/scripts".source = ../dotfiles/wayfire/scripts;
     # Waybar configuration - standard XDG location
     "xdg/waybar/style.css".source = ../dotfiles/waybar/style.css;
     # Build combined waybar config from modular JSON files
@@ -236,7 +280,10 @@ in {
           fi
         done
 
-        cp config.json $out
+        # Fix script paths to use /etc/xdg instead of /etc/waybar
+        sed 's|/etc/waybar/scripts/|/etc/xdg/waybar/scripts/|g' config.json > final_config.json
+        
+        cp final_config.json $out
       '';
     };
     # Note: Using fuzzel as launcher instead of wofi
@@ -248,7 +295,6 @@ in {
     "xdg/nwg-launchers/nwgbar/style.css".source = ../dotfiles/nwgbar/style.css;
     # Waybar scripts and resources
     "xdg/waybar/scripts".source = ../dotfiles/waybar/scripts;
-    "xdg/wayfire/scripts".source = ../dotfiles/wayfire/scripts;
     "xdg/waybar/kartoza-logo-neon.png".source =
       ../resources/kartoza-logo-neon.png;
     "xdg/waybar/kartoza-logo-neon-bright.png".source =
@@ -382,7 +428,7 @@ in {
     enable = true;
     settings = {
       default_session = {
-        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd wayfire";
+        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd 'wayfire -c /etc/xdg/wayfire/wayfire.ini'";
         user = "greeter";
       };
     };
