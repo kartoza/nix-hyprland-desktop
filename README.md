@@ -12,6 +12,7 @@ This flake provides a complete Wayfire desktop environment configuration that ca
 - Mako notification daemon
 - Fuzzel and other utilities
 - Complete theming and styling
+- GNOME Keyring integration with SSH and GPG support
 
 ## Usage
 
@@ -155,3 +156,87 @@ deploy-wayfire-configs
 ```
 
 This is useful when users want to customize configurations locally.
+
+## Security & Authentication
+
+### SSH and GPG Key Management
+
+This configuration provides seamless integration between SSH/GPG keys and the GNOME Keyring:
+
+#### Features
+- **Automatic unlock**: GPG keys become available when you unlock your keychain at login
+- **SSH agent integration**: SSH keys stored in GNOME Keyring are automatically available
+- **GUI password prompts**: Uses `pinentry-gnome3` for secure password entry
+- **Session persistence**: Keys remain unlocked for the duration of your session
+
+#### How It Works
+
+1. **At Login**: PAM automatically unlocks GNOME Keyring using your login password
+2. **GPG Integration**: The GPG agent connects to the keyring and uses GUI prompts for passwords
+3. **SSH Integration**: SSH agent socket is exposed via `SSH_AUTH_SOCK` environment variable
+
+#### Manual Keyring Management
+
+If you need to manually unlock your keyring (e.g., after screen lock):
+
+```bash
+unlock-keyring
+```
+
+This script will:
+- Check if GNOME Keyring is running
+- Prompt for your password if the keyring is locked
+- Connect the GPG agent to the newly unlocked keyring
+- Display status notifications
+
+#### Adding SSH Keys
+
+To add SSH keys to the keyring:
+
+```bash
+ssh-add ~/.ssh/your_private_key
+```
+
+#### Adding GPG Keys
+
+GPG keys are automatically detected when stored in `~/.gnupg/`. The configuration includes:
+
+- **Keyserver**: Uses `hkps://keys.openpgp.org` for key retrieval
+- **Caching**: Keys are cached for 8 hours (28800 seconds)
+- **Auto-retrieval**: Automatically downloads missing public keys when needed
+
+#### Configuration Files
+
+The system automatically creates GPG configuration files in your home directory:
+
+- `~/.gnupg/gpg-agent.conf`: GPG agent configuration with GUI pinentry
+- `~/.gnupg/gpg.conf`: Basic GPG settings with keyserver configuration
+
+These files are created automatically by the `deploy-wayfire-configs` script if they don't already exist.
+
+#### Troubleshooting
+
+**GPG keys not accessible:**
+```bash
+# Check GPG agent status
+gpg-connect-agent 'keyinfo --list' /bye
+
+# Restart GPG agent if needed
+gpg-connect-agent killagent /bye
+gpg-connect-agent /bye
+```
+
+**SSH keys not loading:**
+```bash
+# Check SSH agent
+echo $SSH_AUTH_SOCK
+ssh-add -l
+
+# If keyring SSH agent isn't working, check:
+pgrep gnome-keyring-daemon
+```
+
+**Keyring not unlocking:**
+- Ensure your user password matches your keyring password
+- The keyring password is typically set to your login password during first login
+- Use `seahorse` (GNOME Passwords and Keys) to manage keyring passwords if needed

@@ -36,6 +36,9 @@ in
     # Default icon theme (Papirus) - can be overridden by kartoza.nix or other configs
     papirus-icon-theme
     # Cursor theme is managed by home-manager (see home/default.nix)
+    # GPG integration packages
+    gnupg
+    pinentry-gnome3
     # Add these for better app compatibility
     audio-recorder
     blueman # Bluetooth manager with system tray
@@ -116,6 +119,15 @@ in
 
                   if [ $? -eq 0 ]; then
                       ${pkgs.libnotify}/bin/notify-send "Keyring Unlocked" "Your keyring has been successfully unlocked"
+                      
+                      # Start GPG agent and connect to keyring
+                      export GPG_TTY=$(tty)
+                      ${pkgs.gnupg}/bin/gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
+                      
+                      # Test GPG functionality
+                      if ${pkgs.gnupg}/bin/gpg --list-secret-keys >/dev/null 2>&1; then
+                          echo "GPG keys are now accessible"
+                      fi
                   else
                       ${pkgs.libnotify}/bin/notify-send "Keyring Unlock Failed" "Failed to unlock keyring with provided password"
                   fi
@@ -124,6 +136,11 @@ in
               fi
           else
               echo "Keyring is already unlocked"
+              
+              # Ensure GPG agent is connected
+              export GPG_TTY=$(tty)
+              ${pkgs.gnupg}/bin/gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
+              
               ${pkgs.libnotify}/bin/notify-send "Keyring Ready" "Your keyring is already unlocked and ready"
           fi
       else
@@ -152,6 +169,7 @@ in
       mkdir -p "$USER_HOME/.config/waybar/scripts"
       mkdir -p "$USER_HOME/.config/wayfire/scripts"
       mkdir -p "$USER_HOME/.local/bin"
+      mkdir -p "$USER_HOME/.gnupg"
 
       # Copy configuration files from /etc
       cp /etc/wayfire/wayfire.ini "$USER_HOME/.config/wayfire/wayfire.ini"
@@ -171,6 +189,14 @@ in
       cp /etc/xdg/waybar/kartoza-logo-neon.png "$USER_HOME/.config/waybar/"
       cp /etc/xdg/waybar/kartoza-logo-neon-bright.png "$USER_HOME/.config/waybar/"
       cp /etc/fuzzel/fuzzel-emoji "$USER_HOME/.local/bin/fuzzel-emoji"
+      
+      # Copy GPG configuration if it doesn't already exist
+      if [ ! -f "$USER_HOME/.gnupg/gpg-agent.conf" ]; then
+        cp /etc/skel/.gnupg/gpg-agent.conf "$USER_HOME/.gnupg/gpg-agent.conf"
+      fi
+      if [ ! -f "$USER_HOME/.gnupg/gpg.conf" ]; then
+        cp /etc/skel/.gnupg/gpg.conf "$USER_HOME/.gnupg/gpg.conf"
+      fi
 
       # Set permissions
       chmod 644 "$USER_HOME/.config/wayfire/wayfire.ini"
@@ -188,6 +214,11 @@ in
       chmod +x "$USER_HOME/.config/waybar/scripts"/*
       chmod +x "$USER_HOME/.config/wayfire/scripts"/*
       chmod +x "$USER_HOME/.local/bin/fuzzel-emoji"
+      
+      # Set GPG directory permissions
+      chmod 700 "$USER_HOME/.gnupg"
+      chmod 600 "$USER_HOME/.gnupg/gpg-agent.conf" 2>/dev/null || true
+      chmod 600 "$USER_HOME/.gnupg/gpg.conf" 2>/dev/null || true
 
       echo "Wayfire configuration deployment complete!"
     '')
@@ -201,6 +232,9 @@ in
     # Cursor theme and size are managed by home-manager (see home/default.nix)
     # Enable gnome-keyring SSH agent
     SSH_AUTH_SOCK = "$XDG_RUNTIME_DIR/keyring/ssh";
+    # Configure GPG agent socket
+    GPG_TTY = "$(tty)";
+    GNUPGHOME = "$HOME/.gnupg";
     # Browser configuration
     DEFAULT_BROWSER = "${pkgs.junction}/bin/re.sonny.Junction";
     BROWSER = "re.sonny.Junction";
@@ -293,6 +327,18 @@ in
     "xdg/waybar/kartoza-logo-neon-bright.png".source = ../resources/kartoza-logo-neon-bright.png;
     # Fuzzel emoji script
     "fuzzel/fuzzel-emoji".source = ../dotfiles/fuzzel/fuzzel-emoji;
+    # GPG agent configuration
+    "skel/.gnupg/gpg-agent.conf".text = ''
+      pinentry-program ${pkgs.pinentry-gnome3}/bin/pinentry-gnome3
+      default-cache-ttl 28800
+      max-cache-ttl 86400
+      enable-ssh-support
+    '';
+    "skel/.gnupg/gpg.conf".text = ''
+      use-agent
+      keyserver hkps://keys.openpgp.org
+      keyserver-options auto-key-retrieve
+    '';
   };
 
   # Required for screen sharing
@@ -317,6 +363,13 @@ in
 
   # Enable gnome-keyring service for SSH and GPG key caching
   services.gnome.gnome-keyring.enable = true;
+
+  # Enable GPG agent to integrate with gnome-keyring
+  programs.gnupg.agent = {
+    enable = true;
+    enableSSHSupport = true;
+    pinentryPackage = pkgs.pinentry-gnome3;
+  };
 
   # Configure PAM for greetd to unlock gnome-keyring on login
   security.pam.services.greetd = {
@@ -385,7 +438,22 @@ in
     DefaultEnvironment="XDG_CURRENT_DESKTOP=wayfire"
     DefaultEnvironment="XDG_SESSION_DESKTOP=wayfire"
     DefaultEnvironment="XDG_SESSION_TYPE=wayland"
+    DefaultEnvironment="SSH_AUTH_SOCK=%t/keyring/ssh"
+    DefaultEnvironment="GPG_TTY=$(tty)"
   '';
+
+  # Systemd user service to ensure GPG agent connects to keyring
+  systemd.user.services.gpg-agent-connect = {
+    description = "Connect GPG agent to keyring";
+    after = [ "graphical-session.target" ];
+    wants = [ "graphical-session.target" ];
+    wantedBy = [ "default.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.gnupg}/bin/gpg-connect-agent updatestartuptty /bye";
+      Environment = "GPG_TTY=$(tty)";
+    };
+  };
 
   # For Wayfire (no display manager), we use greetd
   # Note: Autologin is configured per-host in hosts/<hostname>/desktop.nix
