@@ -27,7 +27,7 @@ Add this flake as an input to your NixOS configuration:
 }
 ```
 
-Then import the module in your NixOS configuration:
+Then import the module and enable it in your NixOS configuration:
 
 ```nix
 {
@@ -35,13 +35,26 @@ Then import the module in your NixOS configuration:
     wayfire-desktop.nixosModules.default
     # ... other modules
   ];
+
+  # Enable Kartoza Wayfire Desktop with one line!
+  kartoza.wayfire-desktop.enable = true;
+}
+```
+
+### Configuration Options
+
+```nix
+{
+  kartoza.wayfire-desktop = {
+    enable = true;
+    iconTheme = "Papirus";  # Optional, defaults to Papirus
+  };
 }
 ```
 
 ## Dependencies
 
-This module expects the importing flake to provide:
-- `config.kartoza.theme.iconTheme.name` for GTK icon theme configuration
+None! This module is completely self-contained and doesn't require any external configuration.
 
 ## Structure
 
@@ -62,6 +75,25 @@ Format code:
 ```bash
 nix fmt
 ```
+
+### Testing with QEMU VM
+
+You can test the desktop environment in a VM without affecting your main system:
+
+```bash
+# Run the test VM (builds automatically)
+./run-vm.sh
+
+# Or run directly:
+nix run .#nixosConfigurations.vm-test.config.system.build.vm
+```
+
+The VM includes:
+- 4GB RAM, 4 CPU cores, 8GB disk
+- Auto-login as `testuser` (password: `test`)
+- Full Wayfire desktop with all components
+- Hardware-accelerated graphics (1920x1080)
+- Basic applications for testing (Firefox, file manager, terminal)
 
 ### Testing Changes on Existing NixOS Systems
 

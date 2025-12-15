@@ -1,11 +1,26 @@
 { config, lib, pkgs, ... }:
 
-let
-  wayfireEnabled = config.programs.wayfire.enable or false;
+with lib;
 
-  # Allow configuration of icon theme, with Papirus as default
-  iconThemeName = config.kartoza.theme.iconTheme.name or "Papirus";
+let
+  cfg = config.kartoza.wayfire-desktop;
+  
+  # Use the icon theme from the module configuration
+  iconThemeName = cfg.iconTheme;
 in {
+  options = {
+    kartoza.wayfire-desktop = {
+      enable = mkEnableOption "Kartoza Wayfire Desktop Environment";
+      
+      iconTheme = mkOption {
+        type = types.str;
+        default = "Papirus";
+        description = "Icon theme to use for the desktop";
+      };
+    };
+  };
+
+  config = mkIf cfg.enable {
 
   # Deploy essential Wayfire dotfiles at system level
   # Enable the X server.
@@ -224,9 +239,7 @@ in {
         cp config.json $out
       '';
     };
-    # Wofi configuration - standard XDG location
-    "xdg/wofi/config".source = ../dotfiles/wofi/config;
-    "xdg/wofi/style.css".source = ../dotfiles/wofi/style.css;
+    # Note: Using fuzzel as launcher instead of wofi
     # Mako notification config - standard XDG location
     "xdg/mako/kartoza".source = ../dotfiles/mako/kartoza;
     # nwg-launchers configs - standard XDG location
@@ -374,4 +387,6 @@ in {
       };
     };
   };
+  
+  }; # End of config = mkIf cfg.enable
 }

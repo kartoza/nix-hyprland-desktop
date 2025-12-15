@@ -15,4 +15,5 @@ result-*
 
 # OS files
 .DS_Store
-Thumbs.db
+Thumbs.db/.claude/
+/*.qcow2

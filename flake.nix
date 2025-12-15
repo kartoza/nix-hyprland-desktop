@@ -14,6 +14,14 @@
         default = self.nixosModules.wayfire-desktop;
       };
 
+      # VM configurations for testing
+      nixosConfigurations = {
+        vm-test = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [ ./vm-test.nix ];
+        };
+      };
+
       # Development shell
       devShells = forAllSystems (system:
         let pkgs = nixpkgs.legacyPackages.${system};
