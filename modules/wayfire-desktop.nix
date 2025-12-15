@@ -1,17 +1,11 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+{ config, lib, pkgs, ... }:
 
 let
   wayfireEnabled = config.programs.wayfire.enable or false;
-  
+
   # Allow configuration of icon theme, with Papirus as default
   iconThemeName = config.kartoza.theme.iconTheme.name or "Papirus";
-in
-{
+in {
 
   # Deploy essential Wayfire dotfiles at system level
   # Enable the X server.
@@ -19,11 +13,7 @@ in
 
   programs.wayfire = {
     enable = true;
-    plugins = with pkgs.wayfirePlugins; [
-      wcm
-      wf-shell
-      wayfire-plugins-extra
-    ];
+    plugins = with pkgs.wayfirePlugins; [ wcm wf-shell wayfire-plugins-extra ];
   };
 
   # Enable NetworkManager service for network and VPN management
@@ -148,80 +138,6 @@ in
           ${pkgs.libnotify}/bin/notify-send "Keyring Error" "GNOME Keyring daemon is not running"
       fi
     '')
-    (writeScriptBin "deploy-wayfire-configs" ''
-      #!/bin/bash
-      # Deploy Wayfire configs to user's home directory
-      USER_HOME="$HOME"
-      if [ -z "$USER_HOME" ]; then
-        USER_HOME="/home/$USER"
-      fi
-
-      echo "Deploying Wayfire configuration files to $USER_HOME..."
-
-      # Create config directories
-      mkdir -p "$USER_HOME/.config/wayfire"
-      mkdir -p "$USER_HOME/.config/waybar"
-      mkdir -p "$USER_HOME/.config/wofi"
-      mkdir -p "$USER_HOME/.config/wofi-emoji"
-      mkdir -p "$USER_HOME/.config/mako"
-      mkdir -p "$USER_HOME/.config/nwg-launchers/nwggrid"
-      mkdir -p "$USER_HOME/.config/nwg-launchers/nwgbar"
-      mkdir -p "$USER_HOME/.config/waybar/scripts"
-      mkdir -p "$USER_HOME/.config/wayfire/scripts"
-      mkdir -p "$USER_HOME/.local/bin"
-      mkdir -p "$USER_HOME/.gnupg"
-
-      # Copy configuration files from /etc
-      cp /etc/wayfire/wayfire.ini "$USER_HOME/.config/wayfire/wayfire.ini"
-      cp /etc/xdg/waybar/style.css "$USER_HOME/.config/waybar/style.css"
-      cp /etc/xdg/waybar/config "$USER_HOME/.config/waybar/config"
-
-      cp /etc/wofi/config "$USER_HOME/.config/wofi/config"
-      cp /etc/wofi/style.css "$USER_HOME/.config/wofi/style.css"
-      cp /etc/wofi-emoji/config "$USER_HOME/.config/wofi-emoji/config"
-      cp /etc/mako/kartoza "$USER_HOME/.config/mako/kartoza"
-      cp /etc/nwg-launchers/nwggrid/style.css "$USER_HOME/.config/nwg-launchers/nwggrid/style.css"
-      cp /etc/nwg-launchers/nwgbar/style.css "$USER_HOME/.config/nwg-launchers/nwgbar/style.css"
-
-      # Copy scripts and resources
-      cp -r /etc/xdg/waybar/scripts/* "$USER_HOME/.config/waybar/scripts/"
-      cp -r /etc/wayfire/scripts/* "$USER_HOME/.config/wayfire/scripts/"
-      cp /etc/xdg/waybar/kartoza-logo-neon.png "$USER_HOME/.config/waybar/"
-      cp /etc/xdg/waybar/kartoza-logo-neon-bright.png "$USER_HOME/.config/waybar/"
-      cp /etc/fuzzel/fuzzel-emoji "$USER_HOME/.local/bin/fuzzel-emoji"
-      
-      # Copy GPG configuration if it doesn't already exist
-      if [ ! -f "$USER_HOME/.gnupg/gpg-agent.conf" ]; then
-        cp /etc/skel/.gnupg/gpg-agent.conf "$USER_HOME/.gnupg/gpg-agent.conf"
-      fi
-      if [ ! -f "$USER_HOME/.gnupg/gpg.conf" ]; then
-        cp /etc/skel/.gnupg/gpg.conf "$USER_HOME/.gnupg/gpg.conf"
-      fi
-
-      # Set permissions
-      chmod 644 "$USER_HOME/.config/wayfire/wayfire.ini"
-      chmod 644 "$USER_HOME/.config/waybar/style.css"
-      chmod 644 "$USER_HOME/.config/waybar/config"
-      chmod 644 "$USER_HOME/.config/wofi/config"
-      chmod 644 "$USER_HOME/.config/wofi/style.css"
-      chmod 644 "$USER_HOME/.config/wofi-emoji/config"
-      chmod 644 "$USER_HOME/.config/mako/kartoza"
-      chmod 644 "$USER_HOME/.config/nwg-launchers/nwggrid/style.css"
-      chmod 644 "$USER_HOME/.config/nwg-launchers/nwgbar/style.css"
-      chmod 644 "$USER_HOME/.config/waybar/kartoza-logo-neon.png"
-      chmod 644 "$USER_HOME/.config/waybar/kartoza-logo-neon-bright.png"
-      # Make scripts executable
-      chmod +x "$USER_HOME/.config/waybar/scripts"/*
-      chmod +x "$USER_HOME/.config/wayfire/scripts"/*
-      chmod +x "$USER_HOME/.local/bin/fuzzel-emoji"
-      
-      # Set GPG directory permissions
-      chmod 700 "$USER_HOME/.gnupg"
-      chmod 600 "$USER_HOME/.gnupg/gpg-agent.conf" 2>/dev/null || true
-      chmod 600 "$USER_HOME/.gnupg/gpg.conf" 2>/dev/null || true
-
-      echo "Wayfire configuration deployment complete!"
-    '')
   ];
 
   environment.sessionVariables = {
@@ -240,8 +156,8 @@ in
     BROWSER = "re.sonny.Junction";
     # Add script directories to PATH
     PATH = [
-      "/etc/fuzzel"
-      "/etc/wayfire/scripts"
+      "/etc/xdg/fuzzel"
+      "/etc/xdg/wayfire/scripts"
       "/etc/xdg/waybar/scripts"
     ];
   };
@@ -277,56 +193,56 @@ in
     gtk-icon-theme-name=${iconThemeName}
   '';
 
-  # Deploy Wayfire configuration files system-wide
+  # Deploy Wayfire configuration files system-wide using standard paths
   environment.etc = {
-    # Wayfire main config
-    "wayfire/wayfire.ini".source = ../dotfiles/wayfire/wayfire.ini;
-    # Waybar configuration
+    # Wayfire main config - standard location
+    "xdg/wayfire/wayfire.ini".source = ../dotfiles/wayfire/wayfire.ini;
+    # Waybar configuration - standard XDG location
     "xdg/waybar/style.css".source = ../dotfiles/waybar/style.css;
     # Build combined waybar config from modular JSON files
     "xdg/waybar/config" = {
-      source =
-        pkgs.runCommand "waybar-config-wayfire"
-          {
-            nativeBuildInputs = [ pkgs.jq ];
-          }
-          ''
-            src=${../dotfiles/waybar/config.d}
+      source = pkgs.runCommand "waybar-config-wayfire" {
+        nativeBuildInputs = [ pkgs.jq ];
+      } ''
+        src=${../dotfiles/waybar/config.d}
 
-            # Use Wayfire base config instead of regular base
-            cat "$src/00-base-wayfire.json" > config.json
+        # Use Wayfire base config instead of regular base
+        cat "$src/00-base-wayfire.json" > config.json
 
-            # Merge all other config fragments except sway-specific ones and generic power
-            for file in "$src"/*.json; do
-              filename=$(basename "$file")
-              # Skip base files, sway-specific modules, and generic power (use wayfire-specific)
-              if [[ "$filename" != "00-base.json" && "$filename" != "00-base-wayfire.json" &&
-                    "$filename" != "90-sway-"* && "$filename" != "90-custom-power.json" ]]; then
-                echo "Merging $filename"
-                jq -s '.[0] * .[1]' config.json "$file" > temp.json
-                mv temp.json config.json
-              fi
-            done
+        # Merge all other config fragments except sway-specific ones and generic power
+        for file in "$src"/*.json; do
+          filename=$(basename "$file")
+          # Skip base files, sway-specific modules, and generic power (use wayfire-specific)
+          if [[ "$filename" != "00-base.json" && "$filename" != "00-base-wayfire.json" &&
+                "$filename" != "90-sway-"* && "$filename" != "90-custom-power.json" ]]; then
+            echo "Merging $filename"
+            jq -s '.[0] * .[1]' config.json "$file" > temp.json
+            mv temp.json config.json
+          fi
+        done
 
-            cp config.json $out
-          '';
+        cp config.json $out
+      '';
     };
-    # Wofi configuration
-    "wofi/config".source = ../dotfiles/wofi/config;
-    "wofi/style.css".source = ../dotfiles/wofi/style.css;
-    "wofi-emoji/config".source = ../dotfiles/wofi-emoji/config;
-    # Mako notification config
-    "mako/kartoza".source = ../dotfiles/mako/kartoza;
-    # nwg-launchers configs
-    "nwg-launchers/nwggrid/style.css".source = ../dotfiles/nwggrid/style.css;
-    "nwg-launchers/nwgbar/style.css".source = ../dotfiles/nwgbar/style.css;
+    # Wofi configuration - standard XDG location
+    "xdg/wofi/config".source = ../dotfiles/wofi/config;
+    "xdg/wofi/style.css".source = ../dotfiles/wofi/style.css;
+    "xdg/wofi-emoji/config".source = ../dotfiles/wofi-emoji/config;
+    # Mako notification config - standard XDG location
+    "xdg/mako/kartoza".source = ../dotfiles/mako/kartoza;
+    # nwg-launchers configs - standard XDG location
+    "xdg/nwg-launchers/nwggrid/style.css".source =
+      ../dotfiles/nwggrid/style.css;
+    "xdg/nwg-launchers/nwgbar/style.css".source = ../dotfiles/nwgbar/style.css;
     # Waybar scripts and resources
     "xdg/waybar/scripts".source = ../dotfiles/waybar/scripts;
-    "wayfire/scripts".source = ../dotfiles/wayfire/scripts;
-    "xdg/waybar/kartoza-logo-neon.png".source = ../resources/kartoza-logo-neon.png;
-    "xdg/waybar/kartoza-logo-neon-bright.png".source = ../resources/kartoza-logo-neon-bright.png;
-    # Fuzzel emoji script
-    "fuzzel/fuzzel-emoji".source = ../dotfiles/fuzzel/fuzzel-emoji;
+    "xdg/wayfire/scripts".source = ../dotfiles/wayfire/scripts;
+    "xdg/waybar/kartoza-logo-neon.png".source =
+      ../resources/kartoza-logo-neon.png;
+    "xdg/waybar/kartoza-logo-neon-bright.png".source =
+      ../resources/kartoza-logo-neon-bright.png;
+    # Fuzzel emoji script - standard location for executables
+    "xdg/fuzzel/fuzzel-emoji".source = ../dotfiles/fuzzel/fuzzel-emoji;
     # GPG agent configuration
     "skel/.gnupg/gpg-agent.conf".text = ''
       pinentry-program ${pkgs.pinentry-gnome3}/bin/pinentry-gnome3
@@ -350,9 +266,7 @@ in
     jack.enable = true;
   };
 
-  services.dbus = {
-    enable = true;
-  };
+  services.dbus = { enable = true; };
 
   # Enable automounting for removable media (USB drives, etc.)
   services.udisks2.enable = true;
@@ -392,9 +306,7 @@ in
   };
 
   # Configure PAM for sudo to maintain keyring access
-  security.pam.services.sudo = {
-    enableGnomeKeyring = true;
-  };
+  security.pam.services.sudo = { enableGnomeKeyring = true; };
 
   xdg.portal = {
     enable = true;
@@ -405,10 +317,7 @@ in
     # Configure portal backends for Wayfire
     config = {
       wayfire = {
-        default = lib.mkForce [
-          "gtk"
-          "wlr"
-        ];
+        default = lib.mkForce [ "gtk" "wlr" ];
         "org.freedesktop.impl.portal.FileChooser" = lib.mkForce [ "gtk" ];
         "org.freedesktop.impl.portal.AppChooser" = lib.mkForce [ "gtk" ];
         "org.freedesktop.impl.portal.ScreenCast" = lib.mkForce [ "wlr" ];

@@ -16,10 +16,6 @@ cd /path/to/nix-wayfire-desktop/dotfiles/waybar
 waybar -c config -s style.css --log-level debug  # Test waybar changes
 ```
 
-### Deploy Configuration
-```bash
-deploy-wayfire-configs  # Deploy configs to user home directory (when module is installed)
-```
 
 ## Architecture Overview
 
@@ -35,8 +31,8 @@ This is a **standalone NixOS flake** that provides a complete Wayfire desktop en
 2. **Main Module** (`modules/wayfire-desktop.nix`):
    - Comprehensive Wayfire desktop setup with all dependencies
    - Configures services: PipeWire, NetworkManager, gnome-keyring, greetd
-   - Deploys dotfiles to `/etc` for system-wide availability
-   - Includes custom deployment script and keyring unlock utility
+   - Deploys dotfiles to `/etc/xdg` for system-wide availability
+   - Includes keyring unlock utility
 
 3. **Dotfiles Structure** (`dotfiles/`):
    - **wayfire/**: Wayfire compositor config with plugins and scripts
@@ -63,7 +59,6 @@ The waybar config uses a **unique modular approach** for easier maintenance:
 ### Key Scripts and Utilities
 
 - `unlock-keyring` - GUI keyring unlock at login using zenity
-- `deploy-wayfire-configs` - Copies system configs to user home directories
 - `wayfire/scripts/` - Window switching, browser detection, recording toggles
 - `waybar/scripts/` - Status monitoring (temperature, power, notifications)
 

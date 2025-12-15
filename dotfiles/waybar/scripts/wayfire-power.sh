@@ -30,8 +30,7 @@ cat >"$TEMP_CONFIG" <<'EOF'
 EOF
 
 # Launch nwgbar with wayfire config
-nwgbar -t "$TEMP_CONFIG" -c ~/.config/nwg-launchers/nwgbar/style.css -s 48
+nwgbar -t "$TEMP_CONFIG" -c /etc/nwgbar/style.css -s 48
 
 # Clean up
 rm -f "$TEMP_CONFIG"
-
