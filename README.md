@@ -8,13 +8,15 @@ This flake provides a complete Wayfire desktop environment configuration that ca
 
 - Wayfire compositor with plugins
 - Waybar status bar with modular configuration
-- Wofi application launcher
+- Nwggrid and nwgpanel application launcher
 - Mako notification daemon
 - Fuzzel and other utilities
 - Complete theming and styling
 - GNOME Keyring integration with SSH and GPG support
 
 ## Usage
+
+### Step 1: Add Flake Input
 
 Add this flake as an input to your NixOS configuration:
 
@@ -27,7 +29,9 @@ Add this flake as an input to your NixOS configuration:
 }
 ```
 
-Then import the module and enable it in your NixOS configuration:
+### Step 2: Import and Enable Module
+
+Import the module and enable it in your NixOS configuration:
 
 ```nix
 {
@@ -41,16 +45,161 @@ Then import the module and enable it in your NixOS configuration:
 }
 ```
 
+### Step 3: Configure Display Manager (CRITICAL)
+
+**IMPORTANT**: You must configure your display manager to start Wayfire with the correct configuration file. The module configures greetd as the display manager, but you need to set the initial session command in your user configuration:
+
+```nix
+{
+  # Configure greetd to auto-login with Wayfire
+  services.greetd = {
+    enable = true;
+    settings = {
+      default_session = {
+        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd 'wayfire -c /etc/xdg/wayfire/wayfire.ini'";
+        user = "greeter";
+      };
+      
+      # Optional: Auto-login for a specific user
+      initial_session = {
+        command = "wayfire -c /etc/xdg/wayfire/wayfire.ini";
+        user = "your-username";  # Replace with your actual username
+      };
+    };
+  };
+}
+```
+
+**Critical Parameter**:
+- `-c /etc/xdg/wayfire/wayfire.ini` - Ensures Wayfire uses the module's configuration
+
+Without this parameter, Wayfire will use default configs and the desktop environment may not work correctly.
+
+### Step 4: Rebuild System
+
+After configuration, rebuild your system:
+
+```bash
+sudo nixos-rebuild switch --flake .#your-hostname
+```
+
 ### Configuration Options
 
 ```nix
 {
   kartoza.wayfire-desktop = {
     enable = true;
-    iconTheme = "Papirus";  # Optional, defaults to Papirus
+    iconTheme = "Papirus";              # Icon theme (default: "Papirus")
+    gtkTheme = "Adwaita";               # GTK theme (default: "Adwaita")
+    darkTheme = true;                   # Use dark theme (default: true)
+    fractionalScaling = 1.25;           # Default scaling factor (default: 1.0)
+    qtTheme = "gnome";                  # Qt platform theme (default: "gnome")
+    cursorTheme = "Vanilla-DMZ";        # Cursor theme (default: "Vanilla-DMZ")
+    cursorSize = 24;                    # Cursor size in pixels (default: 24)
+    
+    # Per-display scaling overrides
+    displayScaling = {
+      "eDP-1" = 1.5;    # Laptop screen at 150%
+      "DP-9" = 1.0;     # External monitor at 100%
+    };
   };
 }
 ```
+
+## Customizing Dotfiles
+
+This module deploys configuration files to `/etc/xdg/` for system-wide availability. Users can override these configurations by creating local dotfiles in their home directories.
+
+### Override Priority
+
+Configuration files are loaded in this order (highest to lowest priority):
+
+1. **User home directory**: `~/.config/wayfire/`, `~/.config/waybar/`, etc.
+2. **System XDG config**: `/etc/xdg/wayfire/`, `/etc/xdg/waybar/`, etc. (this module)
+3. **Application defaults**: Built-in application defaults
+
+### How to Override System Dotfiles
+
+#### Method 1: Copy and Modify (Recommended)
+
+Copy the system configurations to your home directory and modify them:
+
+```bash
+# Copy wayfire config for customization
+mkdir -p ~/.config/wayfire
+cp /etc/xdg/wayfire/wayfire.ini ~/.config/wayfire/
+# Edit ~/.config/wayfire/wayfire.ini as needed
+
+# Copy waybar config for customization  
+mkdir -p ~/.config/waybar
+cp /etc/xdg/waybar/config ~/.config/waybar/
+cp /etc/xdg/waybar/style.css ~/.config/waybar/
+# Edit ~/.config/waybar/ files as needed
+
+# Copy mako config for customization
+mkdir -p ~/.config/mako  
+cp /etc/xdg/mako/kartoza ~/.config/mako/config
+# Edit ~/.config/mako/config as needed
+```
+
+#### Method 2: Selective Overrides
+
+You can override specific applications without copying entire configurations:
+
+**Wayfire**: Create `~/.config/wayfire/wayfire.ini` with only the settings you want to change. Wayfire will merge your changes with the system configuration.
+
+**Waybar**: Create `~/.config/waybar/` with your own `config` and `style.css`. For modular waybar configs, you can also copy the `config.d/` directory and modify specific modules.
+
+**Mako**: Create `~/.config/mako/config` with your notification preferences.
+
+#### Method 3: Environment-Specific Configurations
+
+For different environments (work, home, etc.), you can use environment variables or conditional logic:
+
+```ini
+# In ~/.config/wayfire/wayfire.ini
+[core]
+plugins = animate command cube decoration expo fast-switcher
+# Add/remove plugins based on your needs
+
+[command]  
+# Override specific keybindings
+binding_terminal = <super> KEY_RETURN
+command_terminal = alacritty  # Use different terminal
+```
+
+#### Method 4: Waybar Modular Override
+
+For waybar specifically, you can override individual modules:
+
+```bash
+# Copy the modular config system
+mkdir -p ~/.config/waybar/config.d
+cp -r /etc/xdg/waybar/config.d/* ~/.config/waybar/config.d/
+
+# Modify specific modules
+echo '{
+  "custom/my-widget": {
+    "format": "My Custom Widget",
+    "on-click": "my-command"
+  }
+}' > ~/.config/waybar/config.d/99-my-custom-widget.json
+
+# Rebuild the config (run this after making changes)
+cd ~/.config/waybar
+/etc/xdg/waybar/build-config.sh
+
+# Restart waybar to apply changes
+killall waybar
+waybar &
+```
+
+### Important Notes
+
+- **Backup your changes**: User configurations are not managed by Nix, so back them up separately
+- **System updates**: When this module is updated, you may want to compare your local configs with the new system configs
+- **Script paths**: If you copy scripts, update their paths in your local configs to point to your home directory
+- **Restarting services**: After changing configs, restart the relevant applications (waybar, mako, etc.)
 
 ## Dependencies
 

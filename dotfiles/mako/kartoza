@@ -14,7 +14,7 @@ border-radius=10
 border-color=#DF9E2F
 default-timeout=3000
 group-by=summary
-on-notify=exec mpv ~/.config/mako/sounds/Tink.aiff
+on-notify=exec mpv /etc/xdg/mako/sounds/Tink.aiff
 
 # Enable action buttons for notifications (required for bluetooth pairing)
 actions=1
