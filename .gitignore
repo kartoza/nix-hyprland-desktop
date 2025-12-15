@@ -17,3 +17,4 @@ result-*
 .DS_Store
 Thumbs.db/.claude/
 /*.qcow2
+core

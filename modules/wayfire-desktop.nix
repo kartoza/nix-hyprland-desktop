@@ -115,18 +115,27 @@ in {
       # Create wallpapers directory
       mkdir -p "$HOME/wallpapers"
       
-      # If no wallpaper exists, create a simple colored background
-      if [[ ! -f "$HOME/wallpapers/timos-wallpaper.png" ]]; then
-        # Use convert from imagemagick to create a simple gradient
-        ${pkgs.imagemagick}/bin/convert -size 1920x1080 \
-          gradient:'#2d3748-#4a5568' \
-          "$HOME/wallpapers/timos-wallpaper.png"
-        echo "Created default gradient wallpaper"
+      # Define wallpaper paths
+      SYSTEM_WALLPAPER="/etc/kartoza-wallpaper.png"
+      USER_WALLPAPER="$HOME/wallpapers/timos-wallpaper.png"
+      
+      # If no user wallpaper exists, copy the Kartoza default
+      if [[ ! -f "$USER_WALLPAPER" ]]; then
+        if [[ -f "$SYSTEM_WALLPAPER" ]]; then
+          cp "$SYSTEM_WALLPAPER" "$USER_WALLPAPER"
+          echo "Copied Kartoza default wallpaper"
+        else
+          # Fallback: create a simple gradient
+          ${pkgs.imagemagick}/bin/convert -size 1920x1080 \
+            gradient:'#2d3748-#4a5568' \
+            "$USER_WALLPAPER"
+          echo "Created fallback gradient wallpaper"
+        fi
       fi
       
       # Initialize swww and set wallpaper
       swww init || true
-      swww img "$HOME/wallpapers/timos-wallpaper.png"
+      swww img "$USER_WALLPAPER"
     '')
     # Keyring unlock script for login
     (writeScriptBin "unlock-keyring" ''
@@ -299,6 +308,8 @@ in {
       ../resources/kartoza-logo-neon.png;
     "xdg/waybar/kartoza-logo-neon-bright.png".source =
       ../resources/kartoza-logo-neon-bright.png;
+    # Kartoza default wallpaper
+    "kartoza-wallpaper.png".source = ../resources/KartozaBackground.png;
     # Fuzzel emoji script - standard location for executables
     "xdg/fuzzel/fuzzel-emoji".source = ../dotfiles/fuzzel/fuzzel-emoji;
     # GPG agent configuration
