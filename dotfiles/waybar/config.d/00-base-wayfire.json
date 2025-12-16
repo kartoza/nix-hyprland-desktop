@@ -1,7 +1,7 @@
 {
     "layer": "top",
     "position": "bottom",
-    "margin-bottom": -1,
+    "margin-bottom": 0,
     "modules-left": [
         "custom/launcher",
         "custom/workspace-switcher",
