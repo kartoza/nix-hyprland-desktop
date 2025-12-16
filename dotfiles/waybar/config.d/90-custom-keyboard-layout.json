@@ -1,5 +1,5 @@
 {"custom/keyboard-layout": {
-  "format": " {}",
+  "format": "  {}",
   "tooltip": true,
   "tooltip-format": "Click to toggle between US and Portuguese layouts",
   "exec": "/etc/xdg/waybar/scripts/keyboard-layout.sh",
