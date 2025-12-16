@@ -33,6 +33,9 @@
     
     # Qt application theming
     qtTheme = "gnome"; # Options: gnome, gtk2, kde, fusion
+    
+    # Keyboard layout configuration (demonstrates customization)
+    keyboardLayouts = [ "us" "de" "fr" ]; # US, German, French (Alt+Shift to toggle)
   };
 
   # VM-specific configuration

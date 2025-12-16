@@ -67,6 +67,13 @@ in {
         default = 24;
         description = "Cursor size in pixels";
       };
+
+      keyboardLayouts = mkOption {
+        type = types.listOf types.str;
+        default = [ "us" "pt" ];
+        example = [ "us" "de" "fr" ];
+        description = "List of keyboard layouts (first layout is default, others accessible via Alt+Shift toggle)";
+      };
     };
   };
 
@@ -346,12 +353,14 @@ in {
             "cursor_size = 24"
             "scale = 1.500000"
             "scale = 1.000000"
+            "xkb_layout = us,pt"
           ] [
             "setup-wallpaper"
             "cursor_theme = ${cfg.cursorTheme}"
             "cursor_size = ${toString cfg.cursorSize}"
             "scale = ${toString cfg.fractionalScaling}"
             "scale = ${toString cfg.fractionalScaling}"
+            "xkb_layout = ${lib.concatStringsSep "," cfg.keyboardLayouts}"
           ] baseConfig;
         in configWithSubstitutions + "\n\n" + displayOutputs;
       };

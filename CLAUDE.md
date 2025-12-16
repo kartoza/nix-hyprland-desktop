@@ -56,6 +56,24 @@ The waybar config uses a **unique modular approach** for easier maintenance:
 - Kartoza branding with custom logos and color schemes
 - Orange accent color (`#eb8444`) for active window borders
 
+### Keyboard Layout Configuration
+
+The module provides configurable keyboard layouts with intelligent switching:
+
+- **Default**: `["us", "pt"]` (US English, Portuguese)
+- **Customizable**: Set any list of layouts via `keyboardLayouts` option
+- **Smart Toggle**: Waybar script automatically reads layouts from Wayfire config
+- **Alt+Shift**: Hardware toggle between configured layouts
+- **Display Names**: Automatic conversion (us→EN, de→DE, fr→FR, pt→PT, etc.)
+
+Example configuration:
+```nix
+kartoza.wayfire-desktop = {
+  enable = true;
+  keyboardLayouts = [ "us" "de" "fr" ];  # US, German, French
+};
+```
+
 ### Key Scripts and Utilities
 
 - `unlock-keyring` - GUI keyring unlock at login using zenity

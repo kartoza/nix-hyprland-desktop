@@ -102,8 +102,94 @@ sudo nixos-rebuild switch --flake .#your-hostname
       "eDP-1" = 1.5;    # Laptop screen at 150%
       "DP-9" = 1.0;     # External monitor at 100%
     };
+    
+    # Keyboard layout configuration
+    keyboardLayouts = [ "us" "pt" ];       # Default: US English, Portuguese
+    # keyboardLayouts = [ "us" "de" "fr" ]; # Example: US, German, French
+    # keyboardLayouts = [ "us" "es" ];      # Example: US, Spanish
   };
 }
+```
+
+## Keyboard Layout Configuration
+
+The module provides intelligent keyboard layout management with configurable options:
+
+### Features
+
+- **Multiple Layout Support**: Configure any number of keyboard layouts
+- **Smart Toggle**: Alt+Shift switches between layouts automatically
+- **Waybar Integration**: Shows current layout with proper display names
+- **Auto-Detection**: Waybar script reads layouts from Wayfire configuration
+- **Display Name Mapping**: Converts layout codes to readable names (us→EN, de→DE, fr→FR, pt→PT, etc.)
+
+### Configuration Examples
+
+```nix
+# Default configuration (US English + Portuguese)
+kartoza.wayfire-desktop = {
+  enable = true;
+  keyboardLayouts = [ "us" "pt" ];
+};
+
+# European configuration (US English + German + French)
+kartoza.wayfire-desktop = {
+  enable = true;
+  keyboardLayouts = [ "us" "de" "fr" ];
+};
+
+# Spanish configuration
+kartoza.wayfire-desktop = {
+  enable = true;
+  keyboardLayouts = [ "us" "es" ];
+};
+
+# Multi-language setup
+kartoza.wayfire-desktop = {
+  enable = true;
+  keyboardLayouts = [ "us" "de" "fr" "it" "pt" ];
+};
+```
+
+### How It Works
+
+1. **Module Configuration**: The `keyboardLayouts` option generates the Wayfire configuration
+2. **Wayfire Setup**: Layouts are configured in `xkb_layout` with Alt+Shift toggle (`grp:alt_shift_toggle`)
+3. **Waybar Display**: The keyboard layout script reads the Wayfire config and shows the current layout
+4. **Toggle Methods**: 
+   - **Hardware**: Press Alt+Shift to cycle through layouts
+   - **GUI**: Click the keyboard layout widget in Waybar
+
+### Supported Layout Codes
+
+The module supports standard XKB layout codes:
+
+| Code | Language | Display Name |
+|------|----------|--------------|
+| `us` | US English | EN |
+| `pt` | Portuguese | PT |
+| `de` | German | DE |
+| `fr` | French | FR |
+| `es` | Spanish | ES |
+| `it` | Italian | IT |
+| `ru` | Russian | RU |
+| `pl` | Polish | PL |
+| `nl` | Dutch | NL |
+| `se` | Swedish | SE |
+| `no` | Norwegian | NO |
+| `dk` | Danish | DK |
+| `fi` | Finnish | FI |
+
+For other layouts, the script will display the uppercase layout code (e.g., `cz` → `CZ`).
+
+### Testing in VM
+
+The test VM is configured with US, German, and French layouts to demonstrate the feature:
+
+```bash
+./run-vm.sh
+# In the VM: Press Alt+Shift to cycle between US, German, French layouts
+# Check the Waybar keyboard layout widget for current layout display
 ```
 
 ## Customizing Dotfiles
