@@ -1,5 +1,5 @@
 {"custom/power": {
   "format": " ⏻ ",
-  "on-click": "/etc/waybar/scripts/wayfire-power.sh",
+  "on-click": "/etc/xdg/waybar/scripts/wayfire-power.sh",
   "tooltip": false
 }}

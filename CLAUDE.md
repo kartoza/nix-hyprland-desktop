@@ -31,14 +31,14 @@ This is a **standalone NixOS flake** that provides a complete Wayfire desktop en
 2. **Main Module** (`modules/wayfire-desktop.nix`):
    - Comprehensive Wayfire desktop setup with all dependencies
    - Configures services: PipeWire, NetworkManager, gnome-keyring, greetd
-   - Deploys dotfiles to `/etc/xdg` for system-wide availability
-   - Includes keyring unlock utility
+   - Deploys dotfiles to `/etc/xdg` for system-wide availability with user override support
+   - Includes keyring unlock utility and XDG config path resolution tools
 
 3. **Dotfiles Structure** (`dotfiles/`):
    - **wayfire/**: Wayfire compositor config with plugins and scripts
    - **waybar/**: Modular status bar config system (see Waybar section below)
    - **wofi/**: Application launcher styling
-   - **mako/**: Notification daemon theming (Kartoza branded)
+   - **mako/**: Notification daemon theming (Kartoza branded) with custom notification sound
    - **fuzzel/**: Additional launcher utilities
 
 ### Waybar Modular Configuration System
@@ -90,6 +90,44 @@ kartoza.wayfire-desktop = {
   wallpaper = "/home/user/Pictures/custom-wallpaper.jpg";  # Custom wallpaper
 };
 ```
+
+### User Configuration Override Support
+
+The module follows XDG Base Directory Specification for configuration management:
+
+- **System configs**: `/etc/xdg/wayfire/`, `/etc/xdg/waybar/`, etc. (provided by module)
+- **User overrides**: `~/.config/wayfire/`, `~/.config/waybar/`, etc. (user customizations)
+- **Resolution order**: User configs in `~/.config/` take precedence over system configs in `/etc/xdg/`
+
+#### XDG Config Tools
+
+- `xdg-config-resolve` - Dynamic config path resolver for scripts and applications
+- `xdg-config-path` - Simple path helper for shell scripts
+- PATH includes both `~/.config/*/scripts` and `/etc/xdg/*/scripts` (user scripts first)
+
+#### Overriding Configuration
+
+Users can override any system configuration by copying files to their home directory:
+
+```bash
+# Override wayfire config
+cp /etc/xdg/wayfire/wayfire.ini ~/.config/wayfire/
+
+# Override waybar config
+mkdir -p ~/.config/waybar
+cp /etc/xdg/waybar/config ~/.config/waybar/
+cp /etc/xdg/waybar/style.css ~/.config/waybar/
+
+# Override individual waybar modules
+mkdir -p ~/.config/waybar/config.d
+cp -r /etc/xdg/waybar/config.d/* ~/.config/waybar/config.d/
+
+# Override notification sound
+mkdir -p ~/.config/mako/sounds
+cp your-custom-sound.wav ~/.config/mako/sounds/notification.wav
+```
+
+All applications and scripts will automatically use the user's configuration if present.
 
 ### Key Scripts and Utilities
 

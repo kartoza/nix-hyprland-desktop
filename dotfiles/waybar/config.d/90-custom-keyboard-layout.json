@@ -2,8 +2,8 @@
   "format": "  {}",
   "tooltip": true,
   "tooltip-format": "Click to toggle between US and Portuguese layouts",
-  "exec": "/etc/xdg/waybar/scripts/keyboard-layout.sh",
-  "on-click": "/etc/xdg/waybar/scripts/keyboard-layout.sh toggle",
+  "exec": "keyboard-layout.sh",
+  "on-click": "keyboard-layout.sh toggle",
   "interval": 1,
   "restart-interval": 1
 }}

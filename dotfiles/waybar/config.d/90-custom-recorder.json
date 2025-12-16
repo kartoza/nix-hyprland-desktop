@@ -2,8 +2,8 @@
   "tooltip": true,
   "format": "{}",
   "return-type": "json",
-  "exec": "/etc/waybar/scripts/recording-status.sh",
-  "on-click": "/etc/wayfire/scripts/record-toggle.sh",
+  "exec": "recording-status.sh",
+  "on-click": "record-toggle.sh",
   "interval": 2
 }}
 

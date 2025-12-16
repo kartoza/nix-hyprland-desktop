@@ -7,8 +7,8 @@
     "error": "󰍢"
   },
   "return-type": "json",
-  "exec": "/etc/waybar/scripts/mako-count.sh",
-  "on-click": "/etc/waybar/scripts/mako-show.sh",
+  "exec": "/etc/xdg/waybar/scripts/mako-count.sh",
+  "on-click": "/etc/xdg/waybar/scripts/mako-show.sh",
   "interval": 2
 },
 "custom/notification-toggle": {
@@ -20,7 +20,7 @@
     "error": "󰀦"
   },
   "return-type": "json",
-  "exec": "/etc/waybar/scripts/mako-status.sh",
-  "on-click": "/etc/waybar/scripts/mako-toggle.sh",
+  "exec": "/etc/xdg/waybar/scripts/mako-status.sh",
+  "on-click": "/etc/xdg/waybar/scripts/mako-toggle.sh",
   "interval": 5
 }}

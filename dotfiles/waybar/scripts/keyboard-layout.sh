@@ -3,8 +3,8 @@
 # Waybar keyboard layout toggle script
 # Toggles between configured keyboard layouts
 
-# Read layouts from Wayfire config
-WAYFIRE_CONFIG="${WAYFIRE_CONFIG:-/etc/xdg/wayfire/wayfire.ini}"
+# Read layouts from Wayfire config (check user config first)
+WAYFIRE_CONFIG="$(xdg-config-path wayfire/wayfire.ini 2>/dev/null || echo "/etc/xdg/wayfire/wayfire.ini")"
 if [[ -f "$WAYFIRE_CONFIG" ]]; then
   # Extract xkb_layout line and get the layouts
   LAYOUTS=$(grep "^xkb_layout = " "$WAYFIRE_CONFIG" | cut -d'=' -f2 | tr -d ' ')

@@ -7,6 +7,30 @@ let
 
   # Use the icon theme from the module configuration
   iconThemeName = cfg.iconTheme;
+
+  # Helper function to find config files in XDG paths (user config takes precedence)
+  findConfigFile = configPath: ''
+    if [[ -f "$HOME/.config/${configPath}" ]]; then
+      echo "$HOME/.config/${configPath}"
+    else
+      echo "/etc/xdg/${configPath}"
+    fi
+  '';
+
+  # Helper script to resolve XDG config paths at runtime
+  xdgConfigResolver = pkgs.writeScriptBin "xdg-config-resolve" ''
+    #!/usr/bin/env bash
+    # Resolves XDG config paths, checking user config first, then system
+    config_path="$1"
+    if [[ -f "$HOME/.config/$config_path" ]]; then
+      echo "$HOME/.config/$config_path"
+    elif [[ -f "/etc/xdg/$config_path" ]]; then
+      echo "/etc/xdg/$config_path"
+    else
+      echo "Config file not found: $config_path" >&2
+      exit 1
+    fi
+  '';
 in {
   options = {
     kartoza.wayfire-desktop = {
@@ -106,6 +130,8 @@ in {
     security.polkit.enable = true;
 
     environment.systemPackages = with pkgs; [
+      # XDG config path resolver utility
+      xdgConfigResolver
       # Default icon theme (Papirus) - can be overridden by kartoza.nix or other configs
       papirus-icon-theme
       # Essential fonts for waybar and wayfire
@@ -187,6 +213,17 @@ in {
       imagemagick # For creating default wallpaper
       # Deploy script for system-wide Wayfire config management
       jq # Required for waybar config building
+      # XDG config path helper for use in config files
+      (writeScriptBin "xdg-config-path" ''
+        #!/usr/bin/env bash
+        # Returns the path to a config file, checking user config first
+        config_path="$1"
+        if [[ -f "$HOME/.config/$config_path" ]]; then
+          echo "$HOME/.config/$config_path"
+        else
+          echo "/etc/xdg/$config_path"
+        fi
+      '')
       # Wallpaper setup script
       (writeScriptBin "setup-wallpaper" ''
         #!/usr/bin/env bash
@@ -285,8 +322,11 @@ in {
       # Browser configuration
       DEFAULT_BROWSER = "${pkgs.junction}/bin/re.sonny.Junction";
       BROWSER = "re.sonny.Junction";
-      # Add script directories to PATH
+      # Add script directories to PATH (user directories first)
       PATH = [
+        "$HOME/.config/fuzzel"
+        "$HOME/.config/wayfire/scripts"
+        "$HOME/.config/waybar/scripts"
         "/etc/xdg/fuzzel"
         "/etc/xdg/wayfire/scripts"
         "/etc/xdg/waybar/scripts"
@@ -294,11 +334,9 @@ in {
     };
 
     environment.variables = {
-      # XDG environment for finding configs
+      # XDG environment for finding configs - user configs in ~/.config take precedence
       XDG_CONFIG_DIRS = "/etc/xdg";
       XDG_DATA_DIRS = mkDefault "/etc/xdg:/usr/local/share:/usr/share";
-      # Ensure Wayfire finds its config
-      WAYFIRE_CONFIG = "/etc/xdg/wayfire/wayfire.ini";
       # Cursor theme
       XCURSOR_THEME = cfg.cursorTheme;
       XCURSOR_SIZE = toString cfg.cursorSize;
@@ -361,6 +399,11 @@ in {
             "scale = 1.500000"
             "scale = 1.000000"
             "xkb_layout = us,pt"
+            "mako -c /etc/xdg/mako/kartoza"
+            "swaylock -f -C /etc/xdg/swaylock/config"
+            "swaylock -f -c /etc/xdg/swaylock/config"
+            "/etc/xdg/fuzzel/fuzzel-emoji"
+            "/etc/xdg/wayfire/scripts/record-toggle.sh"
           ] [
             "swww init && swww img ${cfg.wallpaper}"
             "cursor_theme = ${cfg.cursorTheme}"
@@ -368,6 +411,11 @@ in {
             "scale = ${toString cfg.fractionalScaling}"
             "scale = ${toString cfg.fractionalScaling}"
             "xkb_layout = ${lib.concatStringsSep "," cfg.keyboardLayouts}"
+            "mako -c $(xdg-config-path mako/kartoza)"
+            "swaylock -f -C $(xdg-config-path swaylock/config)"
+            "swaylock -f -c $(xdg-config-path swaylock/config)"
+            "$(xdg-config-path fuzzel/fuzzel-emoji)"
+            "$(xdg-config-path wayfire/scripts/record-toggle.sh)"
           ] baseConfig;
         in configWithSubstitutions + "\n\n" + displayOutputs;
       };
@@ -405,6 +453,8 @@ in {
       # Note: Using fuzzel as launcher instead of wofi
       # Mako notification config - standard XDG location
       "xdg/mako/kartoza".source = ../dotfiles/mako/kartoza;
+      # Notification sound file
+      "xdg/mako/sounds/notification.wav".source = ../resources/sounds/notification.wav;
       # nwg-launchers configs - standard XDG location
       "xdg/nwg-launchers/nwggrid/style.css".source =
         ../dotfiles/nwggrid/style.css;
@@ -560,7 +610,7 @@ in {
       settings = {
         default_session = {
           command =
-            "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd 'wayfire -c /etc/xdg/wayfire/wayfire.ini'";
+            "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd 'wayfire -c $(${xdgConfigResolver}/bin/xdg-config-resolve wayfire/wayfire.ini)'";
           user = "greeter";
         };
       };
