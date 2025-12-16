@@ -7,8 +7,33 @@
     ./modules/wayfire-desktop.nix
   ];
 
-  # Enable Kartoza Wayfire Desktop
-  kartoza.wayfire-desktop.enable = true;
+  # Enable Kartoza Wayfire Desktop with explicit configuration
+  kartoza.wayfire-desktop = {
+    enable = true;
+    
+    # Theme configuration
+    iconTheme = "Papirus";
+    gtkTheme = "Adwaita";
+    darkTheme = true;
+    
+    # Cursor configuration
+    cursorTheme = "Vanilla-DMZ";
+    cursorSize = 24;
+    
+    # Display scaling configuration
+    fractionalScaling = 1.0; # 100% scaling for VM
+    
+    # Per-display scaling (useful for multi-monitor setups)
+    displayScaling = {
+      # Example configuration - these displays won't exist in VM but shows usage
+      "eDP-1" = 1.0;   # Laptop display at 100%
+      "DP-1" = 1.0;    # External monitor at 100%
+      "HDMI-1" = 1.0;  # External monitor at 100%
+    };
+    
+    # Qt application theming
+    qtTheme = "gnome"; # Options: gnome, gtk2, kde, fusion
+  };
 
   # VM-specific configuration
   virtualisation = {
@@ -19,7 +44,9 @@
     resolution = { x = 1920; y = 1080; };
     qemu.options = [
       "-vga virtio"
-      "-display gtk,gl=on"
+      "-display gtk,gl=on,grab-on-hover=on"
+      "-device virtio-tablet-pci"
+      "-device virtio-keyboard-pci"
     ];
   };
 

@@ -21,6 +21,7 @@
         "cpu",
         "memory",
         "pulseaudio",
+        "custom/keyboard-layout",
         "custom/notification-count",
         "custom/notification-toggle",
         "tray",
