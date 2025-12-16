@@ -107,6 +107,10 @@ sudo nixos-rebuild switch --flake .#your-hostname
     keyboardLayouts = [ "us" "pt" ];       # Default: US English, Portuguese
     # keyboardLayouts = [ "us" "de" "fr" ]; # Example: US, German, French
     # keyboardLayouts = [ "us" "es" ];      # Example: US, Spanish
+    
+    # Wallpaper configuration
+    wallpaper = "/etc/kartoza-wallpaper.png";          # Default: Kartoza wallpaper
+    # wallpaper = "/home/user/Pictures/my-wallpaper.jpg"; # Example: Custom wallpaper
   };
 }
 ```
@@ -190,6 +194,70 @@ The test VM is configured with US, German, and French layouts to demonstrate the
 ./run-vm.sh
 # In the VM: Press Alt+Shift to cycle between US, German, French layouts
 # Check the Waybar keyboard layout widget for current layout display
+```
+
+## Wallpaper Configuration
+
+The module provides unified wallpaper management for both desktop background and lock screen:
+
+### Features
+
+- **Unified Wallpaper**: Same image used for desktop background and swaylock
+- **Configurable Path**: Override with any image file path
+- **Lock Screen Styling**: Swaylock displays wallpaper with beautiful Kartoza-themed overlay
+- **Effects**: Lock screen includes blur, vignette, clock, and caps lock indicator
+- **Smart Scaling**: Automatically scales wallpaper to fit screen resolution
+
+### Configuration Examples
+
+```nix
+# Default configuration (uses Kartoza wallpaper)
+kartoza.wayfire-desktop = {
+  enable = true;
+  wallpaper = "/etc/kartoza-wallpaper.png"; # Default
+};
+
+# Custom wallpaper configuration
+kartoza.wayfire-desktop = {
+  enable = true;
+  wallpaper = "/home/user/Pictures/my-wallpaper.jpg";
+};
+
+# Network wallpaper (downloaded separately)
+kartoza.wayfire-desktop = {
+  enable = true;
+  wallpaper = "/usr/share/backgrounds/nature.jpg";
+};
+```
+
+### Supported Image Formats
+
+Swaylock and swww support common image formats:
+- PNG (.png)
+- JPEG (.jpg, .jpeg) 
+- BMP (.bmp)
+- WEBP (.webp)
+
+### Lock Screen Features
+
+The swaylock configuration includes:
+- **Clock Display**: Shows current time and date
+- **Keyboard Layout**: Shows current layout indicator
+- **Kartoza Theme**: Blue and orange color scheme matching desktop
+- **Visual Effects**: Blur effect on wallpaper, vignette overlay
+- **Security Features**: Caps lock indicator, wrong password feedback
+- **Accessibility**: Large, readable fonts and clear visual indicators
+
+### Testing Wallpaper
+
+To test the wallpaper configuration:
+
+```bash
+# Test desktop wallpaper change
+swww img /path/to/your/wallpaper.jpg
+
+# Test lock screen wallpaper (Ctrl+Alt+L to lock)
+swaylock -c /etc/xdg/swaylock/config
 ```
 
 ## Customizing Dotfiles

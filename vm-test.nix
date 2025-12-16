@@ -36,6 +36,10 @@
     
     # Keyboard layout configuration (demonstrates customization)
     keyboardLayouts = [ "us" "de" "fr" ]; # US, German, French (Alt+Shift to toggle)
+    
+    # Wallpaper configuration (demonstrates unified desktop/lock screen wallpaper)
+    wallpaper = "/etc/kartoza-wallpaper.png"; # Default Kartoza wallpaper
+    # wallpaper = "/home/testuser/Pictures/custom-wallpaper.jpg"; # Example custom path
   };
 
   # VM-specific configuration

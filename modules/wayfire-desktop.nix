@@ -74,6 +74,13 @@ in {
         example = [ "us" "de" "fr" ];
         description = "List of keyboard layouts (first layout is default, others accessible via Alt+Shift toggle)";
       };
+
+      wallpaper = mkOption {
+        type = types.str;
+        default = "/etc/kartoza-wallpaper.png";
+        example = "/home/user/Pictures/my-wallpaper.jpg";
+        description = "Path to wallpaper image used for both desktop background and swaylock screen";
+      };
     };
   };
 
@@ -348,14 +355,14 @@ in {
 
           # Replace template placeholders
           configWithSubstitutions = lib.replaceStrings [
-            "swww init && swww img ~/wallpapers/timos-wallpaper.png"
+            "swww init && swww img /etc/kartoza-wallpaper.png"
             "cursor_theme = default"
             "cursor_size = 24"
             "scale = 1.500000"
             "scale = 1.000000"
             "xkb_layout = us,pt"
           ] [
-            "setup-wallpaper"
+            "swww init && swww img ${cfg.wallpaper}"
             "cursor_theme = ${cfg.cursorTheme}"
             "cursor_size = ${toString cfg.cursorSize}"
             "scale = ${toString cfg.fractionalScaling}"
@@ -411,6 +418,18 @@ in {
         ../resources/kartoza-logo-neon-bright.png;
       # Kartoza default wallpaper
       "kartoza-wallpaper.png".source = ../resources/KartozaBackground.png;
+      # Swaylock configuration - standard XDG location
+      "xdg/swaylock/config" = {
+        text = let
+          baseConfig = lib.readFile ../dotfiles/swaylock/config;
+          # Replace wallpaper path with configured wallpaper
+          configWithWallpaper = lib.replaceStrings [
+            "image=/etc/kartoza-wallpaper.png"
+          ] [
+            "image=${cfg.wallpaper}"
+          ] baseConfig;
+        in configWithWallpaper;
+      };
       # Fuzzel emoji script - standard location for executables
       "xdg/fuzzel/fuzzel-emoji".source = ../dotfiles/fuzzel/fuzzel-emoji;
       # GPG agent configuration

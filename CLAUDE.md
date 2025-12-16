@@ -74,6 +74,23 @@ kartoza.wayfire-desktop = {
 };
 ```
 
+### Wallpaper Configuration
+
+The module provides unified wallpaper management across desktop and lock screen:
+
+- **Default**: `/etc/kartoza-wallpaper.png` (Kartoza branded wallpaper)
+- **Configurable**: Set custom wallpaper path via `wallpaper` option
+- **Unified**: Same wallpaper used for desktop background (swww) and lock screen (swaylock)
+- **Styled Lock Screen**: Swaylock overlay with Kartoza colors, blur effects, clock, and indicators
+
+Example configuration:
+```nix
+kartoza.wayfire-desktop = {
+  enable = true;
+  wallpaper = "/home/user/Pictures/custom-wallpaper.jpg";  # Custom wallpaper
+};
+```
+
 ### Key Scripts and Utilities
 
 - `unlock-keyring` - GUI keyring unlock at login using zenity
