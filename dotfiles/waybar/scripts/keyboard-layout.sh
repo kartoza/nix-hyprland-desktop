@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-# Waybar keyboard layout toggle script
+# Waybar keyboard layout toggle script for Hyprland
 # Toggles between configured keyboard layouts and detects external changes
 
-# Read layouts from Wayfire config (check user config first)
-WAYFIRE_CONFIG="$(xdg-config-path wayfire/wayfire.ini 2>/dev/null || echo "/etc/xdg/wayfire/wayfire.ini")"
-if [[ -f "$WAYFIRE_CONFIG" ]]; then
-  # Extract xkb_layout line and get the layouts
-  LAYOUTS=$(grep "^xkb_layout = " "$WAYFIRE_CONFIG" | cut -d'=' -f2 | tr -d ' ')
+# Read layouts from Hyprland config (check user config first)
+HYPRLAND_CONFIG="$(xdg-config-path hypr/hyprland.conf 2>/dev/null || echo "/etc/xdg/hypr/hyprland.conf")"
+if [[ -f "$HYPRLAND_CONFIG" ]]; then
+  # Extract kb_layout line and get the layouts
+  LAYOUTS=$(grep "kb_layout = " "$HYPRLAND_CONFIG" | head -1 | cut -d'=' -f2 | tr -d ' ')
   IFS=',' read -ra LAYOUT_ARRAY <<< "$LAYOUTS"
   LAYOUT_PRIMARY="${LAYOUT_ARRAY[0]:-us}"
   LAYOUT_SECONDARY="${LAYOUT_ARRAY[1]:-pt}"

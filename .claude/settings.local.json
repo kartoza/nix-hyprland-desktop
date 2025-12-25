@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(nix flake check:*)",
-      "Bash(./dotfiles/wayfire/scripts/workspace-names.sh:*)"
+      "Bash(./dotfiles/wayfire/scripts/workspace-names.sh:*)",
+      "Bash(hyprctl:*)"
     ],
     "deny": [],
     "ask": []

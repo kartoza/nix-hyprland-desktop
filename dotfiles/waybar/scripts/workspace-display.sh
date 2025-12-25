@@ -1,30 +1,19 @@
 #!/usr/bin/env bash
-# Waybar workspace display widget
+# Waybar workspace display widget for Hyprland
 # Shows current workspace number and name
 
-WORKSPACE_NAMES_FILE="$(xdg-config-path wayfire/workspace-names.conf 2>/dev/null || echo "$HOME/.config/wayfire/workspace-names.conf")"
+WORKSPACE_NAMES_FILE="$(xdg-config-path hypr/workspace-names.conf 2>/dev/null || echo "$HOME/.config/hypr/workspace-names.conf")"
 
 # Function to get current workspace
 get_current_workspace() {
-    # Use wayfire workspace manager for reliable workspace detection
-    if [[ -x "$(command -v wayfire-workspace-manager.sh)" ]]; then
-        wayfire-workspace-manager.sh get
+    # Use hyprctl to get current workspace
+    local current_workspace=$(hyprctl activeworkspace -j 2>/dev/null | jq -r '.id')
+    
+    # Convert to 0-based indexing (Hyprland uses 1-based)
+    if [[ "$current_workspace" =~ ^[1-9]$ ]]; then
+        echo $((current_workspace - 1))
     else
-        # Fallback to cache file reading
-        local cache_file="$HOME/.cache/wayfire-current-workspace"
-        if [[ -f "$cache_file" ]]; then
-            local workspace=$(cat "$cache_file" 2>/dev/null | tr -d '\n')
-            if [[ "$workspace" =~ ^[0-8]$ ]]; then
-                echo "$workspace"
-                return
-            fi
-        fi
-        
-        # Default to workspace 0 if cache doesn't exist or is invalid
         echo "0"
-        # Create cache with default
-        mkdir -p "$(dirname "$cache_file")"
-        echo "0" > "$cache_file"
     fi
 }
 

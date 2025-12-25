@@ -1,17 +1,21 @@
 {
-  description = "Kartoza Wayfire Desktop Configuration";
+  description = "Kartoza Hyprland Desktop Configuration";
 
-  inputs = { nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05"; };
+  inputs = { 
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    hyprland.url = "github:hyprwm/Hyprland";
+    hyprland.inputs.nixpkgs.follows = "nixpkgs";
+  };
 
-  outputs = { self, nixpkgs, ... }:
+  outputs = { self, nixpkgs, hyprland, ... }:
     let
       supportedSystems = [ "x86_64-linux" "aarch64-linux" ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
     in {
-      # Export the Wayfire desktop module
+      # Export the Hyprland desktop module
       nixosModules = {
-        wayfire-desktop = import ./modules/wayfire-desktop.nix;
-        default = self.nixosModules.wayfire-desktop;
+        hyprland-desktop = import ./modules/hyprland-desktop.nix;
+        default = self.nixosModules.hyprland-desktop;
       };
 
       # VM configurations for testing
@@ -27,7 +31,7 @@
         let pkgs = nixpkgs.legacyPackages.${system};
         in {
           default = pkgs.mkShell {
-            name = "wayfire-config-dev";
+            name = "hyprland-config-dev";
             buildInputs = with pkgs; [ nixfmt-rfc-style git ];
           };
         });

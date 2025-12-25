@@ -1,4 +1,4 @@
-# VM configuration for testing Kartoza Wayfire Desktop
+# VM configuration for testing Kartoza Hyprland Desktop
 {
   config,
   lib,
@@ -10,11 +10,11 @@
 {
   imports = [
     (modulesPath + "/virtualisation/qemu-vm.nix")
-    ./modules/wayfire-desktop.nix
+    ./modules/hyprland-desktop.nix
   ];
 
-  # Enable Kartoza Wayfire Desktop with explicit configuration
-  kartoza.wayfire-desktop = {
+  # Enable Kartoza Hyprland Desktop with explicit configuration
+  kartoza.hyprland-desktop = {
     enable = true;
 
     iconTheme = "Papirus";
@@ -74,7 +74,7 @@
 
   # Enable networking
   networking = {
-    hostName = "wayfire-test-vm";
+    hostName = "hyprland-test-vm";
     useDHCP = lib.mkDefault true;
   };
 
@@ -110,11 +110,11 @@
   # Auto-login for convenience in VM testing
   services.greetd.settings = {
     default_session = lib.mkForce {
-      command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd 'wayfire -c /etc/xdg/wayfire/wayfire.ini'";
+      command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd 'Hyprland --config /etc/xdg/hypr/hyprland.conf'";
       user = "greeter";
     };
     initial_session = {
-      command = "wayfire -c /etc/xdg/wayfire/wayfire.ini";
+      command = "Hyprland --config /etc/xdg/hypr/hyprland.conf";
       user = "testuser";
     };
   };

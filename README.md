@@ -1,19 +1,20 @@
-# Kartoza Wayfire Desktop Configuration
+# Kartoza Hyprland Desktop Configuration
 
-A standalone NixOS flake for configuring Wayfire desktop environment with Kartoza theming and customizations.
+A standalone NixOS flake for configuring Hyprland desktop environment with Kartoza theming and customizations.
 
 ## Overview
 
-This flake provides a complete Wayfire desktop environment configuration that can be imported into any NixOS flake. It includes:
+This flake provides a complete Hyprland desktop environment configuration that can be imported into any NixOS flake. It includes:
 
-- Wayfire compositor with plugins
-- Waybar status bar with modular configuration
+- Hyprland compositor with window animations and effects
+- Waybar status bar with modular configuration and **working taskbar**
 - **Workspace Management**: Named workspaces with fuzzel-based switcher
 - Nwggrid and nwgpanel application launcher
 - Mako notification daemon
 - Fuzzel and other utilities
 - Complete theming and styling
 - GNOME Keyring integration with SSH and GPG support
+- **Floating windows by default** with optional tiling mode
 
 ## Usage
 
@@ -24,7 +25,7 @@ Add this flake as an input to your NixOS configuration:
 ```nix
 {
   inputs = {
-    wayfire-desktop.url = "github:kartoza/nix-wayfire-desktop";
+    hyprland-desktop.url = "github:kartoza/nix-hyprland-desktop";
     # ... other inputs
   };
 }
@@ -37,33 +38,33 @@ Import the module and enable it in your NixOS configuration:
 ```nix
 {
   imports = [
-    wayfire-desktop.nixosModules.default
+    hyprland-desktop.nixosModules.default
     # ... other modules
   ];
 
-  # Enable Kartoza Wayfire Desktop with one line!
-  kartoza.wayfire-desktop.enable = true;
+  # Enable Kartoza Hyprland Desktop with one line!
+  kartoza.hyprland-desktop.enable = true;
 }
 ```
 
 ### Step 3: Configure Display Manager (CRITICAL)
 
-**IMPORTANT**: You must configure your display manager to start Wayfire with the correct configuration file. The module configures greetd as the display manager, but you need to set the initial session command in your user configuration:
+**IMPORTANT**: You must configure your display manager to start Hyprland with the correct configuration file. The module configures greetd as the display manager, but you need to set the initial session command in your user configuration:
 
 ```nix
 {
-  # Configure greetd to auto-login with Wayfire
+  # Configure greetd to auto-login with Hyprland
   services.greetd = {
     enable = true;
     settings = {
       default_session = {
-        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd 'wayfire -c /etc/xdg/wayfire/wayfire.ini'";
+        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd 'Hyprland --config /etc/xdg/hypr/hyprland.conf'";
         user = "greeter";
       };
       
       # Optional: Auto-login for a specific user
       initial_session = {
-        command = "wayfire -c /etc/xdg/wayfire/wayfire.ini";
+        command = "Hyprland --config /etc/xdg/hypr/hyprland.conf";
         user = "your-username";  # Replace with your actual username
       };
     };
@@ -72,9 +73,9 @@ Import the module and enable it in your NixOS configuration:
 ```
 
 **Critical Parameter**:
-- `-c /etc/xdg/wayfire/wayfire.ini` - Ensures Wayfire uses the module's configuration
+- `--config /etc/xdg/hypr/hyprland.conf` - Ensures Hyprland uses the module's configuration
 
-Without this parameter, Wayfire will use default configs and the desktop environment may not work correctly.
+Without this parameter, Hyprland will use default configs and the desktop environment may not work correctly.
 
 ### Step 4: Rebuild System
 
@@ -88,7 +89,7 @@ sudo nixos-rebuild switch --flake .#your-hostname
 
 ```nix
 {
-  kartoza.wayfire-desktop = {
+  kartoza.hyprland-desktop = {
     enable = true;
     iconTheme = "Papirus";              # Icon theme (default: "Papirus")
     gtkTheme = "Adwaita";               # GTK theme (default: "Adwaita")
@@ -125,32 +126,32 @@ The module provides intelligent keyboard layout management with configurable opt
 - **Multiple Layout Support**: Configure any number of keyboard layouts
 - **Smart Toggle**: Alt+Shift switches between layouts automatically
 - **Waybar Integration**: Shows current layout with proper display names
-- **Auto-Detection**: Waybar script reads layouts from Wayfire configuration
+- **Auto-Detection**: Waybar script reads layouts from Hyprland configuration
 - **Display Name Mapping**: Converts layout codes to readable names (us→EN, de→DE, fr→FR, pt→PT, etc.)
 
 ### Configuration Examples
 
 ```nix
 # Default configuration (US English + Portuguese)
-kartoza.wayfire-desktop = {
+kartoza.hyprland-desktop = {
   enable = true;
   keyboardLayouts = [ "us" "pt" ];
 };
 
 # European configuration (US English + German + French)
-kartoza.wayfire-desktop = {
+kartoza.hyprland-desktop = {
   enable = true;
   keyboardLayouts = [ "us" "de" "fr" ];
 };
 
 # Spanish configuration
-kartoza.wayfire-desktop = {
+kartoza.hyprland-desktop = {
   enable = true;
   keyboardLayouts = [ "us" "es" ];
 };
 
 # Multi-language setup
-kartoza.wayfire-desktop = {
+kartoza.hyprland-desktop = {
   enable = true;
   keyboardLayouts = [ "us" "de" "fr" "it" "pt" ];
 };
@@ -158,9 +159,9 @@ kartoza.wayfire-desktop = {
 
 ### How It Works
 
-1. **Module Configuration**: The `keyboardLayouts` option generates the Wayfire configuration
-2. **Wayfire Setup**: Layouts are configured in `xkb_layout` with Alt+Shift toggle (`grp:alt_shift_toggle`)
-3. **Waybar Display**: The keyboard layout script reads the Wayfire config and shows the current layout
+1. **Module Configuration**: The `keyboardLayouts` option generates the Hyprland configuration
+2. **Hyprland Setup**: Layouts are configured in `kb_layout` with Alt+Shift toggle (`grp:alt_shift_toggle`)
+3. **Waybar Display**: The keyboard layout script reads the Hyprland config and shows the current layout
 4. **Toggle Methods**: 
    - **Hardware**: Press Alt+Shift to cycle through layouts
    - **GUI**: Click the keyboard layout widget in Waybar
@@ -213,19 +214,19 @@ The module provides unified wallpaper management for both desktop background and
 
 ```nix
 # Default configuration (uses Kartoza wallpaper)
-kartoza.wayfire-desktop = {
+kartoza.hyprland-desktop = {
   enable = true;
   wallpaper = "/etc/kartoza-wallpaper.png"; # Default
 };
 
 # Custom wallpaper configuration
-kartoza.wayfire-desktop = {
+kartoza.hyprland-desktop = {
   enable = true;
   wallpaper = "/home/user/Pictures/my-wallpaper.jpg";
 };
 
 # Network wallpaper (downloaded separately)
-kartoza.wayfire-desktop = {
+kartoza.hyprland-desktop = {
   enable = true;
   wallpaper = "/usr/share/backgrounds/nature.jpg";
 };
@@ -269,10 +270,12 @@ The module provides a comprehensive workspace management system with named works
 
 - **Named Workspaces**: Each workspace has a meaningful name (Browser, Chat, Terminal, etc.)
 - **Fuzzel Integration**: Beautiful graphical workspace selector with fuzzel
-- **Waybar Widget**: Clickable workspace indicator in status bar
+- **Waybar Widget**: Clickable workspace indicator in status bar with **working taskbar**
+- **Window Management**: Click taskbar icons to focus windows, middle-click to close
 - **Keyboard Shortcuts**: Multiple ways to switch workspaces
-- **Change Tracking**: Automatic logging when switching workspaces
+- **Change Tracking**: Automatic logging when switching workspaces using `hyprctl`
 - **User Customizable**: Override workspace names easily
+- **Floating Mode**: Windows spawn in floating mode by default (Super+F to toggle tiling)
 
 ### Default Workspace Layout
 
@@ -331,11 +334,11 @@ Override the default workspace names by copying and editing the configuration:
 
 ```bash
 # Copy system config to user directory
-mkdir -p ~/.config/wayfire
-cp /etc/xdg/wayfire/workspace-names.conf ~/.config/wayfire/
+mkdir -p ~/.config/hypr
+cp /etc/xdg/hypr/workspace-names.conf ~/.config/hypr/
 
 # Edit workspace names (format: workspace_number=workspace_name)
-cat >> ~/.config/wayfire/workspace-names.conf << EOF
+cat >> ~/.config/hypr/workspace-names.conf << EOF
 0=My Browser
 1=Slack & Teams
 2=Terminal Work
@@ -354,7 +357,7 @@ The system calls `workspace-changed.sh` whenever workspace changes. You can over
 
 ```bash
 # Copy and customize the workspace change hook
-cp /etc/xdg/wayfire/scripts/workspace-changed.sh ~/.config/wayfire/scripts/
+cp /etc/xdg/hypr/scripts/workspace-changed.sh ~/.config/hypr/scripts/
 
 # Edit to add your custom logic:
 # - Change wallpaper per workspace
@@ -383,8 +386,8 @@ This module deploys configuration files to `/etc/xdg/` for system-wide availabil
 
 Configuration files are loaded in this order (highest to lowest priority):
 
-1. **User home directory**: `~/.config/wayfire/`, `~/.config/waybar/`, etc.
-2. **System XDG config**: `/etc/xdg/wayfire/`, `/etc/xdg/waybar/`, etc. (this module)
+1. **User home directory**: `~/.config/hypr/`, `~/.config/waybar/`, etc.
+2. **System XDG config**: `/etc/xdg/hypr/`, `/etc/xdg/waybar/`, etc. (this module)
 3. **Application defaults**: Built-in application defaults
 
 ### How to Override System Dotfiles
@@ -394,10 +397,10 @@ Configuration files are loaded in this order (highest to lowest priority):
 Copy the system configurations to your home directory and modify them:
 
 ```bash
-# Copy wayfire config for customization
-mkdir -p ~/.config/wayfire
-cp /etc/xdg/wayfire/wayfire.ini ~/.config/wayfire/
-# Edit ~/.config/wayfire/wayfire.ini as needed
+# Copy hyprland config for customization
+mkdir -p ~/.config/hypr
+cp /etc/xdg/hypr/hyprland.conf ~/.config/hypr/
+# Edit ~/.config/hypr/hyprland.conf as needed
 
 # Copy waybar config for customization  
 mkdir -p ~/.config/waybar
@@ -415,7 +418,7 @@ cp /etc/xdg/mako/kartoza ~/.config/mako/config
 
 You can override specific applications without copying entire configurations:
 
-**Wayfire**: Create `~/.config/wayfire/wayfire.ini` with only the settings you want to change. Wayfire will merge your changes with the system configuration.
+**Hyprland**: Create `~/.config/hypr/hyprland.conf` with your custom configuration. You can include the system config and add overrides, or replace it entirely.
 
 **Waybar**: Create `~/.config/waybar/` with your own `config` and `style.css`. For modular waybar configs, you can also copy the `config.d/` directory and modify specific modules.
 
@@ -423,18 +426,24 @@ You can override specific applications without copying entire configurations:
 
 #### Method 3: Environment-Specific Configurations
 
-For different environments (work, home, etc.), you can use environment variables or conditional logic:
+For different environments (work, home, etc.), you can customize Hyprland configuration:
 
-```ini
-# In ~/.config/wayfire/wayfire.ini
-[core]
-plugins = animate command cube decoration expo fast-switcher
-# Add/remove plugins based on your needs
+```bash
+# In ~/.config/hypr/hyprland.conf
 
-[command]  
-# Override specific keybindings
-binding_terminal = <super> KEY_RETURN
-command_terminal = alacritty  # Use different terminal
+# Include the system config as base
+source=/etc/xdg/hypr/hyprland.conf
+
+# Override specific settings
+general {
+    layout = master  # Use master layout instead of dwindle
+}
+
+# Add custom keybinds
+bind = $mainMod, T, exec, alacritty  # Use alacritty instead of kitty
+
+# Override window rules
+windowrulev2 = tile, class:.*  # Tile all windows by default instead of floating
 ```
 
 #### Method 4: Waybar Modular Override
@@ -476,8 +485,8 @@ None! This module is completely self-contained and doesn't require any external 
 
 ## Structure
 
-- `modules/wayfire-desktop.nix` - Main NixOS module
-- `dotfiles/` - Configuration files for Wayfire and related applications
+- `modules/hyprland-desktop.nix` - Main NixOS module
+- `dotfiles/` - Configuration files for Hyprland and related applications
 - `resources/` - Images and other static resources
 
 ## Development
@@ -509,9 +518,10 @@ nix run .#nixosConfigurations.vm-test.config.system.build.vm
 The VM includes:
 - 4GB RAM, 4 CPU cores, 8GB disk
 - Auto-login as `testuser` (password: `test`)
-- Full Wayfire desktop with all components
+- Full Hyprland desktop with all components including working taskbar
 - Hardware-accelerated graphics (1920x1080)
 - Basic applications for testing (Firefox, file manager, terminal)
+- Floating windows by default with tiling mode available (Super+F)
 
 ### Testing Changes on Existing NixOS Systems
 
@@ -519,14 +529,14 @@ If you're running a NixOS system that already imports this flake, you can test l
 
 #### Method 1: Local Path Override (Recommended for Development)
 
-In your main system flake, temporarily override the wayfire-desktop input to point to your local development copy:
+In your main system flake, temporarily override the hyprland-desktop input to point to your local development copy:
 
 ```nix
 {
   inputs = {
-    wayfire-desktop.url = "path:/path/to/your/local/nix-wayfire-desktop";
+    hyprland-desktop.url = "path:/path/to/your/local/nix-hyprland-desktop";
     # Or use a relative path if your system flake is in a parent directory:
-    # wayfire-desktop.url = "path:./nix-wayfire-desktop";
+    # hyprland-desktop.url = "path:./nix-hyprland-desktop";
     # ... other inputs
   };
 }
@@ -543,7 +553,7 @@ If you've pushed changes to the remote repository:
 
 ```bash
 # In your system flake directory, update only this flake
-nix flake lock --update-input wayfire-desktop
+nix flake lock --update-input hyprland-desktop
 
 # Then rebuild
 sudo nixos-rebuild switch --flake .#your-hostname
@@ -559,7 +569,7 @@ git checkout -b feature/my-changes
 git add . && git commit -m "Test changes"
 
 # In your system flake, temporarily change the input
-# wayfire-desktop.url = "github:kartoza/nix-wayfire-desktop/feature/my-changes";
+# hyprland-desktop.url = "github:kartoza/nix-hyprland-desktop/feature/my-changes";
 ```
 
 #### Method 4: Quick Waybar Configuration Testing
@@ -567,7 +577,7 @@ git add . && git commit -m "Test changes"
 For rapid waybar configuration testing without full system rebuilds:
 
 ```bash
-cd /path/to/nix-wayfire-desktop/dotfiles/waybar
+cd /path/to/nix-hyprland-desktop/dotfiles/waybar
 
 # Build the modular config
 ./build-config.sh
@@ -593,7 +603,7 @@ This method is useful for CSS styling and layout changes, but won't reflect modu
 3. Create a pull request and merge to main
 4. Update your system flake to use the new commit:
    ```bash
-   nix flake lock --update-input wayfire-desktop
+   nix flake lock --update-input hyprland-desktop
    ```
 5. Deploy with `sudo nixos-rebuild switch`
 
@@ -602,7 +612,7 @@ This method is useful for CSS styling and layout changes, but won't reflect modu
 After system rebuild, configuration files are available system-wide in `/etc`. To deploy them to user home directories:
 
 ```bash
-deploy-wayfire-configs
+deploy-hyprland-configs
 ```
 
 This is useful when users want to customize configurations locally.
@@ -662,7 +672,7 @@ The system automatically creates GPG configuration files in your home directory:
 - `~/.gnupg/gpg-agent.conf`: GPG agent configuration with GUI pinentry
 - `~/.gnupg/gpg.conf`: Basic GPG settings with keyserver configuration
 
-These files are created automatically by the `deploy-wayfire-configs` script if they don't already exist.
+These files are created automatically by the `deploy-hyprland-configs` script if they don't already exist.
 
 #### Troubleshooting
 

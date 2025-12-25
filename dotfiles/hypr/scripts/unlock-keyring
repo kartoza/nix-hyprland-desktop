@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+# Script to unlock GNOME Keyring at Wayfire login
+# This ensures the keyring is available for SSH keys and other secrets
+
+# Check if gnome-keyring-daemon is already running
+if pgrep -x gnome-keyring-daemon >/dev/null; then
+    echo "GNOME Keyring daemon is already running"
+    
+    # Check if the default keyring is unlocked
+    if ! secret-tool lookup service test 2>/dev/null; then
+        echo "Keyring appears to be locked, attempting to unlock..."
+        
+        # Use zenity to prompt for password to unlock keyring
+        password=$(zenity --password --title="Unlock Keyring" --text="Please enter your password to unlock the keyring:")
+        
+        if [ -n "$password" ]; then
+            # Attempt to unlock keyring
+            echo -n "$password" | gnome-keyring-daemon --unlock --daemonize
+            
+            if [ $? -eq 0 ]; then
+                notify-send "Keyring Unlocked" "Your keyring has been successfully unlocked"
+            else
+                notify-send "Keyring Unlock Failed" "Failed to unlock keyring with provided password"
+            fi
+        else
+            notify-send "Keyring Unlock Cancelled" "Keyring unlock was cancelled"
+        fi
+    else
+        echo "Keyring is already unlocked"
+        notify-send "Keyring Ready" "Your keyring is already unlocked and ready"
+    fi
+else
+    echo "GNOME Keyring daemon not running, this should have been started by PAM"
+    notify-send "Keyring Error" "GNOME Keyring daemon is not running"
+fi

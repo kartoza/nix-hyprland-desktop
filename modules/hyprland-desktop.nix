@@ -3,7 +3,7 @@
 with lib;
 
 let
-  cfg = config.kartoza.wayfire-desktop;
+  cfg = config.kartoza.hyprland-desktop;
 
   # Use the icon theme from the module configuration
   iconThemeName = cfg.iconTheme;
@@ -33,8 +33,8 @@ let
   '';
 in {
   options = {
-    kartoza.wayfire-desktop = {
-      enable = mkEnableOption "Kartoza Wayfire Desktop Environment";
+    kartoza.hyprland-desktop = {
+      enable = mkEnableOption "Kartoza Hyprland Desktop Environment";
 
       iconTheme = mkOption {
         type = types.str;
@@ -110,17 +110,11 @@ in {
 
   config = mkIf cfg.enable {
 
-    # Deploy essential Wayfire dotfiles at system level
-    # Enable the X server.
-    services.xserver.enable = true;
-
-    programs.wayfire = {
+    # Deploy essential Hyprland dotfiles at system level
+    # Enable Hyprland
+    programs.hyprland = {
       enable = true;
-      plugins = with pkgs.wayfirePlugins; [
-        wcm
-        wf-shell
-        wayfire-plugins-extra
-      ];
+      xwayland.enable = true;
     };
 
     # Enable NetworkManager service for network and VPN management
@@ -194,20 +188,17 @@ in {
       swww # Wallpaper setter (works with Wayfire too)
       util-linux # Provides rfkill tool to enable/disable wireless devices
       waybar # Bar panel for Wayland
-      wayfire # Wayfire compositor with lots of nice eye candy
-      wayfirePlugins.wayfire-plugins-extra
-      wayfirePlugins.wcm # Wayfire Config Manager
-      wayfirePlugins.wf-shell
+      hyprpaper # Wallpaper utility for Hyprland
       wf-recorder # Wayland screen recorder
       wireplumber
       wl-clipboard
       wlr-randr # Display configuration for wlr compositors
-      wlrctl # Wayfire window management and inspection tool
+      hyprshot # Screenshot tool for Hyprland
       wshowkeys # On-screen key display for Wayland (setuid wrapper configured below)
       wtype # Wayland typing utility
       wev # Wayland event viewer for debugging
       xdg-desktop-portal-gtk
-      xdg-desktop-portal-wlr # For screen sharing in Wayfire
+      xdg-desktop-portal-hyprland # For screen sharing in Hyprland
       zenity # GUI dialogs for keyring unlock
       # Wallpaper and screen management
       swww # Efficient animated wallpaper daemon for wayland
@@ -316,9 +307,9 @@ in {
 
     environment.sessionVariables = {
       XDG_SESSION_TYPE = "wayland";
-      # Wayfire sets this to "wayfire"
-      XDG_CURRENT_DESKTOP = "wayfire";
-      XDG_SESSION_DESKTOP = "wayfire";
+      # Hyprland sets this to "hyprland"
+      XDG_CURRENT_DESKTOP = "hyprland";
+      XDG_SESSION_DESKTOP = "hyprland";
       # Cursor theme and size are managed by home-manager (see home/default.nix)
       # Enable gnome-keyring SSH agent
       SSH_AUTH_SOCK = "$XDG_RUNTIME_DIR/keyring/ssh";
@@ -331,10 +322,10 @@ in {
       # Add script directories to PATH (user directories first)
       PATH = [
         "$HOME/.config/fuzzel"
-        "$HOME/.config/wayfire/scripts"
+        "$HOME/.config/hypr/scripts"
         "$HOME/.config/waybar/scripts"
         "/etc/xdg/fuzzel"
-        "/etc/xdg/wayfire/scripts"
+        "/etc/xdg/hypr/scripts"
         "/etc/xdg/waybar/scripts"
       ];
     };
@@ -385,22 +376,16 @@ in {
       gtk-application-prefer-dark-theme=${lib.boolToString cfg.darkTheme}
     '';
 
-    # Deploy Wayfire configuration files system-wide using standard paths
+    # Deploy Hyprland configuration files system-wide using standard paths
     environment.etc = {
-      # Wayfire main config - generated from template with proper substitution
-      "xdg/wayfire/wayfire.ini" = {
+      # Hyprland main config - generated from template with proper substitution
+      "xdg/hypr/hyprland.conf" = {
         text = let
-          baseConfig = lib.readFile ../dotfiles/wayfire/wayfire.ini;
+          baseConfig = lib.readFile ../dotfiles/hypr/hyprland.conf;
           # Generate per-display output sections
-          displayOutputs = lib.concatStringsSep "\n\n" (lib.mapAttrsToList
+          displayOutputs = lib.concatStringsSep "\n" (lib.mapAttrsToList
             (display: scaling: ''
-              [output:${display}]
-              depth = 8
-              mode = auto
-              position = auto
-              scale = ${toString scaling}
-              transform = normal
-              vrr = false
+              monitor=${display},preferred,auto,${toString scaling}
             '') cfg.displayScaling);
 
           # Replace template placeholders with proper values
@@ -426,34 +411,34 @@ in {
             "mako -c $(xdg-config-path mako/kartoza)"
             "swaylock -f -C $(xdg-config-path swaylock/config)"
             "$(xdg-config-path fuzzel/fuzzel-emoji)"
-            "$(xdg-config-path wayfire/scripts/record-toggle.sh)"
-            "$(xdg-config-path wayfire/scripts/workspace-switcher.sh)"
-            "$(xdg-config-path wayfire/scripts/wshowkeys-toggle.sh)"
+            "$(xdg-config-path hypr/scripts/record-toggle.sh)"
+            "$(xdg-config-path hypr/scripts/workspace-switcher.sh)"
+            "$(xdg-config-path hypr/scripts/wshowkeys-toggle.sh)"
             displayOutputs
           ] baseConfig;
         in configWithSubstitutions;
       };
-      "xdg/wayfire/scripts".source = ../dotfiles/wayfire/scripts;
-      # Wayfire workspace names configuration
-      "xdg/wayfire/workspace-names.conf".source = ../dotfiles/wayfire/workspace-names.conf;
+      "xdg/hypr/scripts".source = ../dotfiles/hypr/scripts;
+      # Hyprland workspace names configuration  
+      "xdg/hypr/workspace-names.conf".source = ../dotfiles/wayfire/workspace-names.conf;
       # Waybar configuration - standard XDG location
       "xdg/waybar/style.css".source = ../dotfiles/waybar/style.css;
-      # Build combined waybar config from modular JSON files
+      # Build combined waybar config from modular JSON files  
       "xdg/waybar/config" = {
-        source = pkgs.runCommand "waybar-config-wayfire" {
+        source = pkgs.runCommand "waybar-config-hyprland" {
           nativeBuildInputs = [ pkgs.jq ];
         } ''
           src=${../dotfiles/waybar/config.d}
 
-          # Use Wayfire base config instead of regular base
-          cat "$src/00-base-wayfire.json" > config.json
+          # Use generic base config and add all modules including taskbar
+          cat "$src/00-base.json" > config.json
 
-          # Merge all other config fragments except sway-specific ones and generic power
+          # Merge all other config fragments except wayfire-specific ones
           for file in "$src"/*.json; do
             filename=$(basename "$file")
-            # Skip base files, sway-specific modules, and generic power (use wayfire-specific)
+            # Skip base files and wayfire-specific modules
             if [[ "$filename" != "00-base.json" && "$filename" != "00-base-wayfire.json" &&
-                  "$filename" != "90-sway-"* && "$filename" != "90-custom-power.json" ]]; then
+                  "$filename" != "90-wayfire-"* ]]; then
               echo "Merging $filename"
               jq -s '.[0] * .[1]' config.json "$file" > temp.json
               mv temp.json config.json
@@ -578,21 +563,20 @@ in {
       enable = true;
       extraPortals = [
         pkgs.xdg-desktop-portal-gtk
-        pkgs.xdg-desktop-portal-wlr # For Wayfire screen sharing
+        pkgs.xdg-desktop-portal-hyprland # For Hyprland screen sharing
       ];
-      # Configure portal backends for Wayfire
+      # Configure portal backends for Hyprland
       config = {
-        wayfire = {
-          default = lib.mkForce [ "gtk" "wlr" ];
+        hyprland = {
+          default = lib.mkForce [ "gtk" "hyprland" ];
           "org.freedesktop.impl.portal.FileChooser" = lib.mkForce [ "gtk" ];
           "org.freedesktop.impl.portal.AppChooser" = lib.mkForce [ "gtk" ];
-          "org.freedesktop.impl.portal.ScreenCast" = lib.mkForce [ "wlr" ];
-          "org.freedesktop.impl.portal.Screenshot" = lib.mkForce [ "wlr" ];
+          "org.freedesktop.impl.portal.ScreenCast" = lib.mkForce [ "hyprland" ];
+          "org.freedesktop.impl.portal.Screenshot" = lib.mkForce [ "hyprland" ];
         };
       };
       # Ensures the right backend is selected
       xdgOpenUsePortal = true;
-      wlr.enable = true;
     };
 
     # Configure default applications for MIME types
@@ -614,8 +598,8 @@ in {
     # Import environment variables into systemd user session
     systemd.user.extraConfig = ''
       DefaultEnvironment="WAYLAND_DISPLAY=wayland-1"
-      DefaultEnvironment="XDG_CURRENT_DESKTOP=wayfire"
-      DefaultEnvironment="XDG_SESSION_DESKTOP=wayfire"
+      DefaultEnvironment="XDG_CURRENT_DESKTOP=hyprland"
+      DefaultEnvironment="XDG_SESSION_DESKTOP=hyprland"
       DefaultEnvironment="XDG_SESSION_TYPE=wayland"
       DefaultEnvironment="SSH_AUTH_SOCK=%t/keyring/ssh"
       DefaultEnvironment="GPG_TTY=$(tty)"
@@ -634,14 +618,14 @@ in {
       };
     };
 
-    # For Wayfire (no display manager), we use greetd
+    # For Hyprland (no display manager), we use greetd
     # Note: Autologin is configured per-host in hosts/<hostname>/desktop.nix
     services.greetd = {
       enable = true;
       settings = {
         default_session = {
           command =
-            "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd 'wayfire -c $(${xdgConfigResolver}/bin/xdg-config-resolve wayfire/wayfire.ini)'";
+            "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd 'Hyprland --config $(${xdgConfigResolver}/bin/xdg-config-resolve hypr/hyprland.conf)'";
           user = "greeter";
         };
       };

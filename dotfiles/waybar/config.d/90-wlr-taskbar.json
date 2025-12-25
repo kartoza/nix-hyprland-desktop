@@ -1,11 +1,8 @@
 {"wlr/taskbar": {
-  "format": "{icon}",
-  "icon-size": 20,
-  "icon-theme": "Papirus-Dark",
-  "tooltip-format": "{title}",
-  "on-click": "activate",
-  "on-click-middle": "close",
-  "on-click-right": "minimize",
-  "ignore-list": [],
-  "all-outputs": false
-}}
+        	"format": "{icon}",
+        	"tooltip": true,
+        	"tooltip-format": "{title}",
+        	"on-click": "hyprctl dispatch focuswindow address:0x{address}",
+        	"on-click-middle": "hyprctl dispatch closewindow address:0x{address}",
+        	"active-first": true
+ }}

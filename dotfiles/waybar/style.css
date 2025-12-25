@@ -55,7 +55,8 @@ window#waybar {
 #custom-notification-toggle, 
 #custom-recorder,
 #custom-workspace-switcher,
-#custom-wshowkeys {
+#custom-wshowkeys,
+#taskbar{
     /* orange kartoza colour but with some transparency */
     min-height: 12px;
     padding: 6px 10px;
@@ -170,7 +171,7 @@ window#waybar {
 
 /* Taskbar - clean app icons */
 #taskbar {
-    background-color: transparent;
+    background-color: #ffffff;
     margin: 0px 4px;
 }
 
