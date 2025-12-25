@@ -23,6 +23,7 @@
         "memory",
         "pulseaudio",
         "custom/keyboard-layout",
+        "custom/wshowkeys",
         "custom/notification-count",
         "custom/notification-toggle",
         "tray",

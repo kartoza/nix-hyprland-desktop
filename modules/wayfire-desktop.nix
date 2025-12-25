@@ -203,6 +203,7 @@ in {
       wl-clipboard
       wlr-randr # Display configuration for wlr compositors
       wlrctl # Wayfire window management and inspection tool
+      wshowkeys # On-screen key display for Wayland
       wtype # Wayland typing utility
       wev # Wayland event viewer for debugging
       xdg-desktop-portal-gtk
@@ -402,33 +403,35 @@ in {
               vrr = false
             '') cfg.displayScaling);
 
-          # Replace template placeholders
+          # Replace template placeholders with proper values
           configWithSubstitutions = lib.replaceStrings [
-            "swww init && swww img /etc/kartoza-wallpaper.png"
-            "cursor_theme = default"
-            "cursor_size = 24"
-            "scale = 1.500000"
-            "scale = 1.000000"
-            "xkb_layout = us,pt"
-            "mako -c /etc/xdg/mako/kartoza"
-            "swaylock -f -C /etc/xdg/swaylock/config"
-            "swaylock -f -c /etc/xdg/swaylock/config"
-            "/etc/xdg/fuzzel/fuzzel-emoji"
-            "/etc/xdg/wayfire/scripts/record-toggle.sh"
+            "@WALLPAPER_COMMAND@"
+            "@CURSOR_THEME@"
+            "@CURSOR_SIZE@"
+            "@FRACTIONAL_SCALING@"
+            "@KEYBOARD_LAYOUTS@"
+            "@NOTIFICATION_COMMAND@"
+            "@SWAYLOCK_COMMAND@"
+            "@EMOJI_COMMAND@"
+            "@RECORD_TOGGLE_COMMAND@"
+            "@WORKSPACE_SWITCHER_COMMAND@"
+            "@WSHOWKEYS_TOGGLE_COMMAND@"
+            "@DISPLAY_OUTPUTS@"
           ] [
             "swww init && swww img ${cfg.wallpaper}"
-            "cursor_theme = ${cfg.cursorTheme}"
-            "cursor_size = ${toString cfg.cursorSize}"
-            "scale = ${toString cfg.fractionalScaling}"
-            "scale = ${toString cfg.fractionalScaling}"
-            "xkb_layout = ${lib.concatStringsSep "," cfg.keyboardLayouts}"
+            "${cfg.cursorTheme}"
+            "${toString cfg.cursorSize}"
+            "${toString cfg.fractionalScaling}"
+            "${lib.concatStringsSep "," cfg.keyboardLayouts}"
             "mako -c $(xdg-config-path mako/kartoza)"
             "swaylock -f -C $(xdg-config-path swaylock/config)"
-            "swaylock -f -c $(xdg-config-path swaylock/config)"
             "$(xdg-config-path fuzzel/fuzzel-emoji)"
             "$(xdg-config-path wayfire/scripts/record-toggle.sh)"
+            "$(xdg-config-path wayfire/scripts/workspace-switcher.sh)"
+            "$(xdg-config-path wayfire/scripts/wshowkeys-toggle.sh)"
+            displayOutputs
           ] baseConfig;
-        in configWithSubstitutions + "\n\n" + displayOutputs;
+        in configWithSubstitutions;
       };
       "xdg/wayfire/scripts".source = ../dotfiles/wayfire/scripts;
       # Wayfire workspace names configuration

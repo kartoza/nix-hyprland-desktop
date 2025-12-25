@@ -54,7 +54,8 @@ window#waybar {
 #custom-notification-count,
 #custom-notification-toggle, 
 #custom-recorder,
-#custom-workspace-switcher {
+#custom-workspace-switcher,
+#custom-wshowkeys {
     /* orange kartoza colour but with some transparency */
     min-height: 12px;
     padding: 6px 10px;
@@ -244,6 +245,15 @@ window#waybar {
 
 #custom-notification.disabled {
     color: #DF9E2F;
+}
+
+/* wshowkeys states */
+#custom-wshowkeys.active {
+    color: #DF9E2F;
+}
+
+#custom-wshowkeys.inactive {
+    color: #8A8B8B;
 }
 
 /* Screen recorder states */

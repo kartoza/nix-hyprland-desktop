@@ -1,0 +1,8 @@
+{"custom/wshowkeys": {
+  "tooltip": true,
+  "format": "{}",
+  "return-type": "json",
+  "exec": "wshowkeys-status.sh",
+  "on-click": "wshowkeys-toggle.sh",
+  "interval": 2
+}}
