@@ -63,8 +63,9 @@ background-color=#2D353B
 default-timeout=3000
 
 # Do Not Disturb mode - completely disables the service
-[mode=do-not-disturb]
+[mode=dnd]
 invisible=1
+border-color=#0fff0f
 
 [mode=hide]
 invisible=1
