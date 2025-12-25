@@ -247,6 +247,10 @@ window#waybar {
     color: #DF9E2F;
 }
 
+#custom-notification.warning {
+    color: #FF6B6B;
+}
+
 /* wshowkeys states */
 #custom-wshowkeys.active {
     color: #DF9E2F;
