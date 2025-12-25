@@ -25,17 +25,12 @@ actions=1
 on-button-left=invoke-default-action
 on-button-right=dismiss
 
-# Hide most notifications by default (timeout=0 means they stay in history)  
-# User clicks waybar to see them
-# But show actionable notifications immediately
-invisible=0
 
 [grouped]
 format=<b>%s (%g)</b>\n%b
 
-# Non-actionable notifications - keep visible for grouping
+# Non-actionable notifications
 [actionable=false]
-invisible=0
 default-timeout=3000
 
 # Actionable notifications (like bluetooth pairing) styling
@@ -43,7 +38,6 @@ default-timeout=3000
 [actionable]
 border-color=#569FC6
 background-color=#2D353B
-invisible=0
 default-timeout=0
 
 # Critical/error notifications - red border
@@ -66,8 +60,5 @@ default-timeout=3000
 
 # Do Not Disturb mode - completely disables the service
 [mode=dnd]
-invisible=1
 border-color=#0fff0f
 
-[mode=hide]
-invisible=1
