@@ -1,0 +1,31 @@
+{
+    "layer": "top",
+    "position": "bottom",
+    "margin-bottom": 0,
+    "modules-left": [
+        "custom/launcher",
+        "custom/workspace-switcher",
+        "custom/recorder",
+        "custom/gatus-prod",
+        "custom/gatus-gsh"
+    ],
+    "modules-center": [
+        "clock"
+    ],
+    "modules-right": [
+        "idle_inhibitor",
+        "battery",
+        "backlight",
+        "custom/power-profile",
+        "custom/temperature",
+        "cpu",
+        "memory",
+        "pulseaudio",
+        "custom/keyboard-layout",
+        "custom/wshowkeys",
+        "custom/notification-count",
+        "custom/notification-toggle",
+        "tray",
+        "custom/power"
+    ]
+}

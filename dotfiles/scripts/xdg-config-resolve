@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Resolves XDG config paths, checking user config first, then system
+config_path="$1"
+if [[ -f "$HOME/.config/$config_path" ]]; then
+  echo "$HOME/.config/$config_path"
+elif [[ -f "/etc/xdg/$config_path" ]]; then
+  echo "/etc/xdg/$config_path"
+else
+  echo "Config file not found: $config_path" >&2
+  exit 1
+fi

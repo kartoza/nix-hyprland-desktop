@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+# Create wallpapers directory
+mkdir -p "$HOME/wallpapers"
+
+# Define wallpaper paths
+SYSTEM_WALLPAPER="/etc/kartoza-wallpaper.png"
+USER_WALLPAPER="$HOME/wallpapers/timos-wallpaper.png"
+
+# If no user wallpaper exists, copy the Kartoza default
+if [[ ! -f "$USER_WALLPAPER" ]]; then
+  if [[ -f "$SYSTEM_WALLPAPER" ]]; then
+    cp "$SYSTEM_WALLPAPER" "$USER_WALLPAPER"
+    echo "Copied Kartoza default wallpaper"
+  else
+    # Fallback: create a simple gradient using imagemagick
+    if command -v convert >/dev/null 2>&1; then
+      convert -size 1920x1080 \
+        gradient:'#2d3748-#4a5568' \
+        "$USER_WALLPAPER"
+      echo "Created fallback gradient wallpaper"
+    else
+      echo "Warning: ImageMagick not found, cannot create fallback wallpaper"
+      exit 1
+    fi
+  fi
+fi
+
+# Initialize swww and set wallpaper
+swww init || true
+swww img "$USER_WALLPAPER"

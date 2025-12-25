@@ -1,0 +1,5 @@
+{"custom/power": {
+  "format": " ⏻ ",
+  "on-click": "/etc/xdg/waybar/scripts/hyprland-power.sh",
+  "tooltip": false
+}}

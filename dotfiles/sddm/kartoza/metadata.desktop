@@ -1,0 +1,14 @@
+[SddmGreeterTheme]
+Name=Kartoza
+Description=Kartoza branded login theme for SDDM
+Author=Kartoza
+Copyright=(c) 2024 Kartoza
+License=GPL-3.0
+Type=sddm-theme
+Version=1.0
+Website=https://kartoza.com
+Screenshot=preview.png
+
+[Desktop Entry]
+Name=Kartoza
+Comment=Kartoza branded login theme for SDDM based on astronaut theme

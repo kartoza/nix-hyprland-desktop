@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Returns the path to a config file, checking user config first
+config_path="$1"
+if [[ -f "$HOME/.config/$config_path" ]]; then
+  echo "$HOME/.config/$config_path"
+else
+  echo "/etc/xdg/$config_path"
+fi

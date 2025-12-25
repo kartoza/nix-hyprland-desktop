@@ -8,29 +8,7 @@ let
   # Use the icon theme from the module configuration
   iconThemeName = cfg.iconTheme;
 
-  # Helper function to find config files in XDG paths (user config takes precedence)
-  findConfigFile = configPath: ''
-    if [[ -f "$HOME/.config/${configPath}" ]]; then
-      echo "$HOME/.config/${configPath}"
-    else
-      echo "/etc/xdg/${configPath}"
-    fi
-  '';
 
-  # Helper script to resolve XDG config paths at runtime
-  xdgConfigResolver = pkgs.writeScriptBin "xdg-config-resolve" ''
-    #!/usr/bin/env bash
-    # Resolves XDG config paths, checking user config first, then system
-    config_path="$1"
-    if [[ -f "$HOME/.config/$config_path" ]]; then
-      echo "$HOME/.config/$config_path"
-    elif [[ -f "/etc/xdg/$config_path" ]]; then
-      echo "/etc/xdg/$config_path"
-    else
-      echo "Config file not found: $config_path" >&2
-      exit 1
-    fi
-  '';
 in {
   options = {
     kartoza.hyprland-desktop = {
@@ -105,6 +83,13 @@ in {
         example = "/home/user/Pictures/my-wallpaper.jpg";
         description = "Path to wallpaper image used for both desktop background and swaylock screen";
       };
+
+      sddmTheme = mkOption {
+        type = types.str;
+        default = "kartoza";
+        example = "astronaut";
+        description = "SDDM theme to use (kartoza for Kartoza branding, astronaut for default astronaut theme)";
+      };
     };
   };
 
@@ -124,10 +109,10 @@ in {
     security.polkit.enable = true;
 
     environment.systemPackages = with pkgs; [
-      # XDG config path resolver utility
-      xdgConfigResolver
       # Default icon theme (Papirus) - can be overridden by kartoza.nix or other configs
       papirus-icon-theme
+      # SDDM theme
+      sddm-astronaut
       # Essential fonts for waybar and hyprland
       font-awesome # For waybar icons (required for waybar symbols)
       noto-fonts # Good fallback font family
@@ -210,99 +195,6 @@ in {
       imagemagick # For creating default wallpaper
       # Deploy script for system-wide Hyprland config management
       jq # Required for waybar config building
-      # XDG config path helper for use in config files
-      (writeScriptBin "xdg-config-path" ''
-        #!/usr/bin/env bash
-        # Returns the path to a config file, checking user config first
-        config_path="$1"
-        if [[ -f "$HOME/.config/$config_path" ]]; then
-          echo "$HOME/.config/$config_path"
-        else
-          echo "/etc/xdg/$config_path"
-        fi
-      '')
-      # Wallpaper setup script
-      (writeScriptBin "setup-wallpaper" ''
-        #!/usr/bin/env bash
-
-        # Create wallpapers directory
-        mkdir -p "$HOME/wallpapers"
-
-        # Define wallpaper paths
-        SYSTEM_WALLPAPER="/etc/kartoza-wallpaper.png"
-        USER_WALLPAPER="$HOME/wallpapers/timos-wallpaper.png"
-
-        # If no user wallpaper exists, copy the Kartoza default
-        if [[ ! -f "$USER_WALLPAPER" ]]; then
-          if [[ -f "$SYSTEM_WALLPAPER" ]]; then
-            cp "$SYSTEM_WALLPAPER" "$USER_WALLPAPER"
-            echo "Copied Kartoza default wallpaper"
-          else
-            # Fallback: create a simple gradient
-            ${pkgs.imagemagick}/bin/convert -size 1920x1080 \
-              gradient:'#2d3748-#4a5568' \
-              "$USER_WALLPAPER"
-            echo "Created fallback gradient wallpaper"
-          fi
-        fi
-
-        # Initialize swww and set wallpaper
-        swww init || true
-        swww img "$USER_WALLPAPER"
-      '')
-      # Keyring unlock script for login
-      (writeScriptBin "unlock-keyring" ''
-        #!/usr/bin/env bash
-
-        # Script to unlock GNOME Keyring at Hyprland login
-        # This ensures the keyring is available for SSH keys and other secrets
-
-        # Check if gnome-keyring-daemon is already running
-        if pgrep -x gnome-keyring-daemon >/dev/null; then
-            echo "GNOME Keyring daemon is already running"
-
-            # Check if the default keyring is unlocked
-            if ! ${pkgs.libsecret}/bin/secret-tool lookup service test 2>/dev/null; then
-                echo "Keyring appears to be locked, attempting to unlock..."
-
-                # Use zenity to prompt for password to unlock keyring
-                password=$(${pkgs.zenity}/bin/zenity --password --title="Unlock Keyring" --text="Please enter your password to unlock the keyring:")
-
-                if [ -n "$password" ]; then
-                    # Attempt to unlock keyring
-                    echo -n "$password" | ${pkgs.gnome-keyring}/bin/gnome-keyring-daemon --unlock --daemonize
-
-                    if [ $? -eq 0 ]; then
-                        ${pkgs.libnotify}/bin/notify-send "Keyring Unlocked" "Your keyring has been successfully unlocked"
-                        
-                        # Start GPG agent and connect to keyring
-                        export GPG_TTY=$(tty)
-                        ${pkgs.gnupg}/bin/gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
-                        
-                        # Test GPG functionality
-                        if ${pkgs.gnupg}/bin/gpg --list-secret-keys >/dev/null 2>&1; then
-                            echo "GPG keys are now accessible"
-                        fi
-                    else
-                        ${pkgs.libnotify}/bin/notify-send "Keyring Unlock Failed" "Failed to unlock keyring with provided password"
-                    fi
-                else
-                    ${pkgs.libnotify}/bin/notify-send "Keyring Unlock Cancelled" "Keyring unlock was cancelled"
-                fi
-            else
-                echo "Keyring is already unlocked"
-                
-                # Ensure GPG agent is connected
-                export GPG_TTY=$(tty)
-                ${pkgs.gnupg}/bin/gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
-                
-                ${pkgs.libnotify}/bin/notify-send "Keyring Ready" "Your keyring is already unlocked and ready"
-            fi
-        else
-            echo "GNOME Keyring daemon not running, this should have been started by PAM"
-            ${pkgs.libnotify}/bin/notify-send "Keyring Error" "GNOME Keyring daemon is not running"
-        fi
-      '')
     ];
 
     environment.sessionVariables = {
@@ -324,9 +216,11 @@ in {
         "$HOME/.config/fuzzel"
         "$HOME/.config/hypr/scripts"
         "$HOME/.config/waybar/scripts"
+        "$HOME/.config/scripts"
         "/etc/xdg/fuzzel"
         "/etc/xdg/hypr/scripts"
         "/etc/xdg/waybar/scripts"
+        "/etc/xdg/scripts"
       ];
     };
 
@@ -419,6 +313,8 @@ in {
         in configWithSubstitutions;
       };
       "xdg/hypr/scripts".source = ../dotfiles/hypr/scripts;
+      # General utility scripts
+      "xdg/scripts".source = ../dotfiles/scripts;
       # Hyprland workspace names configuration  
       "xdg/hypr/workspace-names.conf".source = ../dotfiles/hypr/workspace-names.conf;
       # Waybar configuration - standard XDG location
@@ -497,6 +393,8 @@ in {
         keyserver hkps://keys.openpgp.org
         keyserver-options auto-key-retrieve
       '';
+      # SDDM Kartoza theme
+      "sddm/themes/kartoza".source = ../dotfiles/sddm/kartoza;
     };
 
     # Required for screen sharing
@@ -527,8 +425,8 @@ in {
       pinentryPackage = pkgs.pinentry-gnome3;
     };
 
-    # Configure PAM for greetd to unlock gnome-keyring on login
-    security.pam.services.greetd = {
+    # Configure PAM for SDDM to unlock gnome-keyring on login
+    security.pam.services.sddm = {
       enableGnomeKeyring = true;
       gnupg.enable = true;
     };
@@ -617,15 +515,23 @@ in {
       };
     };
 
-    # For Hyprland (no display manager), we use greetd
-    # Note: Autologin is configured per-host in hosts/<hostname>/desktop.nix
-    services.greetd = {
+    # Enable X11 for SDDM (login manager runs in X11, Hyprland runs in Wayland after login)
+    services.xserver.enable = true;
+    
+    # Enable SDDM display manager with theme configuration
+    services.displayManager.sddm = {
       enable = true;
+      theme = cfg.sddmTheme;
       settings = {
-        default_session = {
-          command =
-            "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd 'Hyprland --config $(${xdgConfigResolver}/bin/xdg-config-resolve hypr/hyprland.conf)'";
-          user = "greeter";
+        # Enable theme configuration
+        Theme = {
+          Current = cfg.sddmTheme;
+          CursorTheme = cfg.cursorTheme;
+          CursorSize = toString cfg.cursorSize;
+        };
+        # User settings
+        Users = {
+          DefaultPath = "/run/current-system/sw/bin";
         };
       };
     };
