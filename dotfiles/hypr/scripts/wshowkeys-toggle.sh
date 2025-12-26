@@ -8,7 +8,7 @@ PIDFILE="$XDG_RUNTIME_DIR/wshowkeys.pid"
 # Check if wshowkeys is running
 if [ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
   # wshowkeys is running, kill it
-  pkill showkey
+  pkill showkeys
   rm -f "$PIDFILE"
   notify-send "wshowkeys" "Key display disabled" --icon=input-keyboard
   echo "disabled"
