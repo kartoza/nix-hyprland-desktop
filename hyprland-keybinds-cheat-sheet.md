@@ -40,13 +40,14 @@
 | `Super + Alt + Arrow Keys` | Swap windows |
 | `Alt + Tab` | Cycle between windows |
 
-## 🖼️ Screenshots
+## 🖼️ Screenshots & Recording
 
 | Keybind | Action |
 |---------|--------|
 | `Super + Print` | Take screenshot |
 | `Super + Alt + F` | Instant fullscreen screenshot |
 | `Super + Alt + S` | Instant area screenshot |
+| `Ctrl + 6` | **Toggle screen recording** (wf-recorder) |
 
 ## 📺 Media & Volume (Function Keys)
 
@@ -84,7 +85,8 @@
 
 | Keybind | Action |
 |---------|--------|
-| `Super + V` | **Secure clipboard history** (clipse + fuzzel) |
+| `Super + ,` | **Secure clipboard history** (clipse + fuzzel) |
+| `Super + .` | **Emoji picker** (fuzzel interface) |
 | `Super + Ctrl + K` | Show keybindings |
 | `Ctrl + Tab` | Window focus menu |
 
@@ -112,12 +114,13 @@
 | `Super + Alt + G` | Toggle game mode |
 | `Super + Shift + H` | Launch Hyprshade |
 
-## 🖥️ Display & Zoom
+## 🖥️ Display & Accessibility
 
 | Keybind | Action |
 |---------|--------|
-| `Super + Shift + Mouse Scroll` | Zoom in/out |
-| `Super + Shift + Z` | Reset zoom |
+| `Super + Shift + Mouse Scroll Up/Down` | **Desktop zoom in/out** (like Wayfire) |
+| `Super + Shift + Z` | Reset zoom to 1x |
+| `Ctrl + Super + K` | **Toggle on-screen keys** (wshowkeys) |
 
 ## 📂 Sidepad & Navigation
 
@@ -135,15 +138,18 @@
 | `Super + Ctrl + S` | Open ML4W settings app |
 | `XF86Tools` | Open ML4W settings (function key) |
 
-## 🔒 Security Features
+## 🔒 Security & Accessibility Features
 
 | Feature | Details |
 |---------|---------|
-| **Secure Clipboard** | Uses `clipse` for encrypted clipboard storage |
-| **Fuzzel Interface** | Beautiful popup with numbered entries |
+| **Secure Clipboard** | Uses `clipse` for encrypted clipboard storage (`Super + ,`) |
+| **Fuzzel Interface** | Beautiful popups with numbered entries for clipboard and emojis |
 | **XDG Config Support** | User configs override system configs |
 | **Keyring Integration** | Automatic unlock on login and screen unlock |
+| **Desktop Zoom** | Accessibility zoom like Wayfire (`Super + Shift + Scroll`) |
+| **Screen Recording** | Multi-monitor recording with audio (`Ctrl + 6`) |
+| **On-Screen Keys** | Visual feedback for presentations (`Ctrl + Super + K`) |
 
 ---
 
-**Note**: This configuration prioritizes security with encrypted clipboard storage via `clipse` while maintaining an intuitive fuzzel interface. The `Super + V` clipboard manager provides both security and usability.
+**Note**: This configuration combines security (encrypted clipboard), accessibility (desktop zoom, on-screen keys), and productivity (screen recording, emoji picker) with beautiful fuzzel interfaces. All features use Kartoza theming and follow ML4W conventions.

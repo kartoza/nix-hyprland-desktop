@@ -6,7 +6,8 @@
       "Bash(hyprctl:*)",
       "Bash(mv:*)",
       "Bash(rm:*)",
-      "Bash(nix fmt)"
+      "Bash(nix fmt)",
+      "Bash(chmod:*)"
     ],
     "deny": [],
     "ask": []

@@ -15,6 +15,11 @@ This flake provides a complete Hyprland desktop environment configuration that c
 - Complete theming and styling
 - GNOME Keyring integration with SSH and GPG support
 - **Floating windows by default** with optional tiling mode
+- **Secure clipboard management** with clipse encryption and fuzzel interface
+- **Desktop zoom functionality** for accessibility and presentations 
+- **Screen recording** with multi-monitor support and audio
+- **Emoji picker** with fuzzel search interface
+- **On-screen key display** for tutorials and presentations
 
 ## Usage
 
@@ -377,6 +382,104 @@ The workspace management system consists of:
 - **`workspace-names.conf`** - Name mappings configuration
 
 All scripts support XDG user overrides and follow the same override patterns as other configuration files.
+
+## Productivity & Accessibility Tools
+
+The module includes several integrated tools for productivity and accessibility, all using fuzzel interfaces with consistent Kartoza theming:
+
+### Secure Clipboard Manager
+
+- **Keybinding**: `Super + ,` (comma)
+- **Technology**: clipse + fuzzel integration
+- **Features**: 
+  - Encrypted clipboard history storage
+  - Beautiful fuzzel interface with numbered entries
+  - Preview of clipboard content with newline indicators
+  - Secure storage protects sensitive data
+
+### Emoji Picker
+
+- **Keybinding**: `Super + .` (period)  
+- **Technology**: fuzzel + comprehensive emoji database
+- **Features**:
+  - Searchable emoji database with descriptions
+  - Types emoji at cursor and copies to clipboard
+  - Fuzzel interface with consistent theming
+  - Supports all Unicode emoji categories
+
+### Screen Recording
+
+- **Keybinding**: `Ctrl + 6`
+- **Technology**: wf-recorder with Hyprland integration
+- **Features**:
+  - Toggle recording on/off with single keybind
+  - Multi-monitor support (records focused monitor)
+  - Audio recording included
+  - High-quality H.264 encoding
+  - Saves to `~/Videos/Screencasts/` with timestamped names
+  - Visual notifications for recording status
+
+### Desktop Zoom (Accessibility)
+
+- **Keybindings**: 
+  - `Super + Shift + Scroll Up` - Zoom in
+  - `Super + Shift + Scroll Down` - Zoom out  
+  - `Super + Shift + Z` - Reset zoom to 1x
+- **Technology**: Hyprland cursor zoom feature
+- **Features**:
+  - Real-time desktop magnification like Wayfire
+  - Perfect for accessibility needs
+  - Great for screencasts and presentations
+  - Smooth zoom transitions
+  - No performance impact when not zooming
+
+### On-Screen Key Display
+
+- **Keybinding**: `Ctrl + Super + K`
+- **Technology**: wshowkeys with Kartoza theming
+- **Features**:
+  - Shows pressed keys on screen
+  - Perfect for tutorials and presentations
+  - Kartoza color scheme integration
+  - Toggle on/off functionality
+  - Customizable position and appearance
+
+### Usage Examples
+
+```bash
+# Show clipboard history
+Super + ,
+
+# Insert emoji at cursor
+Super + .
+
+# Start/stop screen recording  
+Ctrl + 6
+
+# Zoom in for accessibility/presentations
+Super + Shift + Scroll Up
+
+# Show keys for tutorial recording
+Ctrl + Super + K
+```
+
+### Customization
+
+All tools respect XDG configuration overrides. You can customize:
+
+```bash
+# Customize clipboard settings
+cp /etc/xdg/hypr/scripts/clipboard.sh ~/.config/hypr/scripts/
+# Edit ~/.config/hypr/scripts/clipboard.sh
+
+# Customize emoji picker
+cp /etc/xdg/fuzzel/fuzzel-emoji ~/.config/fuzzel/
+# Edit ~/.config/fuzzel/fuzzel-emoji
+
+# Customize wshowkeys appearance
+cp /etc/xdg/hypr/scripts/wshowkeys-toggle.sh ~/.config/hypr/scripts/
+# Edit font, colors, position in ~/.config/hypr/scripts/wshowkeys-toggle.sh
+```
 
 ## Customizing Dotfiles
 
