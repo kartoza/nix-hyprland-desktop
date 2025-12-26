@@ -199,8 +199,7 @@ in {
 
     environment.sessionVariables = {
       XDG_SESSION_TYPE = "wayland";
-      # Hyprland sets this to "hyprland"
-      XDG_CURRENT_DESKTOP = "hyprland";
+      # Let Hyprland set XDG_CURRENT_DESKTOP automatically to avoid compatibility warnings
       XDG_SESSION_DESKTOP = "hyprland";
       # Cursor theme and size are managed by home-manager (see home/default.nix)
       # Enable gnome-keyring SSH agent
@@ -493,7 +492,6 @@ in {
     # Import environment variables into systemd user session
     systemd.user.extraConfig = ''
       DefaultEnvironment="WAYLAND_DISPLAY=wayland-1"
-      DefaultEnvironment="XDG_CURRENT_DESKTOP=hyprland"
       DefaultEnvironment="XDG_SESSION_DESKTOP=hyprland"
       DefaultEnvironment="XDG_SESSION_TYPE=wayland"
       DefaultEnvironment="SSH_AUTH_SOCK=%t/keyring/ssh"
