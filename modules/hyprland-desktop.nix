@@ -271,52 +271,8 @@ in {
 
     # Deploy Hyprland configuration files system-wide using standard paths
     environment.etc = {
-      # Hyprland main config - generated from template with proper substitution
-      "xdg/hypr/hyprland.conf" = {
-        text = let
-          baseConfig = lib.readFile ../dotfiles/hypr/hyprland.conf;
-          # Generate per-display output sections
-          displayOutputs = lib.concatStringsSep "\n" (lib.mapAttrsToList
-            (display: scaling: ''
-              monitor=${display},preferred,auto,${toString scaling}
-            '') cfg.displayScaling);
-
-          # Replace template placeholders with proper values
-          configWithSubstitutions = lib.replaceStrings [
-            "@WALLPAPER_COMMAND@"
-            "@CURSOR_THEME@"
-            "@CURSOR_SIZE@"
-            "@FRACTIONAL_SCALING@"
-            "@KEYBOARD_LAYOUTS@"
-            "@NOTIFICATION_COMMAND@"
-            "@SWAYLOCK_COMMAND@"
-            "@EMOJI_COMMAND@"
-            "@RECORD_TOGGLE_COMMAND@"
-            "@WORKSPACE_SWITCHER_COMMAND@"
-            "@WSHOWKEYS_TOGGLE_COMMAND@"
-            "@DISPLAY_OUTPUTS@"
-          ] [
-            "swww init && swww img ${cfg.wallpaper}"
-            "${cfg.cursorTheme}"
-            "${toString cfg.cursorSize}"
-            "${toString cfg.fractionalScaling}"
-            "${lib.concatStringsSep "," cfg.keyboardLayouts}"
-            "mako -c $(xdg-config-path mako/kartoza)"
-            "swaylock -f -C $(xdg-config-path swaylock/config)"
-            "$(xdg-config-path fuzzel/fuzzel-emoji)"
-            "$(xdg-config-path hypr/scripts/record-toggle.sh)"
-            "$(xdg-config-path hypr/scripts/workspace-switcher.sh)"
-            "$(xdg-config-path hypr/scripts/wshowkeys-toggle.sh)"
-            displayOutputs
-          ] baseConfig;
-        in configWithSubstitutions;
-      };
-      "xdg/hypr/scripts".source = ../dotfiles/hypr/scripts;
-      # General utility scripts
-      "xdg/scripts".source = ../dotfiles/scripts;
-      # Hyprland workspace names configuration  
-      "xdg/hypr/workspace-names.conf".source = ../dotfiles/hypr/workspace-names.conf;
-      # Waybar configuration - standard XDG location
+      # Deploy entire Hyprland configuration folder to /etc/xdg/hypr
+      "xdg/hypr".source = ../dotfiles/hypr;
       "xdg/waybar/style.css".source = ../dotfiles/waybar/style.css;
       # Build combined waybar config from modular JSON files  
       "xdg/waybar/config" = {
