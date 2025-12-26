@@ -330,7 +330,7 @@ in {
           baseConfig = lib.readFile ../dotfiles/swaylock/config;
           # Replace wallpaper path with configured wallpaper
           configWithWallpaper =
-            lib.replacewStrings [ "image=/etc/kartoza-wallpaper.png" ]
+            lib.replaceStrings [ "image=/etc/kartoza-wallpaper.png" ]
             [ "image=${cfg.wallpaper}" ] baseConfig;
         in configWithWallpaper;
       };
