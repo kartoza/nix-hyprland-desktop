@@ -17,14 +17,14 @@ PIDFILE="$XDG_RUNTIME_DIR/wshowkeys.pid"
 # Check if wshowkeys is running
 if [ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
     # wshowkeys is running, kill it
-    pkill wshowkeys
-    rm -f "$PIDFILE"
-    notify-send "Key Display" "On-screen keys disabled" --icon=input-keyboard --urgency=low
+    /usr/bin/pkill wshowkeys
+    /usr/bin/rm -f "$PIDFILE"
+    /usr/bin/notify-send "Key Display" "On-screen keys disabled" --icon=input-keyboard --urgency=low
     echo "disabled"
 else
     # wshowkeys is not running, start it with Kartoza theming
     # Colors match the Kartoza orange theme: #DF9E2F (orange), dark background
-    wshowkeys \
+    /usr/bin/wshowkeys \
         --font="JetBrains Mono" \
         --font-size=24 \
         --timeout=2 \
@@ -36,6 +36,6 @@ else
         --special="#ffb59d" &
     
     echo $! >"$PIDFILE"
-    notify-send "Key Display" "On-screen keys enabled" --icon=input-keyboard --urgency=low
+    /usr/bin/notify-send "Key Display" "On-screen keys enabled" --icon=input-keyboard --urgency=low
     echo "enabled"
 fi

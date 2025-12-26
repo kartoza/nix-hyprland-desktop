@@ -195,6 +195,8 @@ in {
       imagemagick # For creating default wallpaper
       # Deploy script for system-wide Hyprland config management
       jq # Required for waybar config building
+      # Window management and switching
+      hyprshell # Alternative window switcher for Hyprland
     ];
 
     environment.sessionVariables = {

@@ -17,7 +17,7 @@ max-visible=2
 group-by=summary
 icons-paths=/run/current-system/sw/share/icons/Papirus,/run/current-system/sw/share/icons/Papirus-Dark,/run/current-system/sw/share/icons/Papirus-Light,/run/current-system/sw/share/icons/Adwaita,/run/current-system/sw/share/icons/
 icons=1
-on-notify=exec mpv $(xdg-config-path mako/sounds/notification.wav)
+on-notify=exec /usr/bin/mpv $(/usr/bin/xdg-config-path mako/sounds/notification.wav)
 
 # Enable action buttons for notifications (required for bluetooth pairing)
 actions=1

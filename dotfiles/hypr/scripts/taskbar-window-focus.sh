@@ -22,7 +22,7 @@ fi
 WINDOW_ADDRESS="$1"
 
 # Get window information from hyprctl
-WINDOW_INFO=$(hyprctl clients -j | jq -r ".[] | select(.address == \"$WINDOW_ADDRESS\")")
+WINDOW_INFO=$(/usr/bin/hyprctl clients -j | /usr/bin/jq -r ".[] | select(.address == \"$WINDOW_ADDRESS\")")
 
 if [ -z "$WINDOW_INFO" ] || [ "$WINDOW_INFO" == "null" ]; then
     echo "Window with address $WINDOW_ADDRESS not found"
@@ -30,7 +30,7 @@ if [ -z "$WINDOW_INFO" ] || [ "$WINDOW_INFO" == "null" ]; then
 fi
 
 # Extract workspace ID where the window is located
-WORKSPACE_ID=$(echo "$WINDOW_INFO" | jq -r '.workspace.id')
+WORKSPACE_ID=$(echo "$WINDOW_INFO" | /usr/bin/jq -r '.workspace.id')
 
 if [ "$WORKSPACE_ID" == "null" ] || [ -z "$WORKSPACE_ID" ]; then
     echo "Could not determine workspace for window $WINDOW_ADDRESS"
@@ -38,20 +38,20 @@ if [ "$WORKSPACE_ID" == "null" ] || [ -z "$WORKSPACE_ID" ]; then
 fi
 
 # Get current workspace to check if we need to switch
-CURRENT_WORKSPACE=$(hyprctl activeworkspace -j | jq -r '.id')
+CURRENT_WORKSPACE=$(/usr/bin/hyprctl activeworkspace -j | /usr/bin/jq -r '.id')
 
 # Switch to the window's workspace if not already there
 if [ "$WORKSPACE_ID" != "$CURRENT_WORKSPACE" ]; then
-    hyprctl dispatch workspace "$WORKSPACE_ID"
+    /usr/bin/hyprctl dispatch workspace "$WORKSPACE_ID"
     # Small delay to ensure workspace switch completes
     sleep 0.1
 fi
 
 # Bring window to top (raise it above other windows)
-hyprctl dispatch bringactivetotop "address:$WINDOW_ADDRESS"
+/usr/bin/hyprctl dispatch bringactivetotop "address:$WINDOW_ADDRESS"
 
 # Focus the window
-hyprctl dispatch focuswindow "address:$WINDOW_ADDRESS"
+/usr/bin/hyprctl dispatch focuswindow "address:$WINDOW_ADDRESS"
 
 # Optional: Notify about the action (comment out if too verbose)
 # WINDOW_TITLE=$(echo "$WINDOW_INFO" | jq -r '.title // .class')
