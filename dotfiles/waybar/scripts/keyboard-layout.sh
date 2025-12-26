@@ -1,99 +1,66 @@
 #!/usr/bin/env bash
 
 # Waybar keyboard layout toggle script for Hyprland
-# Toggles between configured keyboard layouts and detects external changes
+# Switches between US and Portuguese layouts using hyprctl
 
-# Read layouts from Hyprland config (check user config first)
-HYPRLAND_CONFIG="$(xdg-config-path hypr/hyprland.conf 2>/dev/null || echo "/etc/xdg/hypr/hyprland.conf")"
-if [[ -f "$HYPRLAND_CONFIG" ]]; then
-  # Extract kb_layout line and get the layouts
-  LAYOUTS=$(grep "kb_layout = " "$HYPRLAND_CONFIG" | head -1 | cut -d'=' -f2 | tr -d ' ')
-  IFS=',' read -ra LAYOUT_ARRAY <<< "$LAYOUTS"
-  LAYOUT_PRIMARY="${LAYOUT_ARRAY[0]:-us}"
-  LAYOUT_SECONDARY="${LAYOUT_ARRAY[1]:-pt}"
-else
-  # Fallback to default layouts
-  LAYOUT_PRIMARY="us"
-  LAYOUT_SECONDARY="pt"
-fi
+# Get main keyboard device name
+get_main_keyboard() {
+  /usr/bin/hyprctl devices -j | /usr/bin/jq -r '.keyboards[] | select(.main == true) | .name' | /usr/bin/head -1
+}
 
-# Get current layout using xkblayout-state if available
+# Get current layout from Hyprland
 get_current_layout() {
-  if command -v xkblayout-state >/dev/null 2>&1; then
-    # Use xkblayout-state to get the current active layout
-    local current_group
-    current_group=$(xkblayout-state print %c 2>/dev/null)
-    
-    # Map group number to layout name
-    case "$current_group" in
-      0) echo "$LAYOUT_PRIMARY" ;;
-      1) echo "$LAYOUT_SECONDARY" ;;
-      *) echo "$LAYOUT_PRIMARY" ;;  # fallback to primary
-    esac
-  else
-    # Fallback: use first layout from config
-    echo "$LAYOUT_PRIMARY"
+  local main_kb=$(get_main_keyboard)
+  if [[ -z "$main_kb" ]]; then
+    echo "us"
+    return
   fi
-}
-
-# Set layout using available tools
-set_layout() {
-  local target_layout="$1"
   
-  if command -v xkblayout-state >/dev/null 2>&1; then
-    # Use xkblayout-state to set layout directly by group number
-    case "$target_layout" in
-      "$LAYOUT_PRIMARY") xkblayout-state set 0 ;;
-      "$LAYOUT_SECONDARY") xkblayout-state set 1 ;;
-    esac
-  else
-    # Fallback: Simulate Alt+Shift keystroke to toggle
-    if command -v wtype >/dev/null 2>&1; then
-      wtype -M alt -M shift -m shift -m alt
-    elif command -v ydotool >/dev/null 2>&1; then
-      ydotool key alt:1 shift:1 shift:0 alt:0
-    fi
-  fi
-}
-
-# Get display name for layout code
-get_display_name() {
-  local layout="$1"
-  case "$layout" in
-    "us") echo "EN" ;;
-    "pt") echo "PT" ;;
-    "de") echo "DE" ;;
-    "fr") echo "FR" ;;
-    "es") echo "ES" ;;
-    "it") echo "IT" ;;
-    *) echo "${layout^^}" ;;  # Uppercase the layout code as fallback
+  local active_keymap=$(/usr/bin/hyprctl devices -j | /usr/bin/jq -r ".keyboards[] | select(.name == \"$main_kb\") | .active_keymap")
+  case "$active_keymap" in
+    *"Portuguese"*) echo "pt" ;;
+    *) echo "us" ;;
   esac
 }
 
-# Toggle layout
+# Toggle between US and Portuguese layouts
 toggle_layout() {
-  current=$(get_current_layout)
-  if [[ "$current" == "$LAYOUT_PRIMARY" ]]; then
-    set_layout "$LAYOUT_SECONDARY"
-    get_display_name "$LAYOUT_SECONDARY"
+  local main_kb=$(get_main_keyboard)
+  if [[ -z "$main_kb" ]]; then
+    echo "EN"
+    return
+  fi
+  
+  local current=$(get_current_layout)
+  
+  if [[ "$current" == "us" ]]; then
+    # Switch to Portuguese (group 1)
+    /usr/bin/hyprctl switchxkblayout "$main_kb" 1 >/dev/null 2>&1
+    echo "PT"
   else
-    set_layout "$LAYOUT_PRIMARY"
-    get_display_name "$LAYOUT_PRIMARY"
+    # Switch to US (group 0) 
+    /usr/bin/hyprctl switchxkblayout "$main_kb" 0 >/dev/null 2>&1
+    echo "EN"
   fi
 }
 
-# Display current layout for waybar
-display_layout() {
-  current=$(get_current_layout)
-  get_display_name "$current"
+# Get display name for current layout
+get_display_name() {
+  local layout=$(get_current_layout)
+  case "$layout" in
+    "us") echo "EN" ;;
+    "pt") echo "PT" ;;
+    *) echo "${layout^^}" ;;
+  esac
 }
 
+# Handle command line arguments
 case "${1}" in
-toggle)
-  toggle_layout
-  ;;
-*)
-  display_layout
-  ;;
+  toggle)
+    toggle_layout
+    ;;
+  *)
+    get_display_name
+    ;;
 esac
 
