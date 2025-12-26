@@ -2,7 +2,9 @@
         	"format": "{icon}",
         	"tooltip": true,
         	"tooltip-format": "{title}",
-        	"on-click": "hyprctl dispatch focuswindow address:0x{address}",
+        	"on-click": "$(xdg-config-resolve hypr/scripts/taskbar-window-focus.sh) 0x{address}",
         	"on-click-middle": "hyprctl dispatch closewindow address:0x{address}",
-        	"active-first": true
+        	"active-first": true,
+        	"sort-by-app-id": true,
+        	"icon-size": 20
  }}
