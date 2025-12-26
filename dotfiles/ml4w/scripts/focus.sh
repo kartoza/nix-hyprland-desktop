@@ -39,7 +39,7 @@ fi
 # -dmenu: Rofi's dmenu mode for selection
 # -i: Case-insensitive searching
 # -p "Active Window": Sets the Rofi prompt
-selected_line=$(echo -e "$rofi_input" | rofi -dmenu -config ~/.config/rofi/config-compact.rasi -no-show-icons -i -p "Active Window")
+selected_line=$(echo -e "$rofi_input" | rofi -dmenu -config /etc/xdg/rofi/config-compact.rasi -no-show-icons -i -p "Active Window")
 
 # Check if a selection was made (user didn't press Esc or close Rofi)
 if [ -n "$selected_line" ]; then

@@ -11,13 +11,13 @@
 # DON'T CHANGE THIS FILE
 
 # You can define your custom configuration by adding
-# files in ~/.config/zshrc
-# or by creating a folder ~/.config/zshrc/custom
+# files in /etc/xdg/zshrc
+# or by creating a folder /etc/xdg/zshrc/custom
 # with you own zshrc configuration
 # -----------------------------------------------------
 
-if [ -d ~/.config/zshrc/custom ]; then
-    for f in ~/.config/zshrc/custom/*; do source $f; done
+if [ -d /etc/xdg/zshrc/custom ]; then
+    for f in /etc/xdg/zshrc/custom/*; do source $f; done
 else
-    for f in ~/.config/zshrc/*; do source $f; done
+    for f in /etc/xdg/zshrc/*; do source $f; done
 fi

@@ -24,7 +24,7 @@ fi
 if [ "$launcher" == "walker" ]; then
     selected_theme=$($HOME/.config/walker/launch.sh -d -N -H -p "Search Theme" <<<"$THEME_OPTIONS")
 else
-    selected_theme=$(rofi -dmenu -i -markup -eh 2 -replace -p "Keybinds" -config ~/.config/rofi/config-compact.rasi <<<"$THEME_OPTIONS")
+    selected_theme=$(rofi -dmenu -i -markup -eh 2 -replace -p "Keybinds" -config /etc/xdg/rofi/config-compact.rasi <<<"$THEME_OPTIONS")
 fi
 
 # -----------------------------------------------------

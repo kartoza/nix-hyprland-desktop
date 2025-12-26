@@ -32,7 +32,7 @@ select_sidepad() {
     if [ "$launcher" == "walker" ]; then
         pad=$(ls $SIDEPAD_PADS_FOLDER | $HOME/.config/walker/launch.sh -d -n -N -H --maxheight 400 -p "Sidepads")
     else
-        pad=$(ls $SIDEPAD_PADS_FOLDER | rofi -dmenu -replace -i -config ~/.config/rofi/config-compact.rasi -no-show-icons -width 30 -p "Sidepads")
+        pad=$(ls $SIDEPAD_PADS_FOLDER | rofi -dmenu -replace -i -config /etc/xdg/rofi/config-compact.rasi -no-show-icons -width 30 -p "Sidepads")
     fi
 
     # Set new sidepad

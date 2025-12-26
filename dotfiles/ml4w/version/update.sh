@@ -3,7 +3,7 @@
 # Check for updates
 # ------------------------------------------------------
 
-source ~/.config/ml4w/version/library.sh
+source /etc/xdg/ml4w/version/library.sh
 
 # Get latest tag from GitHub
 get_latest_release() {
@@ -15,7 +15,7 @@ get_latest_release() {
 # Check for internet connection
 if ping -q -c 1 -W 1 google.com >/dev/null; then
 
-    version=$(cat ~/.config/ml4w/version/name)
+    version=$(cat /etc/xdg/ml4w/version/name)
     online=$(get_latest_release "mylinuxforwork/hyprland-dotfiles")
     echo $version "<" $online
     testvercomp $version $online "<"

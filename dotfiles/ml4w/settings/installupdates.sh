@@ -1,1 +1,1 @@
-$(cat ~/.config/ml4w/settings/terminal.sh) --class dotfiles-floating -e ~/.config/ml4w/scripts/installupdates.sh
+$(cat /etc/xdg/ml4w/settings/terminal.sh) --class dotfiles-floating -e /etc/xdg/ml4w/scripts/installupdates.sh

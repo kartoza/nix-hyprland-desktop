@@ -16,13 +16,13 @@ if [ "$launcher" == "walker" ]; then
 else
     case $1 in
         d)
-            cliphist list | rofi -dmenu -replace -config ~/.config/rofi/config-cliphist.rasi | cliphist delete
+            cliphist list | rofi -dmenu -replace -config /etc/xdg/rofi/config-cliphist.rasi | cliphist delete
         ;;
         w)    
             cliphist wipe
         ;;
         *)
-            cliphist list | rofi -dmenu -replace -config ~/.config/rofi/config-cliphist.rasi | cliphist decode | wl-copy
+            cliphist list | rofi -dmenu -replace -config /etc/xdg/rofi/config-cliphist.rasi | cliphist decode | wl-copy
         ;;
     esac
 fi
