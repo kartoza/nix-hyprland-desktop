@@ -122,7 +122,7 @@ in {
       liberation_ttf # Good sans-serif fonts
       dejavu_fonts # DejaVu fonts (good fallback)
       source-sans # Adobe Source Sans Pro (modern, clean)
-      ubuntu_font_family # Ubuntu fonts (similar to nunito)
+      ubuntu-classic # Ubuntu fonts (similar to nunito)
       # Cursor themes
       vanilla-dmz # Default cursor theme
       adwaita-icon-theme # Includes Adwaita cursor theme
