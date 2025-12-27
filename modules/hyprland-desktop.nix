@@ -113,12 +113,12 @@ in {
       # Default icon theme (Papirus) - can be overridden by kartoza.nix or other configs
       papirus-icon-theme
       # Greetd and regreet
-      greetd.regreet
+      regreet
       # Essential fonts for waybar and hyprland
       font-awesome # For waybar icons (required for waybar symbols)
       noto-fonts # Good fallback font family
       noto-fonts-cjk-sans # CJK character support
-      noto-fonts-emoji # Emoji support
+      noto-fonts-color-emoji # Emoji support
       liberation_ttf # Good sans-serif fonts
       dejavu_fonts # DejaVu fonts (good fallback)
       source-sans # Adobe Source Sans Pro (modern, clean)
@@ -476,7 +476,7 @@ in {
       enable = true;
       settings = {
         default_session = {
-          command = "${pkgs.greetd.regreet}/bin/regreet";
+          command = "${pkgs.regreet}/bin/regreet";
           user = "greeter";
         };
       };
