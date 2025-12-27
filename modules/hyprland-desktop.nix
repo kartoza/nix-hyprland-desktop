@@ -197,7 +197,7 @@ in {
       # Deploy script for system-wide Hyprland config management
       jq # Required for waybar config building
       # Window management and switching
-      hyprswitch # CLI/GUI that allows switching between windows in Hyprland
+      hyprshell # CLI/GUI that allows switching between windows in Hyprland
     ];
 
     environment.sessionVariables = {
