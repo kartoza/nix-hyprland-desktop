@@ -102,9 +102,9 @@ The module follows XDG Base Directory Specification for configuration management
 
 #### XDG Config Tools
 
-- `xdg-config-resolve` - Dynamic config path resolver for scripts and applications
 - `xdg-config-path` - Simple path helper for shell scripts
 - PATH includes both `~/.config/*/scripts` and `/etc/xdg/*/scripts` (user scripts first)
+- All scripts use hard-coded `/etc/xdg/` paths for consistent configuration resolution
 
 #### Overriding Configuration
 
