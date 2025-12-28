@@ -8,35 +8,38 @@
 /* Container takes full screen but is transparent */
 .workspace-overlay-container {
   background-color: transparent;
+  width: 100%;
+  height: 100%;
 }
 
-/* Main workspace overlay box */
+/* Main workspace overlay box - slides in from right */
 .workspace-overlay-box {
-  background-color: rgba(22, 33, 39, 0.95);
+  background-color: rgba(26, 17, 15, 0.95);
   border: 2px solid #DF9E2F;
-  border-radius: 16px;
-  padding: 40px 80px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  border-radius: 16px 0px 0px 16px;
+  padding: 30px 40px;
+  box-shadow: -8px 8px 32px rgba(0, 0, 0, 0.6);
+  margin-right: 0px;
 
-  /* Start hidden and scaled down */
+  /* Start off-screen to the right */
   opacity: 0;
-  transform: scale(0.8);
+  transform: translateX(450px);
 
-  /* Smooth animation with cubic-bezier easing */
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* Smooth slide-in animation with bounce effect */
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Visible state with smooth entrance */
+/* Visible state - slide in and dock to right edge */
 .workspace-overlay-box.visible {
   opacity: 1;
-  transform: scale(1);
+  transform: translateX(0px);
 }
 
-/* Hidden state with smooth exit */
+/* Hidden state - slide out to the right */
 .workspace-overlay-box.hidden {
   opacity: 0;
-  transform: scale(0.9);
-  transition: all 0.3s cubic-bezier(0.36, 0, 0.66, -0.56);
+  transform: translateX(450px);
+  transition: all 0.4s cubic-bezier(0.36, 0, 0.66, -0.56);
 }
 
 /* Workspace number styling */

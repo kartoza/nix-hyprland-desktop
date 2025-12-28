@@ -48,22 +48,17 @@ get_workspace_name() {
 switch_to_workspace() {
     local ws_num="$1"
     if [[ "$ws_num" =~ ^[0-8]$ ]]; then
-        # Use hyprland workspace manager for reliable switching
-        if [[ -x "$(command -v hyprland-workspace-manager.sh)" ]]; then
-            hyprland-workspace-manager.sh set "$ws_num"
-        else
-            # Fallback to direct switching
-            local key_num=$((ws_num + 1))
-            wtype -M logo -k "$key_num" -m logo
-            
-            # Update our state cache
-            mkdir -p "$HOME/.cache"
-            echo "$ws_num" > "$HOME/.cache/hyprland-current-workspace"
-            
-            # Call workspace changed hook
-            if [[ -x "$(command -v workspace-changed.sh)" ]]; then
-                workspace-changed.sh "$ws_num" &
-            fi
+        # Use hyprctl to switch workspaces directly (workspaces 1-9 in Hyprland)
+        local hypr_ws=$((ws_num + 1))
+        hyprctl dispatch workspace "$hypr_ws" >/dev/null 2>&1
+
+        # Update our state cache
+        mkdir -p "$HOME/.cache"
+        echo "$ws_num" > "$HOME/.cache/hyprland-current-workspace"
+
+        # Call workspace changed hook
+        if [[ -x "$(command -v workspace-changed.sh)" ]]; then
+            workspace-changed.sh "$ws_num" &
         fi
     fi
 }
@@ -88,18 +83,18 @@ generate_workspace_list() {
 
 # Main logic
 if command -v fuzzel >/dev/null 2>&1; then
-    # Generate options and show fuzzel
+    # Generate options and show fuzzel with Kartoza styling
     selected=$(generate_workspace_list | fuzzel --dmenu \
-        --prompt="Switch to workspace: " \
-        --placeholder="Select workspace..." \
-        --font="sans-serif:size=12" \
-        --width=40 \
+        --prompt="Kartoza Workspace: " \
+        --width=48 \
         --lines=9 \
-        --line-height=24 \
-        --horizontal-pad=12 \
-        --vertical-pad=8 \
-        --inner-pad=8 \
-        --border-radius=8 \
+        --font="JetBrains Mono:size=12" \
+        --background-color=1a110fdd \
+        --text-color=f1dfdaff \
+        --match-color=ffb59dff \
+        --selection-color=723520ff \
+        --selection-text-color=ffdbd0ff \
+        --border-color=ffb59dff \
         --border-width=2)
     
     if [[ -n "$selected" ]]; then

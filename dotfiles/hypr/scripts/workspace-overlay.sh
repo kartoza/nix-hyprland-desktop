@@ -4,7 +4,7 @@
 
 WORKSPACE_NUMBER="${1:-0}"
 WORKSPACE_NAME="${2:-Workspace}"
-DISPLAY_DURATION="${3:-1500}" # milliseconds to show overlay
+DISPLAY_DURATION="${3:-2000}" # milliseconds to show overlay (2 seconds)
 
 # Ensure eww is running
 if ! pgrep -x eww > /dev/null; then

@@ -34,9 +34,9 @@ echo "$(date '+%Y-%m-%d %H:%M:%S') - Changed to workspace: ${CURRENT_WS} (${WS_N
 # Create log directory if it doesn't exist
 mkdir -p ~/.local/state
 
-# Show workspace overlay with eww (center screen with animation)
+# Show workspace overlay with eww (slides in from right, docked to edge)
 if command -v workspace-overlay.sh >/dev/null 2>&1; then
-    workspace-overlay.sh "$((CURRENT_WS + 1))" "${WS_NAME}" 1500 &
+    workspace-overlay.sh "$((CURRENT_WS + 1))" "${WS_NAME}" &
 fi
 
 # Optional: Update waybar if it has a workspace widget

@@ -6,14 +6,14 @@
 (defvar workspace_name "")
 (defvar workspace_number "")
 
-;; Workspace overlay window
+;; Workspace overlay window - positioned on right side, 1/3 down from top
 (defwindow workspace-overlay
   :monitor 0
-  :geometry (geometry :x "0%"
-                      :y "0%"
-                      :width "100%"
-                      :height "100%"
-                      :anchor "center center")
+  :geometry (geometry :x "0px"
+                      :y "33%"
+                      :width "400px"
+                      :height "150px"
+                      :anchor "right center")
   :stacking "overlay"
   :exclusive false
   :focusable false
@@ -26,7 +26,7 @@
        :orientation "vertical"
        :space-evenly false
        :valign "center"
-       :halign "center"
+       :halign "end"
        :visible workspace_visible
     (box :class "workspace-overlay-box ${workspace_visible ? 'visible' : 'hidden'}"
          :orientation "vertical"
