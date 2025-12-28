@@ -39,9 +39,6 @@ if command -v workspace-overlay.sh >/dev/null 2>&1; then
     workspace-overlay.sh "$((CURRENT_WS + 1))" "${WS_NAME}" &
 fi
 
-# Optional: Update waybar if it has a workspace widget
-pkill -SIGUSR1 waybar 2>/dev/null || true
-
 # You can add more custom actions here:
 # - Update workspace-specific configs
 # - Start/stop workspace-specific services
