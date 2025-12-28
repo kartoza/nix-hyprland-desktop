@@ -3,7 +3,7 @@
   "format": "{}",
   "return-type": "json",
   "exec": "recording-status.sh",
-  "on-click": "record-toggle.sh",
+  "on-click": "screen-recorder.sh",
   "interval": 2
 }}
 
