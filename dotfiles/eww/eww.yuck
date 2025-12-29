@@ -38,14 +38,14 @@
       (label :class "workspace-name"
              :text workspace_name))))
 
-;; Scratchpad indicator window - positioned at top center
+;; Scratchpad indicator window - positioned on right side, like workspace overlay
 (defwindow scratchpad-indicator
   :monitor 0
-  :geometry (geometry :x "0%"
-                      :y "20px"
-                      :width "250px"
-                      :height "80px"
-                      :anchor "top center")
+  :geometry (geometry :x "0px"
+                      :y "50%"
+                      :width "400px"
+                      :height "150px"
+                      :anchor "center right")
   :stacking "overlay"
   :exclusive false
   :focusable false
@@ -57,14 +57,14 @@
   (box :class "scratchpad-indicator-container"
        :orientation "vertical"
        :space-evenly false
-       :valign "start"
-       :halign "center"
+       :valign "center"
+       :halign "end"
        :visible scratchpad_visible
     (box :class "scratchpad-indicator-box ${scratchpad_visible ? 'visible' : 'hidden'}"
          :orientation "vertical"
          :space-evenly false
-         :spacing 5
+         :spacing 10
+      (label :class "scratchpad-icon"
+             :text "📋")
       (label :class "scratchpad-title"
-             :text "Scratchpad")
-      (label :class "scratchpad-hint"
-             :text "Hide: Mod + ~"))))
+             :text "Scratchpad"))))

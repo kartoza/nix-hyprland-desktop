@@ -21,11 +21,14 @@ if ! eww -c "$EWW_CONFIG" active-windows | grep -q "scratchpad-indicator"; then
 fi
 
 # Check if special workspace is visible
-# The special workspace ID is -99 in Hyprland
-ACTIVE_WORKSPACE=$(hyprctl activeworkspace -j | jq -r '.id')
+# The special workspace name is "special:scratchpad" in Hyprland
+SPECIAL_WORKSPACES=$(hyprctl workspaces -j | jq -r '.[] | select(.name == "special:scratchpad") | .windows')
 
-if [ "$ACTIVE_WORKSPACE" = "-99" ]; then
-    # Scratchpad is visible, show indicator
+# If there are windows in the scratchpad and it's currently visible/active
+ACTIVE_WORKSPACE=$(hyprctl activeworkspace -j | jq -r '.name')
+
+if [ "$ACTIVE_WORKSPACE" = "special:scratchpad" ]; then
+    # Scratchpad is visible and active, show indicator
     eww -c "$EWW_CONFIG" update scratchpad_visible=true
 else
     # Scratchpad is hidden, hide indicator

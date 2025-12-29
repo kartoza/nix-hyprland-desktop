@@ -13,7 +13,10 @@
 /* Main workspace overlay box */
 .workspace-overlay-box {
   background-color: rgba(26, 17, 15, 0.95);
-  border: 2px solid #DF9E2F;
+  border-left: 2px solid #DF9E2F;
+  border-top: 2px solid #DF9E2F;
+  border-bottom: 2px solid #DF9E2F;
+  border-right: none;
   border-top-left-radius: 16px;
   border-bottom-left-radius: 16px;
   border-top-right-radius: 0px;
@@ -21,21 +24,24 @@
   padding: 30px 40px;
   margin-right: 0px;
 
-  /* Start hidden */
+  /* Start hidden - off screen to the right */
   opacity: 0;
+  transform: translateX(100%);
 
-  /* Smooth fade animation */
-  transition: opacity 0.3s ease-in-out;
+  /* Smooth slide and fade animation with elastic easing */
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Visible state - fade in */
+/* Visible state - slide in and fade in */
 .workspace-overlay-box.visible {
   opacity: 1;
+  transform: translateX(0);
 }
 
-/* Hidden state - fade out */
+/* Hidden state - slide out and fade out */
 .workspace-overlay-box.hidden {
   opacity: 0;
+  transform: translateX(100%);
 }
 
 /* Workspace number styling */
@@ -62,43 +68,50 @@
   background-color: transparent;
 }
 
-/* Main scratchpad indicator box */
+/* Main scratchpad indicator box - matches workspace overlay style */
 .scratchpad-indicator-box {
   background-color: rgba(26, 17, 15, 0.95);
-  border: 2px solid #DF9E2F;
-  border-radius: 12px;
-  padding: 15px 25px;
+  border-left: 2px solid #DF9E2F;
+  border-top: 2px solid #DF9E2F;
+  border-bottom: 2px solid #DF9E2F;
+  border-right: none;
+  border-top-left-radius: 16px;
+  border-bottom-left-radius: 16px;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+  padding: 30px 40px;
+  margin-right: 0px;
 
-  /* Start hidden */
+  /* Start hidden - off screen to the right */
   opacity: 0;
+  transform: translateX(100%);
 
-  /* Smooth fade animation */
-  transition: opacity 0.3s ease-in-out;
+  /* Smooth slide and fade animation with elastic easing */
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Visible state - fade in */
+/* Visible state - slide in and fade in */
 .scratchpad-indicator-box.visible {
   opacity: 1;
+  transform: translateX(0);
 }
 
-/* Hidden state - fade out */
+/* Hidden state - slide out and fade out */
 .scratchpad-indicator-box.hidden {
   opacity: 0;
+  transform: translateX(100%);
+}
+
+/* Scratchpad icon styling */
+.scratchpad-icon {
+  font-size: 64px;
+  text-align: center;
 }
 
 /* Scratchpad title styling */
 .scratchpad-title {
-  font-size: 24px;
-  font-weight: bold;
+  font-size: 32px;
+  font-weight: 600;
   color: #DF9E2F;
-  text-align: center;
-}
-
-/* Scratchpad hint styling */
-.scratchpad-hint {
-  font-size: 14px;
-  font-weight: 400;
-  color: #FFFFFF;
-  opacity: 0.8;
   text-align: center;
 }
