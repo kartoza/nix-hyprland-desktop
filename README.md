@@ -461,7 +461,7 @@ The module includes several integrated tools for productivity and accessibility,
 
 ### On-Screen Key Display
 
-- **Keybinding**: `Ctrl + Super + K`
+- **Keybinding**: `Super + -`
 - **Technology**: wshowkeys with Kartoza theming
 - **Features**:
   - Shows pressed keys on screen
