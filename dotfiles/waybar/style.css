@@ -371,16 +371,35 @@ window#waybar {
 
 /* Battery states */
 #battery {
+    /* Default gray for 50-75% range */
 }
 
+/* 75%+ - Kartoza green */
+#battery.excellent:not(.charging) {
+    color: #4CAF50;
+}
+
+/* 50-75% - Default gray (no override needed) */
+#battery.good:not(.charging) {
+    color: #aeaeae;
+}
+
+/* 25-50% - Kartoza blue */
+#battery.medium:not(.charging) {
+    color: #569FC6;
+}
+
+/* 10-25% - Kartoza orange */
+#battery.low:not(.charging) {
+    color: #DF9E2F;
+}
+
+/* 0-10% - Kartoza red */
 #battery.critical:not(.charging) {
-    color: #DF9E2F;
+    color: #D32F2F;
 }
 
-#battery.warning:not(.charging) {
-    color: #DF9E2F;
-}
-
+/* Charging state - light blue */
 #battery.charging {
     color: #6AAFD6;
 }
@@ -414,9 +433,34 @@ window#waybar {
     color: #DF9E2F;
 }
 
-/* Hardware temperature */
-#temperature.critical {
+/* Hardware temperature states */
+#temperature {
+    /* Default gray */
+}
+
+/* 0-15°C - Kartoza white */
+#temperature.cold {
+    color: #FFFFFF;
+}
+
+/* 15-25°C - Kartoza blue */
+#temperature.cool {
+    color: #569FC6;
+}
+
+/* 25-35°C - Kartoza orange */
+#temperature.warm {
     color: #DF9E2F;
+}
+
+/* 35-45°C - Light red */
+#temperature.hot {
+    color: #E74C3C;
+}
+
+/* 45°C+ - Bright red */
+#temperature.critical {
+    color: #FF0000;
 }
 
 /* Network states */

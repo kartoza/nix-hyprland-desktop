@@ -24,6 +24,7 @@
         "pulseaudio",
         "custom/keyboard-layout",
         "custom/wshowkeys",
+        "custom/clipboard",
         "custom/notification-count",
         "custom/notification-toggle",
         "tray",

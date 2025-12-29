@@ -1,9 +1,4 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+{ config, lib, pkgs, ... }:
 
 with lib;
 
@@ -26,13 +21,12 @@ let
     cp -r ${../dotfiles/hypr}/* $out/
 
     # Run keybindings generator script
-    ${pkgs.bash}/bin/bash ${../build-scripts/generate-keybindings-list.sh} \
+    ${pkgs.bash}/bin/bash ${../scripts/generate-keybindings-list.sh} \
       "$out/conf/keybindings/default.conf" \
       "$out/scripts/keybindings-list.txt"
   '';
 
-in
-{
+in {
   options = {
     kartoza.hyprland-desktop = {
       enable = mkEnableOption "Kartoza Hyprland Desktop Environment";
@@ -52,19 +46,22 @@ in
       fractionalScaling = mkOption {
         type = types.float;
         default = 1.0;
-        description = "Fractional scaling factor for displays (1.0 = 100%, 1.25 = 125%, 1.5 = 150%, etc.)";
+        description =
+          "Fractional scaling factor for displays (1.0 = 100%, 1.25 = 125%, 1.5 = 150%, etc.)";
       };
 
       qtTheme = mkOption {
         type = types.str;
         default = "qt5ct";
-        description = "Qt platform theme to use for Qt applications (qt5ct, gnome, gtk2, kde, fusion)";
+        description =
+          "Qt platform theme to use for Qt applications (qt5ct, gnome, gtk2, kde, fusion)";
       };
 
       darkTheme = mkOption {
         type = types.bool;
         default = true;
-        description = "Whether to use dark theme for GTK applications (defaults to true)";
+        description =
+          "Whether to use dark theme for GTK applications (defaults to true)";
       };
 
       displayScaling = mkOption {
@@ -74,7 +71,8 @@ in
           "eDP-1" = 1.5;
           "DP-9" = 1.0;
         };
-        description = "Per-display scaling factors. Use display names as keys (e.g., eDP-1, DP-9) and scaling factors as values.";
+        description =
+          "Per-display scaling factors. Use display names as keys (e.g., eDP-1, DP-9) and scaling factors as values.";
       };
 
       cursorTheme = mkOption {
@@ -91,23 +89,33 @@ in
 
       keyboardLayouts = mkOption {
         type = types.listOf types.str;
-        default = [
-          "us"
-          "pt"
-        ];
-        example = [
-          "us"
-          "de"
-          "fr"
-        ];
-        description = "List of keyboard layouts (first layout is default, others accessible via Alt+Shift toggle)";
+        default = [ "us" "pt" ];
+        example = [ "us" "de" "fr" ];
+        description =
+          "List of keyboard layouts (first layout is default, others accessible via Alt+Shift toggle)";
       };
 
       wallpaper = mkOption {
         type = types.str;
         default = "/etc/kartoza-wallpaper.png";
         example = "/home/user/Pictures/my-wallpaper.jpg";
-        description = "Path to wallpaper image used for both desktop background and hyprlock lock screen";
+        description =
+          "Path to wallpaper image used for both desktop background and hyprlock lock screen";
+      };
+
+      startButton = mkOption {
+        type = types.str;
+        default = "/etc/kartoza-start-button.png";
+        example = "/home/user/Pictures/start-button.jpg";
+        description = "Path to image used for the start button in waybar";
+      };
+
+      startButtonHovered = mkOption {
+        type = types.str;
+        default = "/etc/kartoza-start-button-hover.png";
+        example = "/home/user/Pictures/start-button-hovered.jpg";
+        description =
+          "Path to image used for the start button in waybar when hovered";
       };
 
       greetdTheme = mkOption {
@@ -213,7 +221,6 @@ in
       xdg-desktop-portal-hyprland # For screen sharing in Hyprland
       zenity # GUI dialogs for keyring unlock
       # Wallpaper and screen management
-      swww # Efficient animated wallpaper daemon for wayland
       # Cursor theme
       vanilla-dmz # Default cursor theme
       # Image processing for wallpapers
@@ -242,10 +249,6 @@ in
       BROWSER = "re.sonny.Junction";
       # Add script directories to PATH (user directories first)
       PATH = [
-        "$HOME/.config/fuzzel"
-        "$HOME/.config/hypr/scripts"
-        "$HOME/.config/waybar/scripts"
-        "$HOME/.config/scripts"
         "/etc/xdg/fuzzel"
         "/etc/xdg/hypr/scripts"
         "/etc/xdg/waybar/scripts"
@@ -316,40 +319,36 @@ in
       "xdg/waybar/scripts".source = ../dotfiles/waybar/scripts;
       "xdg/waybar/config.d".source = ../dotfiles/waybar/config.d;
       "xdg/waybar/config" = {
-        source =
-          pkgs.runCommand "waybar-config-hyprland"
-            {
-              nativeBuildInputs = [ pkgs.jq ];
-            }
-            ''
-              src=${../dotfiles/waybar/config.d}
+        source = pkgs.runCommand "waybar-config-hyprland" {
+          nativeBuildInputs = [ pkgs.jq ];
+        } ''
+          src=${../dotfiles/waybar/config.d}
 
-              # Use generic base config and add all modules including taskbar
-              cat "$src/00-base.json" > config.json
+          # Use generic base config and add all modules including taskbar
+          cat "$src/00-base.json" > config.json
 
-              # Merge all other config fragments except base files
-              for file in "$src"/*.json; do
-                filename=$(basename "$file")
-                # Skip base files
-                if [[ "$filename" != "00-base.json" && "$filename" != "00-base-hyprland.json" ]]; then
-                  echo "Merging $filename"
-                  jq -s '.[0] * .[1]' config.json "$file" > temp.json
-                  mv temp.json config.json
-                fi
-              done
+          # Merge all other config fragments except base files
+          for file in "$src"/*.json; do
+            filename=$(basename "$file")
+            # Skip base files
+            if [[ "$filename" != "00-base.json" && "$filename" != "00-base-hyprland.json" ]]; then
+              echo "Merging $filename"
+              jq -s '.[0] * .[1]' config.json "$file" > temp.json
+              mv temp.json config.json
+            fi
+          done
 
-              # Fix script paths to use /etc/xdg instead of /etc/waybar
-              sed 's|/etc/waybar/scripts/|/etc/xdg/waybar/scripts/|g' config.json > final_config.json
+          # Fix script paths to use /etc/xdg instead of /etc/waybar
+          sed 's|/etc/waybar/scripts/|/etc/xdg/waybar/scripts/|g' config.json > final_config.json
 
-              cp final_config.json $out
-            '';
+          cp final_config.json $out
+        '';
       };
 
       # Resources - waybar logos and start button
-      "xdg/waybar/kartoza-logo-neon.png".source = ../resources/kartoza-logo-neon.png;
-      "xdg/waybar/kartoza-logo-neon-bright.png".source = ../resources/kartoza-logo-neon-bright.png;
-      "xdg/waybar/kartoza-start-button.png".source = ../resources/kartoza-start-button.png;
-      "xdg/waybar/kartoza-start-button-hover.png".source = ../resources/kartoza-start-button-hover.png;
+      "xdg/waybar/kartoza-start-button.png".source = cfg.startButton;
+      "xdg/waybar/kartoza-start-button-hover.png".source =
+        cfg.startButtonHovered;
 
       # Copy configured wallpaper to generic name for use by swww and hyprlock
       "kartoza-wallpaper.png".source = cfg.wallpaper;
@@ -377,9 +376,7 @@ in
       jack.enable = true;
     };
 
-    services.dbus = {
-      enable = true;
-    };
+    services.dbus = { enable = true; };
 
     # Enable automounting for removable media (USB drives, etc.)
     services.udisks2.enable = true;
@@ -387,6 +384,13 @@ in
 
     # Enable power profile management
     services.power-profiles-daemon.enable = true;
+
+    # Configure lid switch behavior to lock screen before suspend
+    services.logind = {
+      lidSwitch = "suspend";
+      lidSwitchDocked = "ignore";
+      lidSwitchExternalPower = "suspend";
+    };
 
     # Enable fingerprint reader support (fprintd)
     services.fprintd.enable = true;
@@ -422,9 +426,7 @@ in
     };
 
     # Configure PAM for sudo to maintain keyring access
-    security.pam.services.sudo = {
-      enableGnomeKeyring = true;
-    };
+    security.pam.services.sudo = { enableGnomeKeyring = true; };
 
     # Configure setuid wrapper for wshowkeys to capture keyboard events
     security.wrappers.wshowkeys = {
@@ -443,10 +445,7 @@ in
       # Configure portal backends for Hyprland
       config = {
         hyprland = {
-          default = lib.mkForce [
-            "gtk"
-            "hyprland"
-          ];
+          default = lib.mkForce [ "gtk" "hyprland" ];
           "org.freedesktop.impl.portal.FileChooser" = lib.mkForce [ "gtk" ];
           "org.freedesktop.impl.portal.AppChooser" = lib.mkForce [ "gtk" ];
           "org.freedesktop.impl.portal.ScreenCast" = lib.mkForce [ "hyprland" ];
@@ -513,9 +512,7 @@ in
           path = cfg.wallpaper;
           fit = "Cover";
         };
-        appearance = {
-          greeting_msg = "Welcome to Kartoza";
-        };
+        appearance = { greeting_msg = "Welcome to Kartoza"; };
         GTK = {
           application_prefer_dark_theme = mkDefault cfg.darkTheme;
           cursor_theme_name = mkDefault cfg.cursorTheme;

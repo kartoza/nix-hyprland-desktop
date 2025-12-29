@@ -2,9 +2,10 @@
   "critical-threshold": 80,
   "format": "{temperatureC}°C ",
   "states": {
-    "normal": 50,
-    "warm": 65,
-    "hot": 80,
-    "critical": 80
+    "cold": 15,
+    "cool": 25,
+    "warm": 35,
+    "hot": 45,
+    "critical": 45
   }
 }}
