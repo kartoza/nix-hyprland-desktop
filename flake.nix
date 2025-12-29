@@ -7,11 +7,21 @@
     hyprland.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, hyprland, ... }:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      hyprland,
+      ...
+    }:
     let
-      supportedSystems = [ "x86_64-linux" "aarch64-linux" ];
+      supportedSystems = [
+        "x86_64-linux"
+        "aarch64-linux"
+      ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
-    in {
+    in
+    {
       # Export the Hyprland desktop module
       nixosModules = {
         hyprland-desktop = import ./modules/hyprland-desktop.nix;
@@ -27,18 +37,23 @@
       };
 
       # Development shell
-      devShells = forAllSystems (system:
-        let pkgs = nixpkgs.legacyPackages.${system};
-        in {
+      devShells = forAllSystems (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        {
           default = pkgs.mkShell {
             name = "hyprland-config-dev";
-            buildInputs = with pkgs; [ nixfmt-rfc-style git ];
+            buildInputs = with pkgs; [
+              nixfmt-rfc-style
+              git
+            ];
           };
-        });
+        }
+      );
 
       # Formatter for nix files
-      formatter = forAllSystems
-        (system: nixpkgs.legacyPackages.${system}.nixfmt-rfc-style);
+      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-rfc-style);
     };
 }
-

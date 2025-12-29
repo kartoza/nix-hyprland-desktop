@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -8,7 +13,8 @@ let
   # Use the icon theme from the module configuration
   iconThemeName = cfg.iconTheme;
 
-in {
+in
+{
   options = {
     kartoza.hyprland-desktop = {
       enable = mkEnableOption "Kartoza Hyprland Desktop Environment";
@@ -28,22 +34,19 @@ in {
       fractionalScaling = mkOption {
         type = types.float;
         default = 1.0;
-        description =
-          "Fractional scaling factor for displays (1.0 = 100%, 1.25 = 125%, 1.5 = 150%, etc.)";
+        description = "Fractional scaling factor for displays (1.0 = 100%, 1.25 = 125%, 1.5 = 150%, etc.)";
       };
 
       qtTheme = mkOption {
         type = types.str;
         default = "qt5ct";
-        description =
-          "Qt platform theme to use for Qt applications (qt5ct, gnome, gtk2, kde, fusion)";
+        description = "Qt platform theme to use for Qt applications (qt5ct, gnome, gtk2, kde, fusion)";
       };
 
       darkTheme = mkOption {
         type = types.bool;
         default = true;
-        description =
-          "Whether to use dark theme for GTK applications (defaults to true)";
+        description = "Whether to use dark theme for GTK applications (defaults to true)";
       };
 
       displayScaling = mkOption {
@@ -53,8 +56,7 @@ in {
           "eDP-1" = 1.5;
           "DP-9" = 1.0;
         };
-        description =
-          "Per-display scaling factors. Use display names as keys (e.g., eDP-1, DP-9) and scaling factors as values.";
+        description = "Per-display scaling factors. Use display names as keys (e.g., eDP-1, DP-9) and scaling factors as values.";
       };
 
       cursorTheme = mkOption {
@@ -71,18 +73,23 @@ in {
 
       keyboardLayouts = mkOption {
         type = types.listOf types.str;
-        default = [ "us" "pt" ];
-        example = [ "us" "de" "fr" ];
-        description =
-          "List of keyboard layouts (first layout is default, others accessible via Alt+Shift toggle)";
+        default = [
+          "us"
+          "pt"
+        ];
+        example = [
+          "us"
+          "de"
+          "fr"
+        ];
+        description = "List of keyboard layouts (first layout is default, others accessible via Alt+Shift toggle)";
       };
 
       wallpaper = mkOption {
         type = types.str;
         default = "/etc/kartoza-wallpaper.png";
         example = "/home/user/Pictures/my-wallpaper.jpg";
-        description =
-          "Path to wallpaper image used for both desktop background and hyprlock lock screen";
+        description = "Path to wallpaper image used for both desktop background and hyprlock lock screen";
       };
 
       greetdTheme = mkOption {
@@ -276,120 +283,60 @@ in {
 
     # Deploy Hyprland configuration files system-wide using standard paths
     environment.etc = {
-      # Deploy entire Hyprland configuration folder to /etc/xdg/hypr
+      # Deploy entire directories to /etc/xdg
       "xdg/hypr".source = ../dotfiles/hypr;
       "xdg/ml4w".source = ../dotfiles/ml4w;
+      "xdg/mako".source = ../dotfiles/mako;
+      "xdg/nwg-launchers/nwggrid".source = ../dotfiles/nwggrid;
+      "xdg/nwg-launchers/nwgbar".source = ../dotfiles/nwgbar;
+      "xdg/qt5ct".source = ../dotfiles/qt5ct;
+      "xdg/hyprshell".source = ../dotfiles/hyprshell;
+      "xdg/eww".source = ../dotfiles/eww;
+
+      # Waybar needs special handling for config building
       "xdg/waybar/style.css".source = ../dotfiles/waybar/style.css;
-      # Build combined waybar config from modular JSON files  
-      "xdg/waybar/config" = {
-        source = pkgs.runCommand "waybar-config-hyprland" {
-          nativeBuildInputs = [ pkgs.jq ];
-        } ''
-          src=${../dotfiles/waybar/config.d}
-
-          # Use generic base config and add all modules including taskbar
-          cat "$src/00-base.json" > config.json
-
-          # Merge all other config fragments except base files
-          for file in "$src"/*.json; do
-            filename=$(basename "$file")
-            # Skip base files
-            if [[ "$filename" != "00-base.json" && "$filename" != "00-base-hyprland.json" ]]; then
-              echo "Merging $filename"
-              jq -s '.[0] * .[1]' config.json "$file" > temp.json
-              mv temp.json config.json
-            fi
-          done
-
-          # Fix script paths to use /etc/xdg instead of /etc/waybar
-          sed 's|/etc/waybar/scripts/|/etc/xdg/waybar/scripts/|g' config.json > final_config.json
-
-          cp final_config.json $out
-        '';
-      };
-      # Note: Using fuzzel as launcher instead of wofi
-      # Mako notification config - standard XDG location
-      "xdg/mako/kartoza".source = ../dotfiles/mako/kartoza;
-      # Notification sound file
-      "xdg/mako/sounds/notification.wav".source =
-        ../resources/sounds/notification.wav;
-      # nwg-launchers configs - standard XDG location
-      "xdg/nwg-launchers/nwggrid/style.css".source =
-        ../dotfiles/nwggrid/style.css;
-      "xdg/nwg-launchers/nwgbar/style.css".source =
-        ../dotfiles/nwgbar/style.css;
-      "xdg/nwg-launchers/nwgbar/bar.json".source =
-        ../dotfiles/nwgbar/bar.json;
-      # Waybar scripts and resources
       "xdg/waybar/scripts".source = ../dotfiles/waybar/scripts;
-      "xdg/waybar/kartoza-logo-neon.png".source =
-        ../resources/kartoza-logo-neon.png;
-      "xdg/waybar/kartoza-logo-neon-bright.png".source =
-        ../resources/kartoza-logo-neon-bright.png;
-      # Kartoza default wallpaper
-      "kartoza-wallpaper.png".source = ../resources/KartozaBackground.png;
-      # Hyprlock configuration with Kartoza theming
-      "xdg/hypr/hyprlock.conf" = {
-        text = let
-          baseConfig = lib.readFile ../dotfiles/hypr/hyprlock.conf;
-          # Replace wallpaper path with configured wallpaper
-          configWithWallpaper =
-            lib.replaceStrings [ "path = /etc/kartoza-wallpaper.png" ]
-            [ "path = ${cfg.wallpaper}" ] baseConfig;
-        in configWithWallpaper;
+      "xdg/waybar/config.d".source = ../dotfiles/waybar/config.d;
+      "xdg/waybar/config" = {
+        source =
+          pkgs.runCommand "waybar-config-hyprland"
+            {
+              nativeBuildInputs = [ pkgs.jq ];
+            }
+            ''
+              src=${../dotfiles/waybar/config.d}
+
+              # Use generic base config and add all modules including taskbar
+              cat "$src/00-base.json" > config.json
+
+              # Merge all other config fragments except base files
+              for file in "$src"/*.json; do
+                filename=$(basename "$file")
+                # Skip base files
+                if [[ "$filename" != "00-base.json" && "$filename" != "00-base-hyprland.json" ]]; then
+                  echo "Merging $filename"
+                  jq -s '.[0] * .[1]' config.json "$file" > temp.json
+                  mv temp.json config.json
+                fi
+              done
+
+              # Fix script paths to use /etc/xdg instead of /etc/waybar
+              sed 's|/etc/waybar/scripts/|/etc/xdg/waybar/scripts/|g' config.json > final_config.json
+
+              cp final_config.json $out
+            '';
       };
-      # Autostart configuration
-      "xdg/hypr/conf/autostart.conf" = {
-        text = ''
-          #    ___       __           __           __
-          #   / _ |__ __/ /____  ___ / /____ _____/ /_
-          #  / __ / // / __/ _ \(_-</ __/ _ `/ __/ __/
-          # /_/ |_\_,_/\__/\___/___/\__/\_,_/_/  \__/
-          #
 
-          # Launch waybar with proper config and style paths
-          exec-once = waybar -c /etc/xdg/waybar/config -s /etc/xdg/waybar/style.css
+      # Resources - waybar logos
+      "xdg/waybar/kartoza-logo-neon.png".source = ../resources/kartoza-logo-neon.png;
+      "xdg/waybar/kartoza-logo-neon-bright.png".source = ../resources/kartoza-logo-neon-bright.png;
 
-          # Launch notification daemon (mako)
-          exec-once = mako --config=/etc/xdg/mako/kartoza
+      # Mako notification sound
+      "xdg/mako/sounds/notification.wav".source = ../resources/sounds/notification.wav;
 
-          # Launch wallpaper daemon
-          exec-once = swww-daemon
+      # Copy configured wallpaper to generic name for use by swww and hyprlock
+      "kartoza-wallpaper.png".source = cfg.wallpaper;
 
-          # Set wallpaper
-          exec-once = swww img ${cfg.wallpaper}
-
-          # Launch clipse clipboard monitor (secure storage)
-          exec-once = clipse listen
-
-          # Launch authentication agent
-          exec-once = /run/wrappers/bin/polkit-gnome-authentication-agent-1
-
-          # Load GTK settings
-          exec-once = /etc/xdg/hypr/scripts/gtk.sh
-
-          # Using hypridle for idle management
-          exec-once = hypridle
-
-          # Launch hyprshell daemon for window switching and app launcher
-          exec-once = hyprshell run
-
-          # Launch blueman Bluetooth applet
-          exec-once = blueman-applet
-        '';
-      };
-      # Fuzzel emoji script - standard location for executables
-      "xdg/fuzzel/fuzzel-emoji".source = ../dotfiles/fuzzel/fuzzel-emoji;
-      # Qt5ct configuration for proper dialog sizing
-      "xdg/qt5ct/qt5ct.conf".source = ../dotfiles/qt5ct/qt5ct.conf;
-      "xdg/qt5ct/qss/kartoza-qt-fixes.qss".source =
-        ../dotfiles/qt5ct/qss/kartoza-qt-fixes.qss;
-      # Hyprshell configuration
-      "xdg/hyprshell/config.ron".source = ../dotfiles/hyprshell/config.ron;
-      "xdg/hyprshell/styles.css".source = ../dotfiles/hyprshell/styles.css;
-      # Eww configuration for workspace overlay
-      "xdg/eww/eww.yuck".source = ../dotfiles/eww/eww.yuck;
-      "xdg/eww/eww.scss".source = ../dotfiles/eww/eww.scss;
       # GPG agent configuration
       "skel/.gnupg/gpg-agent.conf".text = ''
         pinentry-program ${pkgs.pinentry-gnome3}/bin/pinentry-gnome3
@@ -413,7 +360,9 @@ in {
       jack.enable = true;
     };
 
-    services.dbus = { enable = true; };
+    services.dbus = {
+      enable = true;
+    };
 
     # Enable automounting for removable media (USB drives, etc.)
     services.udisks2.enable = true;
@@ -456,7 +405,9 @@ in {
     };
 
     # Configure PAM for sudo to maintain keyring access
-    security.pam.services.sudo = { enableGnomeKeyring = true; };
+    security.pam.services.sudo = {
+      enableGnomeKeyring = true;
+    };
 
     # Configure setuid wrapper for wshowkeys to capture keyboard events
     security.wrappers.wshowkeys = {
@@ -475,7 +426,10 @@ in {
       # Configure portal backends for Hyprland
       config = {
         hyprland = {
-          default = lib.mkForce [ "gtk" "hyprland" ];
+          default = lib.mkForce [
+            "gtk"
+            "hyprland"
+          ];
           "org.freedesktop.impl.portal.FileChooser" = lib.mkForce [ "gtk" ];
           "org.freedesktop.impl.portal.AppChooser" = lib.mkForce [ "gtk" ];
           "org.freedesktop.impl.portal.ScreenCast" = lib.mkForce [ "hyprland" ];
@@ -542,7 +496,9 @@ in {
           path = cfg.wallpaper;
           fit = "Cover";
         };
-        appearance = { greeting_msg = "Welcome to Kartoza"; };
+        appearance = {
+          greeting_msg = "Welcome to Kartoza";
+        };
         GTK = {
           application_prefer_dark_theme = mkDefault cfg.darkTheme;
           cursor_theme_name = mkDefault cfg.cursorTheme;

@@ -27,12 +27,16 @@ parse_keybinds() {
                 bind_part="${bind_part//\$mainMod/SUPER}"
             fi
 
-            # Extract key combo and action
-            local parts=($bind_part)
-            local mods="${parts[0]//,/}"
-            local key="${parts[1]//,/}"
-            local action="${parts[2]//,/}"
-            local params="${parts[@]:3}"
+            # Extract key combo and action by splitting on commas
+            IFS=',' read -ra PARTS <<< "$bind_part"
+            local mods=$(echo "${PARTS[0]}" | xargs)     # Trim whitespace
+            local key=$(echo "${PARTS[1]}" | xargs)
+            local action=$(echo "${PARTS[2]}" | xargs)
+            # Join remaining parts for params (in case command has commas)
+            local params=""
+            if [[ ${#PARTS[@]} -gt 3 ]]; then
+                params=$(echo "${PARTS[@]:3}" | xargs)
+            fi
 
             # Create readable key combination
             local key_combo="$mods"
