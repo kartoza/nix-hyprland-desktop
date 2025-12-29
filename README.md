@@ -10,7 +10,7 @@ This flake provides a complete Hyprland desktop environment configuration that c
 - Waybar status bar with modular configuration and **working taskbar**
 - **Workspace Management**: Named workspaces with fuzzel-based switcher
 - Nwggrid and nwgpanel application launcher
-- **SwayNC notification center** with history (or lightweight Mako option)
+- **Mako notification daemon** with Kartoza theming and custom sound
 - Fuzzel and other utilities
 - Complete theming and styling
 - GNOME Keyring integration with SSH and GPG support
@@ -118,9 +118,6 @@ sudo nixos-rebuild switch --flake .#your-hostname
     # Wallpaper configuration
     wallpaper = "/etc/kartoza-wallpaper.png";          # Default: Kartoza wallpaper
     # wallpaper = "/home/user/Pictures/my-wallpaper.jpg"; # Example: Custom wallpaper
-
-    # Notification daemon selection
-    notificationDaemon = "swaync";  # Options: "swaync" (default), "mako"
   };
 }
 ```
@@ -270,81 +267,30 @@ swww img /path/to/your/wallpaper.jpg
 swaylock -c /etc/xdg/swaylock/config
 ```
 
-## Notification Daemon Configuration
+## Notification Daemon
 
-The module supports two notification daemons, allowing you to choose between a simple lightweight daemon or a feature-rich notification center.
+The module uses **Mako** as the notification daemon, providing lightweight desktop notifications with Kartoza theming.
 
-### Available Options
+### Features
 
-- **`swaync`** (SwayNC - Sway Notification Center) - **Default**
-  - Full notification history with scrollable panel
-  - Do Not Disturb mode
-  - Control center panel (toggle with `Super + N`)
-  - Action buttons for interactive notifications
-  - Notification grouping
-  - Clear all notifications
-  - Kartoza-themed notification panel
-
-- **`mako`** (Mako Notification Daemon)
-  - Lightweight and minimal
-  - Simple popup notifications
-  - No notification history
-  - Lower resource usage
-  - Kartoza-themed notifications
-
-### Configuration Examples
-
-```nix
-# Default configuration (SwayNC with notification center)
-kartoza.hyprland-desktop = {
-  enable = true;
-  notificationDaemon = "swaync";  # Default
-};
-
-# Lightweight configuration (Mako - simple notifications)
-kartoza.hyprland-desktop = {
-  enable = true;
-  notificationDaemon = "mako";
-};
-```
-
-### Features Comparison
-
-| Feature | SwayNC | Mako |
-|---------|--------|------|
-| Notification Popups | ✅ | ✅ |
-| Notification History | ✅ | ❌ |
-| Control Center Panel | ✅ | ❌ |
-| Do Not Disturb | ✅ | ✅ (via config) |
-| Action Buttons | ✅ | ✅ |
-| Grouped Notifications | ✅ | ✅ |
-| Resource Usage | Medium | Low |
-| Kartoza Theme | ✅ | ✅ |
-| Keybind (`Super + N`) | ✅ | N/A |
-
-### Using the Notification Center
-
-When using SwayNC (default):
-
-- **`Super + N`** - Toggle notification center panel
-- **Click notification** - Invoke default action
-- **Right-click notification** - Dismiss notification
-- **Clear All button** - Remove all notifications from history
-- **DND toggle** - Enable/disable Do Not Disturb mode
+- Lightweight and minimal resource usage
+- Simple popup notifications with action button support
+- Custom Kartoza branding and color scheme
+- Custom notification sound
+- Configuration via XDG config directories
 
 ### Customizing Notifications
 
-Both notification daemons support user overrides:
+Mako configuration can be customized by copying the system config to your home directory:
 
 ```bash
-# Override SwayNC configuration
-cp /etc/xdg/swaync/config.json ~/.config/swaync/
-cp /etc/xdg/swaync/style.css ~/.config/swaync/
-# Edit ~/.config/swaync/config.json or style.css
-
 # Override Mako configuration
 cp /etc/xdg/mako/kartoza ~/.config/mako/config
 # Edit ~/.config/mako/config
+
+# Override notification sound
+mkdir -p ~/.config/mako/sounds
+cp your-custom-sound.wav ~/.config/mako/sounds/notification.wav
 ```
 
 ## Workspace Management

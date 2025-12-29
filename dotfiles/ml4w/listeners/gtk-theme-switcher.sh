@@ -43,14 +43,12 @@ apply_theme() {
         $HOME/.config/nwg-dock-hyprland/launch.sh &
         $HOME/.config/waybar/launch.sh &
         $HOME/.config/hypr/scripts/gtk.sh &
-        swaync-client -rs
     elif [[ "$THEME_PREF" == "0" || "$THEME_PREF" == "false" ]]; then
         echo "Detected light theme preference (gtk-application-prefer-dark-theme=0/false). Applying light matugen theme..."
         $HOME/.local/bin/matugen image $(cat ~/.cache/ml4w/hyprland-dotfiles/current_wallpaper) -m "light"
         $HOME/.config/nwg-dock-hyprland/launch.sh &
         $HOME/.config/waybar/launch.sh &
         $HOME/.config/hypr/scripts/gtk.sh &
-        swaync-client -rs
     else
         echo "Warning: Unexpected value for gtk-application-prefer-dark-theme: $THEME_PREF. Expected 0/1/true/false. Skipping theme application."
     fi

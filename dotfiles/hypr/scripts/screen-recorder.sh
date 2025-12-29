@@ -52,7 +52,7 @@ merge_recordings() {
         filename=$(basename "$output_file")
 
         # Send notification with action using notify-send
-        # The -A flag adds an action button (supported by mako and swaync)
+        # The -A flag adds an action button (supported by mako)
         notify-send -A "open=Open Folder" \
             "Screen Recording Complete" \
             "$filename saved!\n\nClick to open folder" \
