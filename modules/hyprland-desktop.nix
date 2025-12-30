@@ -161,6 +161,7 @@ in {
       libsForQt5.qtstyleplugins # Additional Qt style plugins
       evince
       fuzzel # Application launcher for Wayland
+      authenticator # GNOME Authenticator app
       gnome-disk-utility # GNOME Disks application
       gnome-secrets
       grim # Screenshot utility for Wayland
