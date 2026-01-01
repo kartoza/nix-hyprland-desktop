@@ -210,21 +210,43 @@ else
   # Start video recording (MAXIMUM QUALITY - lossless)
   # CRF 0 = completely lossless
   # preset=veryslow = best compression with highest quality
+  # --audio="" disables audio recording (we handle it separately)
   if [ -n "$focused_output" ] && [ "$focused_output" != "null" ]; then
     wf-recorder \
       --output="$focused_output" \
       --file="$video_file" \
       --codec=libx264 \
-      --codec-param="preset=veryslow,crf=0" \
-      --pixel-format=yuv420p &
+      --codec-param=preset=veryslow \
+      --codec-param=crf=0 \
+      --pixel-format=yuv420p \
+      --audio="" \
+      2>&1 | tee /tmp/wf-recorder-error.log &
+    video_pid=$!
   else
     wf-recorder \
       --file="$video_file" \
       --codec=libx264 \
-      --codec-param="preset=veryslow,crf=0" \
-      --pixel-format=yuv420p &
+      --codec-param=preset=veryslow \
+      --codec-param=crf=0 \
+      --pixel-format=yuv420p \
+      --audio="" \
+      2>&1 | tee /tmp/wf-recorder-error.log &
+    video_pid=$!
   fi
-  echo $! >"$VIDEO_PIDFILE"
+
+  # Save PID and verify wf-recorder started
+  echo $video_pid >"$VIDEO_PIDFILE"
+
+  # Wait a moment and check if wf-recorder is still running
+  sleep 1
+  if ! kill -0 "$video_pid" 2>/dev/null; then
+    notify-send "Screen Recording Error" \
+      "wf-recorder failed to start. Check /tmp/wf-recorder-error.log for details." \
+      --icon=dialog-error \
+      --urgency=critical
+    rm -f "$VIDEO_PIDFILE"
+    exit 1
+  fi
 
   # Start audio recording from default input device (WAV for lossless quality)
   pw-record --target @DEFAULT_SOURCE@ "$audio_file" &
