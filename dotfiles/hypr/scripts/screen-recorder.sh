@@ -43,11 +43,32 @@ merge_recordings() {
   # Wait a moment for files to be fully written
   sleep 2
 
+  notify-send "Screen Recording" "Removing background noise..." --icon=video-x-generic --urgency=normal
+
+  # Step 1: Remove background noise
+  # - highpass: Remove low-frequency rumble (< 200 Hz)
+  # - afftdn: FFT-based denoiser for constant background noise
+  #   - nf=-25: Noise floor (adjust based on noise level)
+  #   - tn=1: Track noise (adapts to changing noise)
+  local denoised_audio="${audio_file%.wav}-denoised.wav"
+
+  if ffmpeg -y -i "$audio_file" \
+    -af "highpass=f=200,afftdn=nf=-25:tn=1" \
+    -c:a pcm_s16le \
+    "$denoised_audio" 2>&1 | grep -q "Output"; then
+
+    # Use denoised audio for normalization
+    local audio_for_norm="$denoised_audio"
+  else
+    notify-send "Noise Reduction Warning" "Skipping noise reduction" --icon=dialog-warning --urgency=low
+    local audio_for_norm="$audio_file"
+  fi
+
   notify-send "Screen Recording" "Analyzing audio levels..." --icon=video-x-generic --urgency=normal
 
-  # TWO-PASS LOUDNORM for maximum quality without clipping
+  # Step 2: TWO-PASS LOUDNORM for maximum quality without clipping
   # Pass 1: Measure the audio levels
-  local loudnorm_stats=$(ffmpeg -i "$audio_file" -af loudnorm=I=-14:TP=-1.5:LRA=11:print_format=json -f null - 2>&1 | tail -n 12)
+  local loudnorm_stats=$(ffmpeg -i "$audio_for_norm" -af loudnorm=I=-14:TP=-1.5:LRA=11:print_format=json -f null - 2>&1 | tail -n 12)
 
   # Extract measured values from JSON output
   local measured_I=$(echo "$loudnorm_stats" | grep input_i | cut -d'"' -f4 | sed 's/[^0-9.-]//g')
@@ -61,7 +82,7 @@ merge_recordings() {
   # LRA: 11 (preserves dynamic range)
   notify-send "Screen Recording" "Normalizing audio..." --icon=video-x-generic --urgency=normal
 
-  if ffmpeg -y -i "$audio_file" \
+  if ffmpeg -y -i "$audio_for_norm" \
     -af "loudnorm=I=-14:TP=-1.5:LRA=11:measured_I=${measured_I}:measured_TP=${measured_TP}:measured_LRA=${measured_LRA}:measured_thresh=${measured_thresh}:linear=true:print_format=summary" \
     -c:a pcm_s16le \
     "$normalized_audio" 2>&1 | grep -q "Output"; then
@@ -259,7 +280,7 @@ else
       --codec-param=preset=veryslow \
       --codec-param=crf=0 \
       --pixel-format=yuv420p \
-      2>&1 | tee /tmp/wf-recorder-error.log &
+      >/tmp/wf-recorder-error.log 2>&1 &
     video_pid=$!
   else
     wf-recorder \
@@ -268,7 +289,7 @@ else
       --codec-param=preset=veryslow \
       --codec-param=crf=0 \
       --pixel-format=yuv420p \
-      2>&1 | tee /tmp/wf-recorder-error.log &
+      >/tmp/wf-recorder-error.log 2>&1 &
     video_pid=$!
   fi
 
