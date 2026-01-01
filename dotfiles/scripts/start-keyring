@@ -21,15 +21,24 @@ else
 fi
 
 # Detect and export the correct SSH agent socket
-# Modern gnome-keyring uses GCR SSH agent which provides better integration
+# Check for available SSH agents in priority order:
+# 1. GPG agent SSH socket (when GPG is handling SSH)
+# 2. GCR SSH agent (modern gnome-keyring 48.0+)
+# 3. Legacy keyring SSH socket
 USER_ID=$(id -u)
+GPG_SSH_SOCKET="/run/user/${USER_ID}/gnupg/S.gpg-agent.ssh"
 GCR_SSH_SOCKET="/run/user/${USER_ID}/gcr/ssh"
 KEYRING_SSH_SOCKET="/run/user/${USER_ID}/keyring/ssh"
 
+# Check for GPG agent SSH socket first (most common with NixOS)
+if [ -S "$GPG_SSH_SOCKET" ]; then
+  export SSH_AUTH_SOCK="$GPG_SSH_SOCKET"
+  echo "Using GPG agent SSH socket at $GPG_SSH_SOCKET"
 # Prefer GCR SSH agent if available (gnome-keyring 48.0+)
-if [ -S "$GCR_SSH_SOCKET" ]; then
+elif [ -S "$GCR_SSH_SOCKET" ]; then
   export SSH_AUTH_SOCK="$GCR_SSH_SOCKET"
   echo "Using GCR SSH agent at $GCR_SSH_SOCKET"
+# Fall back to legacy keyring SSH socket
 elif [ -S "$KEYRING_SSH_SOCKET" ]; then
   export SSH_AUTH_SOCK="$KEYRING_SSH_SOCKET"
   echo "Using keyring SSH agent at $KEYRING_SSH_SOCKET"
