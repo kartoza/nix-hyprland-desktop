@@ -6,5 +6,8 @@
         	"on-click-middle": "close",
         	"active-first": true,
         	"sort-by-app-id": true,
-        	"icon-size": 20
+        	"icon-size": 20,
+        	"all-outputs": false,
+        	"ignore-list": [],
+        	"on-special-workspace": false
  }}
