@@ -301,6 +301,7 @@ in {
       "xdg/qt5ct".source = ../dotfiles/qt5ct;
       "xdg/hyprshell".source = ../dotfiles/hyprshell;
       "xdg/eww".source = ../dotfiles/eww;
+      "xdg/scripts".source = ../dotfiles/scripts;
 
       # Waybar needs special handling for config building
       "xdg/waybar/style.css".source = ../dotfiles/waybar/style.css;
