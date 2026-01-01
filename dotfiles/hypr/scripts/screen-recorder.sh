@@ -323,16 +323,25 @@ else
     done
 
     if [ -n "$webcam_device" ]; then
-      # Record webcam at native quality (MAXIMUM QUALITY - lossless)
-      # Using preset=veryslow and crf=0 for lossless capture
-      ffmpeg -f v4l2 -i "/dev/$webcam_device" \
-        -c:v libx264 -preset veryslow -crf 0 -pix_fmt yuv420p \
+      # Record webcam optimized for REAL-TIME capture (no latency, no stuttering)
+      # - input_format=mjpeg: Use hardware MJPEG if available for lower CPU usage
+      # - framerate=30: Smooth 30fps capture
+      # - preset=ultrafast: Minimal encoding latency for real-time
+      # - tune=zerolatency: Optimize for zero-latency encoding
+      # - threads=0: Use all available CPU cores
+      # - crf=18: Near-lossless quality (lower = better, 18 is visually lossless)
+      # - bf=0: No B-frames for lower latency
+      # - g=60: Keyframe every 2 seconds at 30fps
+      ffmpeg -f v4l2 -input_format mjpeg -framerate 30 -video_size 1920x1080 -i "/dev/$webcam_device" \
+        -c:v libx264 -preset ultrafast -tune zerolatency \
+        -crf 18 -pix_fmt yuv420p \
+        -bf 0 -g 60 -threads 0 \
         "$webcam_file" >/dev/null 2>&1 &
 
       webcam_pid=$!
       if [ $webcam_pid -gt 0 ]; then
         echo $webcam_pid >"$WEBCAM_PIDFILE"
-        notify-send "Webcam Recording" "Recording webcam on /dev/$webcam_device (lossless)" --icon=camera-web --urgency=low
+        notify-send "Webcam Recording" "Recording webcam on /dev/$webcam_device (30fps real-time)" --icon=camera-web --urgency=low
       fi
     else
       notify-send "Webcam Recording" "No webcam detected" --icon=dialog-information --urgency=low
