@@ -1,6 +1,9 @@
 ;; Eww configuration for Hyprland workspace overlay
 ;; Shows workspace name in center of screen with smooth animations
 
+;; Include scratchpad widget
+(include "scratchpad.yuck")
+
 ;; Variables
 (defvar workspace_visible false)
 (defvar workspace_name "")

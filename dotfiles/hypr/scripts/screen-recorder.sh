@@ -128,11 +128,30 @@ merge_recordings() {
   fi
 }
 
-# Check if recording is active
+# Check if any recording is active
+is_recording=false
+
+# Check screen recording
 if [ -f "$VIDEO_PIDFILE" ] && kill -0 "$(cat $VIDEO_PIDFILE)" 2>/dev/null; then
+  is_recording=true
+fi
+
+# Check webcam recording
+if [ -f "$WEBCAM_PIDFILE" ] && kill -0 "$(cat $WEBCAM_PIDFILE)" 2>/dev/null; then
+  is_recording=true
+fi
+
+# Check audio recording
+if [ -f "$AUDIO_PIDFILE" ] && kill -0 "$(cat $AUDIO_PIDFILE)" 2>/dev/null; then
+  is_recording=true
+fi
+
+if [ "$is_recording" = true ]; then
   # Stop video recording
-  kill "$(cat $VIDEO_PIDFILE)" 2>/dev/null
-  rm -f "$VIDEO_PIDFILE"
+  if [ -f "$VIDEO_PIDFILE" ] && kill -0 "$(cat $VIDEO_PIDFILE)" 2>/dev/null; then
+    kill "$(cat $VIDEO_PIDFILE)" 2>/dev/null
+    rm -f "$VIDEO_PIDFILE"
+  fi
 
   # Stop audio recording
   if [ -f "$AUDIO_PIDFILE" ] && kill -0 "$(cat $AUDIO_PIDFILE)" 2>/dev/null; then

@@ -1,0 +1,30 @@
+;; Eww scratchpad indicator widget
+;; Shows "Scratchpad" label in top right corner when scratchpad is visible
+
+;; Scratchpad indicator window - positioned in top right corner
+(defwindow scratchpad-indicator
+  :monitor 0
+  :geometry (geometry :x "20px"
+                      :y "20px"
+                      :width "200px"
+                      :height "60px"
+                      :anchor "top right")
+  :stacking "overlay"
+  :exclusive false
+  :focusable false
+  :namespace "eww-scratchpad-indicator"
+  (scratchpad-widget))
+
+;; Scratchpad widget content
+(defwidget scratchpad-widget []
+  (box :class "scratchpad-indicator-container"
+       :orientation "vertical"
+       :space-evenly false
+       :valign "start"
+       :halign "end"
+       :visible scratchpad_visible
+    (box :class "scratchpad-indicator-box ${scratchpad_visible ? 'visible' : 'hidden'}"
+         :orientation "horizontal"
+         :space-evenly false
+      (label :class "scratchpad-label"
+             :text "Scratchpad"))))

@@ -1,0 +1,42 @@
+/* Eww scratchpad indicator styles - GTK CSS compatible */
+
+/* Container takes up space but is transparent */
+.scratchpad-indicator-container {
+  background-color: transparent;
+}
+
+/* Scratchpad indicator box */
+.scratchpad-indicator-box {
+  background-color: rgba(26, 17, 15, 0.95);
+  border: 2px solid #DF9E2F;
+  border-radius: 8px;
+  padding: 12px 24px;
+
+  /* Start hidden - off screen to the right */
+  opacity: 0;
+  transform: translateX(100%);
+
+  /* Smooth slide and fade animation */
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Visible state - slide in and fade in */
+.scratchpad-indicator-box.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Hidden state - slide out and fade out */
+.scratchpad-indicator-box.hidden {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+/* Scratchpad label styling */
+.scratchpad-label {
+  font-size: 18px;
+  font-weight: bold;
+  color: #DF9E2F;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}

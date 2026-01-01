@@ -5,9 +5,28 @@
 
 STATUSFILE="/tmp/wf-recorder.status"
 VIDEO_PIDFILE="/tmp/wf-recorder.pid"
+AUDIO_PIDFILE="/tmp/pw-recorder.pid"
+WEBCAM_PIDFILE="/tmp/webcam-recorder.pid"
 
-# Check if recording is active
+# Check if any recording is active
+is_recording=false
+
+# Check screen recording
 if [ -f "$VIDEO_PIDFILE" ] && kill -0 "$(cat $VIDEO_PIDFILE)" 2>/dev/null; then
+  is_recording=true
+fi
+
+# Check webcam recording
+if [ -f "$WEBCAM_PIDFILE" ] && kill -0 "$(cat $WEBCAM_PIDFILE)" 2>/dev/null; then
+  is_recording=true
+fi
+
+# Check audio recording
+if [ -f "$AUDIO_PIDFILE" ] && kill -0 "$(cat $AUDIO_PIDFILE)" 2>/dev/null; then
+  is_recording=true
+fi
+
+if [ "$is_recording" = true ]; then
   # Recording is active - red glowing dot
   echo '{"text": "●", "class": "recording", "tooltip": "Click to stop recording (Ctrl+6)"}'
 elif [ -f "$STATUSFILE" ] && [ "$(cat $STATUSFILE)" = "stopped" ]; then
