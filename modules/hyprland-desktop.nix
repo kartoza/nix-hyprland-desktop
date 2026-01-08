@@ -154,6 +154,8 @@ in {
       blueman # Bluetooth manager with system tray
       bluez-tools # Command line tools for Bluetooth
       brightnessctl # Brightness control for waybar
+      pavucontrol # PulseAudio/PipeWire volume control GUI
+      pasystray # PulseAudio/PipeWire system tray applet
       clipse # Wayland clipboard manager
       dmenu
       # Qt theming and configuration tools
