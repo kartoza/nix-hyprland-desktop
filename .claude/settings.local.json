@@ -9,7 +9,8 @@
       "Bash(nix fmt)",
       "Bash(chmod:*)",
       "Bash(cp:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(eww list-windows:*)"
     ],
     "deny": [],
     "ask": []

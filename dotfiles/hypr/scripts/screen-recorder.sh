@@ -25,10 +25,31 @@ VIDEOS_DIR="$HOME/Videos/Screencasts"
 # Ensure videos directory exists
 mkdir -p "$VIDEOS_DIR"
 
-# Function to get focused monitor for Hyprland
-get_focused_output() {
-  # Try to get focused monitor from hyprctl
-  hyprctl monitors -j | jq -r '.[] | select(.focused==true) | .name' 2>/dev/null
+# Function to get monitor where mouse cursor is located
+get_mouse_monitor() {
+  # Get current cursor position
+  local cursor_pos=$(hyprctl cursorpos 2>/dev/null)
+  if [ -z "$cursor_pos" ]; then
+    # Fallback to focused monitor if cursor position unavailable
+    hyprctl monitors -j | jq -r '.[] | select(.focused==true) | .name' 2>/dev/null
+    return
+  fi
+
+  # Parse cursor position (format: "x, y")
+  local cursor_x=$(echo "$cursor_pos" | cut -d',' -f1 | tr -d ' ')
+  local cursor_y=$(echo "$cursor_pos" | cut -d',' -f2 | tr -d ' ')
+
+  # Get monitor information and find which one contains the cursor
+  hyprctl monitors -j | jq -r --argjson cx "$cursor_x" --argjson cy "$cursor_y" '
+    .[] |
+    select(
+      $cx >= .x and
+      $cx < (.x + .width) and
+      $cy >= .y and
+      $cy < (.y + .height)
+    ) |
+    .name
+  ' 2>/dev/null | head -n1
 }
 
 # Function to normalize audio and merge with video
@@ -241,10 +262,10 @@ else
   # Start recording
   timestamp=$(date +%Y%m%d-%H%M%S)
 
-  # Get the focused output (monitor)
-  focused_output=$(get_focused_output)
+  # Get the monitor where mouse cursor is located
+  focused_output=$(get_mouse_monitor)
 
-  # Fallback to first available output if no focused output
+  # Fallback to first available output if no mouse monitor detected
   if [ -z "$focused_output" ] || [ "$focused_output" == "null" ]; then
     focused_output=$(hyprctl monitors -j | jq -r '.[0].name' 2>/dev/null)
   fi
