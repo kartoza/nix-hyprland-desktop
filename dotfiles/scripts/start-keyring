@@ -30,7 +30,8 @@ GPG_SSH_SOCKET="/run/user/${USER_ID}/gnupg/S.gpg-agent.ssh"
 if [ -S "$GPG_SSH_SOCKET" ]; then
   export SSH_AUTH_SOCK="$GPG_SSH_SOCKET"
   systemctl --user set-environment SSH_AUTH_SOCK="$GPG_SSH_SOCKET"
-  dbus-update-activation-environment --systemd SSH_AUTH_SOCK 2>/dev/null
+  dbus-update-activation-environment --systemd SSH_AUTH_SOCK GNUPGHOME 2>/dev/null
+
   echo "SSH agent socket set to GPG agent: $GPG_SSH_SOCKET"
 else
   echo "Warning: GPG agent SSH socket not found at $GPG_SSH_SOCKET"

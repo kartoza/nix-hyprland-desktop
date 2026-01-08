@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+# Hyprland session wrapper script
+# This script sets up the environment before launching Hyprland
+# so that all child processes inherit the correct environment variables
+
+# Set GPG home
+export GNUPGHOME="$HOME/.gnupg"
+
+# Set SSH agent to GPG agent socket (GPG agent started by system with enableSSHSupport)
+USER_ID=$(id -u)
+GPG_SSH_SOCKET="/run/user/${USER_ID}/gnupg/S.gpg-agent.ssh"
+
+# Wait briefly for GPG agent to be available (started by systemd)
+for i in {1..10}; do
+  if [ -S "$GPG_SSH_SOCKET" ]; then
+    break
+  fi
+  sleep 0.5
+done
+
+if [ -S "$GPG_SSH_SOCKET" ]; then
+  export SSH_AUTH_SOCK="$GPG_SSH_SOCKET"
+  echo "Hyprland session: SSH agent socket set to $GPG_SSH_SOCKET"
+else
+  echo "Warning: GPG agent SSH socket not found, SSH may not work"
+fi
+
+# Launch Hyprland with the configured environment
+exec Hyprland --config /etc/xdg/hypr/hyprland.conf
