@@ -125,10 +125,11 @@ in {
     environment.systemPackages = with pkgs; [
       # Default icon theme (Papirus) - can be overridden by kartoza.nix or other configs
       papirus-icon-theme
-      # SDDM display manager and themes
-      libsForQt5.qt5.qtgraphicaleffects
-      libsForQt5.qt5.qtsvg
-      libsForQt5.qt5.qtquickcontrols2
+      # SDDM display manager and themes (Qt6 for SDDM)
+      kdePackages.qt5compat # Qt5Compat.GraphicalEffects for QML themes
+      kdePackages.qtsvg
+      kdePackages.qtdeclarative # QtQuick
+      kdePackages.qtwayland
       # Essential fonts for waybar and hyprland
       font-awesome # For waybar icons (required for waybar symbols)
       noto-fonts # Good fallback font family
@@ -467,11 +468,13 @@ in {
     };
 
     # Import environment variables into systemd user session
+    # SSH_AUTH_SOCK is set to gnome-keyring by default, or GPG agent if enableSSHSupport is true
     systemd.user.extraConfig = ''
       DefaultEnvironment="WAYLAND_DISPLAY=wayland-1"
       DefaultEnvironment="XDG_SESSION_DESKTOP=hyprland"
       DefaultEnvironment="XDG_SESSION_TYPE=wayland"
-      DefaultEnvironment="SSH_AUTH_SOCK=%t/keyring/ssh"
+      ${optionalString (!config.programs.gnupg.agent.enableSSHSupport) ''DefaultEnvironment="SSH_AUTH_SOCK=%t/keyring/ssh"''}
+      ${optionalString config.programs.gnupg.agent.enableSSHSupport ''DefaultEnvironment="SSH_AUTH_SOCK=%t/gnupg/S.gpg-agent.ssh"''}
     '';
 
     # Enable SDDM display manager with Kartoza theme
@@ -479,6 +482,8 @@ in {
       enable = true;
       wayland.enable = true;
       theme = "kartoza";
+      # Use Qt6 for better Wayland support
+      package = pkgs.kdePackages.sddm;
       settings = {
         General = {
           # Input method support
