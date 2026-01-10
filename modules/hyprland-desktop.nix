@@ -482,8 +482,15 @@ in {
       enable = true;
       wayland.enable = true;
       theme = "kartoza";
-      # Use Qt6 for better Wayland support
-      package = pkgs.kdePackages.sddm;
+      # Create custom SDDM package with sddm-greeter symlink for QML theme compatibility
+      package = pkgs.symlinkJoin {
+        name = "sddm-with-greeter-compat";
+        paths = [ pkgs.kdePackages.sddm ];
+        postBuild = ''
+          # Create sddm-greeter symlink to sddm-greeter-qt6 for QML theme compatibility
+          ln -sf $out/bin/sddm-greeter-qt6 $out/bin/sddm-greeter
+        '';
+      };
       settings = {
         General = {
           # Input method support
