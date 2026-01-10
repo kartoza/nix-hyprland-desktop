@@ -392,9 +392,10 @@ in {
 
     # Enable GPG agent for GPG operations only (not SSH)
     # GPG key passphrases will be stored in gnome-keyring
+    # Users can override enableSSHSupport to use GPG agent for SSH instead
     programs.gnupg.agent = {
       enable = true;
-      enableSSHSupport = false; # SSH handled by gnome-keyring
+      enableSSHSupport = lib.mkDefault false; # SSH handled by gnome-keyring by default
       pinentryPackage = pkgs.pinentry-gnome3;
     };
 
