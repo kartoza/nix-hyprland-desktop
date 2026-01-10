@@ -1,0 +1,108 @@
+# Wayscriber Configuration - Kartoza Theme
+# Screen annotation tool for Wayland
+#
+# Kartoza Brand Colors:
+# - Orange: #DF9E2F (223, 158, 47) - Main accent color
+# - Blue: #569FC6 (86, 159, 198) - Primary brand color
+# - Dark bg: #162127 (22, 33, 39) - Dark background
+# - Light text: #E6F7F6 (230, 247, 246) - Light text
+
+[drawing]
+# Default annotation color - Kartoza orange
+default_color = [223, 158, 47]
+# Default pen thickness
+default_thickness = 3.0
+# Default tool on startup
+default_tool = "pen"
+# Auto-adjust pen color when switching board modes
+auto_adjust_pen = true
+
+[presets]
+# Number of quick-access color/tool presets (3-5)
+slot_count = 5
+
+# Preset 1: Kartoza Orange Pen (default)
+[presets.slot_1]
+name = "Orange"
+tool = "pen"
+color = [223, 158, 47]  # Kartoza orange
+size = 3.0
+
+# Preset 2: Kartoza Blue Pen
+[presets.slot_2]
+name = "Blue"
+tool = "pen"
+color = [86, 159, 198]  # Kartoza blue
+size = 3.0
+
+# Preset 3: Light Text Pen (for dark backgrounds)
+[presets.slot_3]
+name = "Light"
+tool = "pen"
+color = [230, 247, 246]  # Light text color
+size = 3.0
+
+# Preset 4: Highlighter - Orange
+[presets.slot_4]
+name = "Highlight"
+tool = "highlighter"
+color = [223, 158, 47]  # Kartoza orange
+size = 20.0
+
+# Preset 5: Eraser
+[presets.slot_5]
+name = "Eraser"
+tool = "eraser"
+color = [0, 0, 0]  # Color doesn't matter for eraser
+size = 20.0
+
+[board]
+# Whiteboard mode background (dark background)
+whiteboard_color = [22, 33, 39]  # Kartoza dark bg
+
+# Blackboard mode background (dark background)
+blackboard_color = [22, 33, 39]  # Kartoza dark bg
+
+# Blackboard text color (light text)
+blackboard_text_color = [230, 247, 246]  # Kartoza light text
+
+[ui]
+# Status bar background color (normalized RGBA: 0.0-1.0)
+status_bar_bg = [0.086, 0.129, 0.153, 0.95]  # Dark bg with transparency
+
+# Status bar text color (normalized RGBA)
+status_bar_text = [0.902, 0.969, 0.965, 1.0]  # Light text
+
+# Status bar position: "top", "bottom", "left", "right"
+status_bar_position = "bottom"
+
+# Show status bar on startup
+status_bar_visible = true
+
+# Click highlight color (normalized RGBA)
+click_highlight_fill = [0.875, 0.620, 0.184, 0.3]  # Orange with transparency
+click_highlight_outline = [0.875, 0.620, 0.184, 1.0]  # Orange solid
+
+[performance]
+# Number of render buffers (2-4)
+buffer_count = 3
+
+# Enable vertical sync
+enable_vsync = true
+
+# UI animation frame rate
+ui_animation_fps = 60
+
+[capture]
+# Copy screenshots to clipboard automatically
+copy_to_clipboard = true
+
+# Screenshot save location
+save_dir = "~/Pictures/Screenshots"
+
+[session]
+# Resume previous session on startup
+resume_session = false
+
+# Session save location
+session_dir = "~/.local/share/wayscriber/sessions"

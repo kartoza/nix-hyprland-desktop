@@ -18,7 +18,8 @@
       "WebSearch",
       "WebFetch(domain:github.com)",
       "WebFetch(domain:wiki.nixos.org)",
-      "WebFetch(domain:discourse.nixos.org)"
+      "WebFetch(domain:discourse.nixos.org)",
+      "Bash(readlink:*)"
     ],
     "deny": [],
     "ask": []

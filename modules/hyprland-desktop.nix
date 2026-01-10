@@ -26,6 +26,11 @@ let
       "$out/scripts/keybindings-list.txt"
   '';
 
+  # SDDM theme package
+  sddmThemeKartoza = pkgs.callPackage ../packages/sddm-theme-kartoza.nix {
+    wallpaper = cfg.wallpaper;
+  };
+
 in {
   options = {
     kartoza.hyprland-desktop = {
@@ -220,8 +225,8 @@ in {
       eww # ElKowars wacky widgets - for animated workspace overlay
       bc # Calculator for sleep duration in workspace-overlay.sh
 
-      # Screen annotation and drawing (like wayfire's drawing mode)
-      gromit-mpx # Screen annotation tool - draw on screen with pen/mouse
+      # Screen annotation and drawing (Wayland native)
+      wayscriber # Screen annotation tool - draw on screen with pen/mouse
 
       # Additional useful Wayland tools
       wl-screenrec # Efficient Wayland screen recorder (better than wf-recorder)
@@ -314,6 +319,7 @@ in {
       "xdg/hyprshell".source = ../dotfiles/hyprshell;
       "xdg/eww".source = ../dotfiles/eww;
       "xdg/scripts".source = ../dotfiles/scripts;
+      "xdg/wayscriber".source = ../dotfiles/wayscriber;
 
       # Waybar needs special handling for config building
       "xdg/waybar/style.css".source = ../dotfiles/waybar/style.css;
@@ -354,9 +360,6 @@ in {
 
       # Copy configured wallpaper to dedicated directory to avoid path conflicts
       "xdg/backgrounds/kartoza-wallpaper.png".source = cfg.wallpaper;
-
-      # Deploy SDDM theme
-      "sddm/themes/kartoza".source = ../dotfiles/sddm/themes/kartoza;
     };
 
     # Required for screen sharing
@@ -482,6 +485,16 @@ in {
       enable = true;
       wayland.enable = true;
       theme = "kartoza";
+
+      # Package the theme properly for NixOS
+      extraPackages = with pkgs.kdePackages; [
+        sddmThemeKartoza
+        qtsvg
+        qtdeclarative
+        qt5compat
+        qtwayland
+      ];
+
       settings = {
         General = {
           # Input method support
@@ -489,7 +502,6 @@ in {
         };
         Theme = {
           Current = "kartoza";
-          ThemeDir = "/etc/sddm/themes";
           CursorTheme = cfg.cursorTheme;
           CursorSize = cfg.cursorSize;
         };

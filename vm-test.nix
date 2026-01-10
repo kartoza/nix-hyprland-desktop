@@ -88,12 +88,11 @@
   # Minimal package set for testing
   environment.systemPackages = with pkgs; [ firefox nautilus gnome-terminal ];
 
-  # Auto-login for convenience in VM testing
-  # Note: Using SDDM instead of greetd as per module configuration
-  services.displayManager.autoLogin = {
-    enable = true;
-    user = "testuser";
-  };
+  # Auto-login disabled to test SDDM theme
+  # services.displayManager.autoLogin = {
+  #   enable = true;
+  #   user = "testuser";
+  # };
 
   system.stateVersion = "25.05";
 }
