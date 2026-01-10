@@ -13,13 +13,13 @@
 # Integrated with ML4W style and modern Wayland tools
 # Enhanced with separate audio recording and post-processing
 
-VIDEO_PIDFILE="/tmp/wf-recorder.pid"
+VIDEO_PIDFILE="/tmp/wl-screenrec.pid"
 AUDIO_PIDFILE="/tmp/pw-recorder.pid"
 WEBCAM_PIDFILE="/tmp/webcam-recorder.pid"
-STATUSFILE="/tmp/wf-recorder.status"
-VIDEO_FILE="/tmp/wf-recorder.video"
-AUDIO_FILE="/tmp/wf-recorder.audio"
-WEBCAM_FILE="/tmp/wf-recorder.webcam"
+STATUSFILE="/tmp/wl-screenrec.status"
+VIDEO_FILE="/tmp/wl-screenrec.video"
+AUDIO_FILE="/tmp/wl-screenrec.audio"
+WEBCAM_FILE="/tmp/wl-screenrec.webcam"
 VIDEOS_DIR="$HOME/Videos/Screencasts"
 
 # Ensure videos directory exists
@@ -289,39 +289,32 @@ else
   echo "$audio_file" >"$AUDIO_FILE"
   echo "$webcam_file" >"$WEBCAM_FILE"
 
-  # Start video recording (MAXIMUM QUALITY - lossless)
-  # CRF 0 = completely lossless
-  # preset=veryslow = best compression with highest quality
-  # No audio parameter - we handle audio separately with pw-record
+  # Start video recording (HARDWARE ACCELERATED)
+  # wl-screenrec uses GPU encoding (VAAPI/NVENC) for minimal CPU usage
+  # No audio - we handle audio separately with pw-record
   if [ -n "$focused_output" ] && [ "$focused_output" != "null" ]; then
-    wf-recorder \
+    wl-screenrec \
       --output="$focused_output" \
-      --file="$video_file" \
-      --codec=libx264 \
-      --codec-param=preset=veryslow \
-      --codec-param=crf=0 \
-      --pixel-format=yuv420p \
-      >/tmp/wf-recorder-error.log 2>&1 &
+      --filename="$video_file" \
+      --encode-pixfmt yuv420p \
+      >/tmp/wl-screenrec-error.log 2>&1 &
     video_pid=$!
   else
-    wf-recorder \
-      --file="$video_file" \
-      --codec=libx264 \
-      --codec-param=preset=veryslow \
-      --codec-param=crf=0 \
-      --pixel-format=yuv420p \
-      >/tmp/wf-recorder-error.log 2>&1 &
+    wl-screenrec \
+      --filename="$video_file" \
+      --encode-pixfmt yuv420p \
+      >/tmp/wl-screenrec-error.log 2>&1 &
     video_pid=$!
   fi
 
-  # Save PID and verify wf-recorder started
+  # Save PID and verify wl-screenrec started
   echo $video_pid >"$VIDEO_PIDFILE"
 
-  # Wait a moment and check if wf-recorder is still running
+  # Wait a moment and check if wl-screenrec is still running
   sleep 1
   if ! kill -0 "$video_pid" 2>/dev/null; then
     notify-send "Screen Recording Error" \
-      "wf-recorder failed to start. Check /tmp/wf-recorder-error.log for details." \
+      "wl-screenrec failed to start. Check /tmp/wl-screenrec-error.log for details." \
       --icon=dialog-error \
       --urgency=critical
     rm -f "$VIDEO_PIDFILE"

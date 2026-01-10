@@ -3,8 +3,8 @@
 # Waybar recording status widget script
 # Part of Kartoza NixOS configuration
 
-STATUSFILE="/tmp/wf-recorder.status"
-VIDEO_PIDFILE="/tmp/wf-recorder.pid"
+STATUSFILE="/tmp/wl-screenrec.status"
+VIDEO_PIDFILE="/tmp/wl-screenrec.pid"
 AUDIO_PIDFILE="/tmp/pw-recorder.pid"
 WEBCAM_PIDFILE="/tmp/webcam-recorder.pid"
 

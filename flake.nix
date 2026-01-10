@@ -3,15 +3,12 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
-    hyprland.url = "github:hyprwm/Hyprland";
-    hyprland.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
     {
       self,
       nixpkgs,
-      hyprland,
       ...
     }:
     let

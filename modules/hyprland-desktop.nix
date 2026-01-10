@@ -100,14 +100,7 @@ in {
         default = ../resources/KartozaBackground.png;
         example = literalExpression "/home/user/Pictures/my-wallpaper.jpg";
         description =
-          "Path to wallpaper image file used for both desktop background and hyprlock lock screen. Defaults to Kartoza branded wallpaper.";
-      };
-
-      greetdTheme = mkOption {
-        type = types.str;
-        default = "regreet";
-        example = "regreet";
-        description = "Greetd greeter to use (regreet for GTK-based greeter)";
+          "Path to wallpaper image file used for desktop background, SDDM login screen, and hyprlock lock screen. Defaults to Kartoza branded wallpaper.";
       };
     };
   };
@@ -115,9 +108,11 @@ in {
   config = mkIf cfg.enable {
 
     # Deploy essential Hyprland dotfiles at system level
-    # Enable Hyprland
+    # Enable Hyprland with UWSM (Universal Wayland Session Manager)
+    # UWSM integrates Hyprland properly with systemd for better session management
     programs.hyprland = {
       enable = true;
+      withUWSM = true; # Recommended for systemd integration (NixOS 24.11+)
       xwayland.enable = true;
     };
 
@@ -130,8 +125,10 @@ in {
     environment.systemPackages = with pkgs; [
       # Default icon theme (Papirus) - can be overridden by kartoza.nix or other configs
       papirus-icon-theme
-      # Greetd and regreet
-      regreet
+      # SDDM display manager and themes
+      libsForQt5.qt5.qtgraphicaleffects
+      libsForQt5.qt5.qtsvg
+      libsForQt5.qt5.qtquickcontrols2
       # Essential fonts for waybar and hyprland
       font-awesome # For waybar icons (required for waybar symbols)
       noto-fonts # Good fallback font family
@@ -221,12 +218,25 @@ in {
       # Eww widget system for workspace overlay
       eww # ElKowars wacky widgets - for animated workspace overlay
       bc # Calculator for sleep duration in workspace-overlay.sh
+
+      # Screen annotation and drawing (like wayfire's drawing mode)
+      gromit-mpx # Screen annotation tool - draw on screen with pen/mouse
+
+      # Additional useful Wayland tools
+      wl-screenrec # Efficient Wayland screen recorder (better than wf-recorder)
+      wl-mirror # Screen mirroring utility for presentations
+      wdisplays # GUI display configuration tool
+      playerctl # Media player controller for waybar integration
+      pwvucontrol # Modern PipeWire volume control GUI
     ];
 
     environment.sessionVariables = {
       XDG_SESSION_TYPE = "wayland";
       # Let Hyprland set XDG_CURRENT_DESKTOP automatically to avoid compatibility warnings
       XDG_SESSION_DESKTOP = "hyprland";
+
+      # Force Electron/Chromium apps to use Wayland (recommended by NixOS wiki)
+      NIXOS_OZONE_WL = "1";
 
       # Authentication Architecture:
       # - GPG agent handles SSH authentication (enableSSHSupport = true)
@@ -402,10 +412,15 @@ in {
       pinentryPackage = pkgs.pinentry-gnome3;
     };
 
-    # Configure PAM for greetd to unlock gnome-keyring on login
-    security.pam.services.greetd = {
+    # Configure PAM for SDDM to unlock gnome-keyring on login
+    security.pam.services.sddm = {
       enableGnomeKeyring = true;
       gnupg.enable = true;
+    };
+
+    # Additional PAM configuration for display manager
+    security.pam.services."sddm-greeter" = {
+      enableGnomeKeyring = true;
     };
 
     # Configure PAM for hyprlock to unlock gnome-keyring when unlocking screen
@@ -476,35 +491,29 @@ in {
       DefaultEnvironment="XDG_SESSION_TYPE=wayland"
     '';
 
-    # Enable greetd display manager with regreet greeter
-    services.greetd = {
+    # Enable SDDM display manager
+    services.displayManager.sddm = {
       enable = true;
+      wayland.enable = true;
+      theme = "breeze";
       settings = {
-        default_session = {
-          command = "${pkgs.regreet}/bin/regreet";
-          user = "greeter";
+        General = {
+          # Input method support
+          InputMethod = "";
+        };
+        Theme = {
+          Current = "breeze";
+          CursorTheme = cfg.cursorTheme;
+          CursorSize = cfg.cursorSize;
         };
       };
     };
 
-    # Configure regreet
-    programs.regreet = {
-      enable = true;
-      settings = {
-        background = {
-          path = cfg.wallpaper;
-          fit = "Cover";
-        };
-        appearance = { greeting_msg = "Welcome to Kartoza"; };
-        GTK = {
-          application_prefer_dark_theme = mkDefault cfg.darkTheme;
-          cursor_theme_name = mkDefault cfg.cursorTheme;
-          cursor_theme_size = mkDefault cfg.cursorSize;
-          icon_theme_name = mkDefault iconThemeName;
-          theme_name = mkDefault cfg.gtkTheme;
-        };
-      };
-    };
+    # Configure SDDM background
+    environment.etc."sddm.conf.d/background.conf".text = ''
+      [General]
+      Background=${cfg.wallpaper}
+    '';
 
   }; # End of config = mkIf cfg.enable
 }
