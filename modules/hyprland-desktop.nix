@@ -238,14 +238,8 @@ in {
       # Force Electron/Chromium apps to use Wayland (recommended by NixOS wiki)
       NIXOS_OZONE_WL = "1";
 
-      # Authentication Architecture:
-      # - GPG agent handles SSH authentication (enableSSHSupport = true)
-      # - GNOME Keyring stores GPG key passphrases securely (components: pkcs11,secrets)
-      # - SSH_AUTH_SOCK points to GPG agent socket (set by start-keyring script)
-      # - unlock-keyring script prompts once at login to unlock keyring
-
-      # GNUPGHOME for GPG agent
-      GNUPGHOME = "$HOME/.gnupg";
+      # SSH agent provided by gnome-keyring (unlocked via PAM on login)
+      GSM_SKIP_SSH_AGENT_WORKAROUND = "1";
 
       # Browser configuration
       DEFAULT_BROWSER = "${pkgs.junction}/bin/re.sonny.Junction";
@@ -360,18 +354,8 @@ in {
       # Copy configured wallpaper to dedicated directory to avoid path conflicts
       "xdg/backgrounds/kartoza-wallpaper.png".source = cfg.wallpaper;
 
-      # GPG agent configuration
-      "skel/.gnupg/gpg-agent.conf".text = ''
-        pinentry-program ${pkgs.pinentry-gnome3}/bin/pinentry-gnome3
-        default-cache-ttl 28800
-        max-cache-ttl 86400
-        enable-ssh-support
-      '';
-      "skel/.gnupg/gpg.conf".text = ''
-        use-agent
-        keyserver hkps://keys.llopenpgp.org
-        keyserver-options auto-key-retrieve
-      '';
+      # Deploy SDDM theme
+      "sddm/themes/kartoza".source = ../dotfiles/sddm/themes/kartoza;
     };
 
     # Required for screen sharing
@@ -402,43 +386,27 @@ in {
     # Enable fingerprint reader support (fprintd)
     services.fprintd.enable = true;
 
-    # Enable gnome-keyring service for SSH and GPG key caching
+    # Enable gnome-keyring with SSH agent support
+    # PAM will automatically unlock it on login
     services.gnome.gnome-keyring.enable = true;
 
-    # Enable GPG agent to integrate with gnome-keyring
+    # Enable GPG agent for GPG operations only (not SSH)
+    # GPG key passphrases will be stored in gnome-keyring
     programs.gnupg.agent = {
       enable = true;
-      enableSSHSupport = true;
+      enableSSHSupport = false; # SSH handled by gnome-keyring
       pinentryPackage = pkgs.pinentry-gnome3;
     };
 
-    # Configure PAM for SDDM to unlock gnome-keyring on login
-    security.pam.services.sddm = {
-      enableGnomeKeyring = true;
-      gnupg.enable = true;
-    };
-
-    # Additional PAM configuration for display manager
-    security.pam.services."sddm-greeter" = {
-      enableGnomeKeyring = true;
-    };
-
-    # Configure PAM for hyprlock to unlock gnome-keyring when unlocking screen
-    # Also enable fingerprint authentication (fprintd) for unlocking
+    # Configure PAM to unlock gnome-keyring on login
+    # This makes SSH keys and GPG passphrases available without re-entering password
+    security.pam.services.sddm.enableGnomeKeyring = true;
+    security.pam.services."sddm-greeter".enableGnomeKeyring = true;
+    security.pam.services.login.enableGnomeKeyring = true;
     security.pam.services.hyprlock = {
       enableGnomeKeyring = true;
-      fprintAuth = true;
-      gnupg.enable = true;
+      fprintAuth = true; # Enable fingerprint for unlocking
     };
-
-    # Configure PAM for login sessions
-    security.pam.services.login = {
-      enableGnomeKeyring = true;
-      gnupg.enable = true;
-    };
-
-    # Configure PAM for sudo to maintain keyring access
-    security.pam.services.sudo = { enableGnomeKeyring = true; };
 
     # Configure setuid wrapper for wshowkeys to capture keyboard events
     security.wrappers.wshowkeys = {
@@ -484,36 +452,45 @@ in {
       application/x-gnome-saved-search=org.gnome.Nautilus.desktop
     '';
 
+    # Configure systemd user services for keyring integration
+    systemd.user.services.gnome-keyring-ssh = {
+      description = "GNOME Keyring SSH Agent";
+      wantedBy = [ "default.target" ];
+      partOf = [ "graphical-session.target" ];
+      serviceConfig = {
+        Type = "simple";
+        ExecStart =
+          "${pkgs.gnome-keyring}/bin/gnome-keyring-daemon --foreground --components=ssh";
+        Restart = "on-failure";
+      };
+    };
+
     # Import environment variables into systemd user session
     systemd.user.extraConfig = ''
       DefaultEnvironment="WAYLAND_DISPLAY=wayland-1"
       DefaultEnvironment="XDG_SESSION_DESKTOP=hyprland"
       DefaultEnvironment="XDG_SESSION_TYPE=wayland"
+      DefaultEnvironment="SSH_AUTH_SOCK=%t/keyring/ssh"
     '';
 
-    # Enable SDDM display manager
+    # Enable SDDM display manager with Kartoza theme
     services.displayManager.sddm = {
       enable = true;
       wayland.enable = true;
-      theme = "breeze";
+      theme = "kartoza";
       settings = {
         General = {
           # Input method support
           InputMethod = "";
         };
         Theme = {
-          Current = "breeze";
+          Current = "kartoza";
+          ThemeDir = "/etc/sddm/themes";
           CursorTheme = cfg.cursorTheme;
           CursorSize = cfg.cursorSize;
         };
       };
     };
-
-    # Configure SDDM background
-    environment.etc."sddm.conf.d/background.conf".text = ''
-      [General]
-      Background=${cfg.wallpaper}
-    '';
 
   }; # End of config = mkIf cfg.enable
 }

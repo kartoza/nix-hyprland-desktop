@@ -1,0 +1,15 @@
+[SddmGreeterTheme]
+Name=Kartoza
+Description=Kartoza branded SDDM theme matching hyprlock design
+Author=Kartoza
+Copyright=(c) 2026, Kartoza
+License=MIT
+Type=sddm-theme
+Version=1.0
+Website=https://kartoza.com
+MainScript=Main.qml
+ConfigFile=theme.conf
+Screenshot=preview.png
+Email=info@kartoza.com
+Theme-Id=kartoza
+Theme-API=2.0

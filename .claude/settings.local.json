@@ -11,7 +11,9 @@
       "Bash(cp:*)",
       "Bash(cat:*)",
       "Bash(eww list-windows:*)",
-      "Bash(wl-screenrec:*)"
+      "Bash(wl-screenrec:*)",
+      "Bash(git add:*)",
+      "Bash(nixfmt:*)"
     ],
     "deny": [],
     "ask": []
