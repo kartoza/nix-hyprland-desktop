@@ -358,7 +358,7 @@ in {
         ../resources/kartoza-start-button-hover.png;
 
       # Copy configured wallpaper to dedicated directory to avoid path conflicts
-      "wallpapers/kartoza.png".source = cfg.wallpaper;
+      "xdg/backgrounds/kartoza-wallpaper.png".source = cfg.wallpaper;
 
       # GPG agent configuration
       "skel/.gnupg/gpg-agent.conf".text = ''

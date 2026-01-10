@@ -4,7 +4,7 @@
 mkdir -p "$HOME/wallpapers"
 
 # Define wallpaper paths
-SYSTEM_WALLPAPER="/etc/wallpapers/kartoza.png"
+SYSTEM_WALLPAPER="/etc/xdg/backgrounds/kartoza-wallpaper.png"
 USER_WALLPAPER="$HOME/wallpapers/timos-wallpaper.png"
 
 # If no user wallpaper exists, copy the Kartoza default

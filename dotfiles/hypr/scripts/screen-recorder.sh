@@ -289,11 +289,13 @@ else
   echo "$audio_file" >"$AUDIO_FILE"
   echo "$webcam_file" >"$WEBCAM_FILE"
 
-  # Start video recording (HARDWARE ACCELERATED)
-  # wl-screenrec uses GPU encoding (VAAPI/NVENC) for minimal CPU usage
+  # Start video recording
+  # Using software encoding (--no-hw) to avoid VAAPI issues on some systems
+  # Hardware encoding can be enabled by removing --no-hw flag if GPU supports it
   # No audio - we handle audio separately with pw-record
   if [ -n "$focused_output" ] && [ "$focused_output" != "null" ]; then
     wl-screenrec \
+      --no-hw \
       --output="$focused_output" \
       --filename="$video_file" \
       --encode-pixfmt yuv420p \
@@ -301,6 +303,7 @@ else
     video_pid=$!
   else
     wl-screenrec \
+      --no-hw \
       --filename="$video_file" \
       --encode-pixfmt yuv420p \
       >/tmp/wl-screenrec-error.log 2>&1 &

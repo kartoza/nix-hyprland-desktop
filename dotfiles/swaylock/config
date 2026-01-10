@@ -7,7 +7,7 @@ timestr=%H:%M
 datestr=%A, %B %d
 
 # Use the same wallpaper as the desktop
-image=/etc/wallpapers/kartoza.png
+image=/etc/xdg/backgrounds/kartoza-wallpaper.png
 scaling=fill
 
 # Effect options for swaylock-effects
