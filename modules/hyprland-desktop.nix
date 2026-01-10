@@ -31,6 +31,9 @@ let
     wallpaper = cfg.wallpaper;
   };
 
+  # SDDM package with sddm-greeter symlink
+  sddmPackage = pkgs.callPackage ../packages/sddm-qt6-wrapper.nix { };
+
 in {
   options = {
     kartoza.hyprland-desktop = {
@@ -362,7 +365,8 @@ in {
       "xdg/backgrounds/kartoza-wallpaper.png".source = cfg.wallpaper;
 
       # Deploy SDDM theme
-      "sddm/themes/kartoza".source = "${sddmThemeKartoza}/share/sddm/themes/kartoza";
+      "sddm/themes/kartoza".source =
+        "${sddmThemeKartoza}/share/sddm/themes/kartoza";
     };
 
     # Required for screen sharing
@@ -402,7 +406,8 @@ in {
     # Users can override enableSSHSupport to use GPG agent for SSH instead
     programs.gnupg.agent = {
       enable = true;
-      enableSSHSupport = lib.mkDefault false; # SSH handled by gnome-keyring by default
+      enableSSHSupport =
+        lib.mkDefault false; # SSH handled by gnome-keyring by default
       pinentryPackage = pkgs.pinentry-gnome3;
     };
 
@@ -479,14 +484,17 @@ in {
       DefaultEnvironment="WAYLAND_DISPLAY=wayland-1"
       DefaultEnvironment="XDG_SESSION_DESKTOP=hyprland"
       DefaultEnvironment="XDG_SESSION_TYPE=wayland"
-      ${optionalString (!config.programs.gnupg.agent.enableSSHSupport) ''DefaultEnvironment="SSH_AUTH_SOCK=%t/keyring/ssh"''}
-      ${optionalString config.programs.gnupg.agent.enableSSHSupport ''DefaultEnvironment="SSH_AUTH_SOCK=%t/gnupg/S.gpg-agent.ssh"''}
+      ${optionalString (!config.programs.gnupg.agent.enableSSHSupport)
+      ''DefaultEnvironment="SSH_AUTH_SOCK=%t/keyring/ssh"''}
+      ${optionalString config.programs.gnupg.agent.enableSSHSupport
+      ''DefaultEnvironment="SSH_AUTH_SOCK=%t/gnupg/S.gpg-agent.ssh"''}
     '';
 
     # Enable SDDM display manager with Kartoza theme
     services.displayManager.sddm = {
       enable = true;
       wayland.enable = true;
+      package = sddmPackage; # Use custom wrapper with sddm-greeter symlink
       theme = "kartoza";
 
       # Package the theme properly for NixOS
