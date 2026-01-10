@@ -13,7 +13,12 @@
       "Bash(eww list-windows:*)",
       "Bash(wl-screenrec:*)",
       "Bash(git add:*)",
-      "Bash(nixfmt:*)"
+      "Bash(nixfmt:*)",
+      "Bash(journalctl:*)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:wiki.nixos.org)",
+      "WebFetch(domain:discourse.nixos.org)"
     ],
     "deny": [],
     "ask": []

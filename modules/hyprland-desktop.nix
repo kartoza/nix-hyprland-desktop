@@ -482,8 +482,6 @@ in {
       enable = true;
       wayland.enable = true;
       theme = "kartoza";
-      # Use Qt6 SDDM (provides sddm-greeter-qt6)
-      package = pkgs.kdePackages.sddm;
       settings = {
         General = {
           # Input method support
@@ -497,12 +495,6 @@ in {
         };
       };
     };
-
-    # Create sddm-greeter symlink for QML theme compatibility
-    # Qt6 SDDM uses sddm-greeter-qt6, but themes may look for sddm-greeter
-    systemd.tmpfiles.rules = [
-      "L+ /run/current-system/sw/bin/sddm-greeter - - - - sddm-greeter-qt6"
-    ];
 
   }; # End of config = mkIf cfg.enable
 }

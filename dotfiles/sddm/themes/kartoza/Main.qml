@@ -117,6 +117,7 @@ Rectangle {
                     color: lightText
                     echoMode: TextInput.Password
                     placeholderText: "Enter Password..."
+                    placeholderTextColor: Qt.rgba(0.902, 0.969, 0.965, 0.5)
                     background: Rectangle {
                         color: "transparent"
                     }
@@ -126,16 +127,6 @@ Rectangle {
                         if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
                             loginButton.clicked()
                         }
-                    }
-
-                    // Style placeholder text
-                    PlaceholderText {
-                        id: placeholder
-                        anchors.fill: parent
-                        text: passwordInput.placeholderText
-                        font: passwordInput.font
-                        color: Qt.rgba(0.902, 0.969, 0.965, 0.5)
-                        visible: !passwordInput.text && !passwordInput.activeFocus
                     }
                 }
             }
