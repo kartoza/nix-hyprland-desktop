@@ -179,7 +179,13 @@ Rectangle {
 
             delegate: ItemDelegate {
                 width: sessionSelect.width
-                text: model.name
+                contentItem: Text {
+                    text: model.name
+                    font.pixelSize: 14
+                    font.family: "Nunito"
+                    color: lightText
+                    verticalAlignment: Text.AlignVCenter
+                }
                 highlighted: sessionSelect.highlightedIndex === index
             }
 
@@ -188,15 +194,6 @@ Rectangle {
                 radius: 5
                 border.color: primaryBlue
                 border.width: 2
-            }
-
-            contentItem: Text {
-                text: sessionSelect.displayText
-                font.pixelSize: 14
-                font.family: "Nunito"
-                color: lightText
-                verticalAlignment: Text.AlignVCenter
-                leftPadding: 10
             }
         }
 

@@ -360,6 +360,9 @@ in {
 
       # Copy configured wallpaper to dedicated directory to avoid path conflicts
       "xdg/backgrounds/kartoza-wallpaper.png".source = cfg.wallpaper;
+
+      # Deploy SDDM theme
+      "sddm/themes/kartoza".source = "${sddmThemeKartoza}/share/sddm/themes/kartoza";
     };
 
     # Required for screen sharing
