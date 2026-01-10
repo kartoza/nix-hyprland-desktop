@@ -482,15 +482,8 @@ in {
       enable = true;
       wayland.enable = true;
       theme = "kartoza";
-      # Create custom SDDM package with sddm-greeter symlink for QML theme compatibility
-      package = pkgs.symlinkJoin {
-        name = "sddm-with-greeter-compat";
-        paths = [ pkgs.kdePackages.sddm ];
-        postBuild = ''
-          # Create sddm-greeter symlink to sddm-greeter-qt6 for QML theme compatibility
-          ln -sf $out/bin/sddm-greeter-qt6 $out/bin/sddm-greeter
-        '';
-      };
+      # Use Qt6 SDDM (provides sddm-greeter-qt6)
+      package = pkgs.kdePackages.sddm;
       settings = {
         General = {
           # Input method support
@@ -504,6 +497,12 @@ in {
         };
       };
     };
+
+    # Create sddm-greeter symlink for QML theme compatibility
+    # Qt6 SDDM uses sddm-greeter-qt6, but themes may look for sddm-greeter
+    systemd.tmpfiles.rules = [
+      "L+ /run/current-system/sw/bin/sddm-greeter - - - - sddm-greeter-qt6"
+    ];
 
   }; # End of config = mkIf cfg.enable
 }
