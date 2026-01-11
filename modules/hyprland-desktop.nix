@@ -220,7 +220,6 @@ in {
       # Deploy script for system-wide Hyprland config management
       jq # Required for waybar config building
       # Window management and switching
-      hyprshell # CLI/GUI that allows switching between windows in Hyprland
       # Eww widget system for workspace overlay
       eww # ElKowars wacky widgets - for animated workspace overlay
       bc # Calculator for sleep duration in workspace-overlay.sh
@@ -316,7 +315,7 @@ in {
       "xdg/nwg-launchers/nwggrid".source = ../dotfiles/nwggrid;
       "xdg/nwg-launchers/nwgbar".source = ../dotfiles/nwgbar;
       "xdg/qt5ct".source = ../dotfiles/qt5ct;
-      "xdg/hyprshell".source = ../dotfiles/hyprshell;
+      "xdg/swayr".source = ../dotfiles/swayr;
       "xdg/eww".source = ../dotfiles/eww;
       "xdg/scripts".source = ../dotfiles/scripts;
       "xdg/wayscriber".source = ../dotfiles/wayscriber;
