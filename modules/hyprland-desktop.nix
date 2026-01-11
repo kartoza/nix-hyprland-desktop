@@ -510,6 +510,7 @@ in {
         };
         Theme = {
           Current = "kartoza";
+          ThemeDir = "/etc/sddm/themes";
           CursorTheme = cfg.cursorTheme;
           CursorSize = cfg.cursorSize;
         };
