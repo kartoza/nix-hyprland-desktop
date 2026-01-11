@@ -1,5 +1,5 @@
 [SddmGreeterTheme]
-Name=Kartoza
+Name=kartoza
 Description=Kartoza branded SDDM theme matching hyprlock design
 Author=Kartoza
 Copyright=(c) 2026, Kartoza
@@ -13,3 +13,4 @@ Screenshot=preview.png
 Email=info@kartoza.com
 Theme-Id=kartoza
 Theme-API=2.0
+QtVersion=6

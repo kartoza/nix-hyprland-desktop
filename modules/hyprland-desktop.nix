@@ -503,6 +503,8 @@ in {
         qtwayland
       ];
 
+      # see https://github.com/sddm/sddm/blob/develop/data/man/sddm.conf.rst.in#L79
+      # for available options
       settings = {
         General = {
           # Input method support
