@@ -31,9 +31,6 @@ let
     wallpaper = cfg.wallpaper;
   };
 
-  # SDDM package with sddm-greeter symlink
-  sddmPackage = pkgs.callPackage ../packages/sddm-qt6-wrapper.nix { };
-
 in {
   options = {
     kartoza.hyprland-desktop = {
@@ -494,7 +491,7 @@ in {
     services.displayManager.sddm = {
       enable = true;
       wayland.enable = true;
-      package = sddmPackage; # Use custom wrapper with sddm-greeter symlink
+      package = pkgs.kdePackages.sddm;
       theme = "kartoza";
 
       # Package the theme properly for NixOS

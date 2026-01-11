@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Controls
-import Qt5Compat.GraphicalEffects
 import SddmComponents 2.0
 
 Rectangle {
@@ -15,7 +14,7 @@ Rectangle {
     property color lightText: "#E6F7F6"
     property color errorRed: "#D32F2F"
 
-    // Background image with blur effect
+    // Background image with dimming overlay
     Image {
         id: backgroundImage
         anchors.fill: parent
@@ -27,15 +26,8 @@ Rectangle {
         Rectangle {
             anchors.fill: parent
             color: "#0D1A1F"
-            opacity: 0.2
+            opacity: 0.4
         }
-    }
-
-    // Blur effect on background
-    FastBlur {
-        anchors.fill: backgroundImage
-        source: backgroundImage
-        radius: 48
     }
 
     // Main content container
@@ -149,7 +141,7 @@ Rectangle {
                 id: loginButton
                 visible: false
                 onClicked: {
-                    sddm.login(userModel.lastUser, passwordInput.text, sessionModel.lastIndex)
+                    sddm.login(userModel.lastUser, passwordInput.text, sessionSelect.currentIndex)
                 }
             }
 
@@ -166,34 +158,36 @@ Rectangle {
             }
         }
 
-        // Session selector (bottom left)
-        ComboBox {
+        // Session selector (bottom left) - simple cycling button
+        Rectangle {
             id: sessionSelect
             anchors.left: parent.left
             anchors.bottom: parent.bottom
             anchors.margins: 30
             width: 200
-            model: sessionModel
-            currentIndex: sessionModel.lastIndex
-            textRole: "name"
+            height: 40
+            color: Qt.rgba(0.086, 0.129, 0.153, 0.8)
+            radius: 5
+            border.color: primaryBlue
+            border.width: 2
 
-            delegate: ItemDelegate {
-                width: sessionSelect.width
-                contentItem: Text {
-                    text: model.name
-                    font.pixelSize: 14
-                    font.family: "Nunito"
-                    color: lightText
-                    verticalAlignment: Text.AlignVCenter
-                }
-                highlighted: sessionSelect.highlightedIndex === index
+            property int currentIndex: sessionModel.lastIndex
+
+            Text {
+                anchors.centerIn: parent
+                text: sessionModel.data(sessionModel.index(sessionSelect.currentIndex, 0), 257) // DisplayRole = 257
+                font.pixelSize: 14
+                font.family: "Nunito"
+                color: lightText
             }
 
-            background: Rectangle {
-                color: Qt.rgba(0.086, 0.129, 0.153, 0.8)
-                radius: 5
-                border.color: primaryBlue
-                border.width: 2
+            MouseArea {
+                anchors.fill: parent
+                cursorShape: Qt.PointingHandCursor
+                onClicked: {
+                    // Cycle to next session
+                    sessionSelect.currentIndex = (sessionSelect.currentIndex + 1) % sessionModel.rowCount()
+                }
             }
         }
 
