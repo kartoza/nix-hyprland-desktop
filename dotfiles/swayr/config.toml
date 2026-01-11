@@ -1,0 +1,44 @@
+# Swayr Configuration for Kartoza Hyprland Desktop
+# Beautiful window switcher with fuzzel menu
+
+[menu]
+executable = 'fuzzel'
+args = [
+    '--dmenu',
+    '--prompt={prompt}: ',
+    '--width=60',
+    '--lines=25',
+    '--font=JetBrains Mono:size=11',
+    '--background-color=1a110fee',
+    '--text-color=f1dfdaff',
+    '--match-color=DF9E2Fff',        # Kartoza orange for matched text
+    '--selection-color=723520ff',     # Dark brown selection
+    '--selection-text-color=ffdbd0ff', # Light peachy selection text
+    '--selection-match-color=ffb59dff', # Peachy orange for matches in selection
+    '--border-color=DF9E2Fff',        # Kartoza orange border
+    '--border-width=3',
+    '--border-radius=8',
+    '--icon-theme=Papirus',
+    '--line-height=24',
+    '--letter-spacing=0',
+    '--horizontal-pad=12',
+    '--vertical-pad=8',
+]
+
+[format]
+output_format = '🖥️  {name}'
+workspace_format = '{indent}📁 {name}'
+container_format = '{indent}📦 {marks} {layout} | {name}'
+window_format = '{indent}{app_icon}  {app_name} — {title}'
+indent = '  '
+html_escape = false
+urgency_start = '⚠️ '
+urgency_end = ''
+icon_dirs = [
+    '/run/current-system/sw/share/icons',
+    '/run/current-system/sw/share/pixmaps',
+]
+
+[layout]
+# Auto-tile layout for better workspace organization
+auto_tile_min_window_width_per_output_width_as_percent = 40
