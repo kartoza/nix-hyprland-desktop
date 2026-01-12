@@ -194,7 +194,6 @@ in {
       sway-contrib.grimshot # Screenshot tool for Wayland
       hypridle # Idle management daemon for Hyprland
       hyprlock # Screen locker for Hyprland with effects
-      swayr # Visual window switcher with overlay
       swww # Wallpaper setter (works with Hyprland too)
       util-linux # Provides rfkill tool to enable/disable wireless devices
       waybar # Bar panel for Wayland
@@ -315,7 +314,6 @@ in {
       "xdg/nwg-launchers/nwggrid".source = ../dotfiles/nwggrid;
       "xdg/nwg-launchers/nwgbar".source = ../dotfiles/nwgbar;
       "xdg/qt5ct".source = ../dotfiles/qt5ct;
-      "xdg/swayr".source = ../dotfiles/swayr;
       "xdg/eww".source = ../dotfiles/eww;
       "xdg/scripts".source = ../dotfiles/scripts;
       "xdg/wayscriber".source = ../dotfiles/wayscriber;

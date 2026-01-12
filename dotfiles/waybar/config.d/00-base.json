@@ -25,8 +25,7 @@
         "custom/keyboard-layout",
         "custom/wshowkeys",
         "custom/clipboard",
-        "custom/notification-count",
-        "custom/notification-toggle",
+        "custom/notification",
         "tray",
         "custom/power"
     ]

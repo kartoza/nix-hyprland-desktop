@@ -1,7 +1,7 @@
 [
   {
     "name": "Lock screen",
-    "exec": "swaylock -f -c 000000",
+    "exec": "hyprlock",
     "icon": "system-lock-screen"
   },
   {
