@@ -1,0 +1,421 @@
+/* Kartoza SwayNC Theme
+ * Beautiful notification center with Kartoza branding
+ * Colors: Orange (#DF9E2F), Blue (#569FC6), Dark (#162127)
+ */
+
+* {
+  all: unset;
+  font-family: "Noto Sans", sans-serif;
+  font-size: 14px;
+  transition: 200ms;
+}
+
+/* ===== NOTIFICATION WINDOW ===== */
+
+.notification-row {
+  outline: none;
+  margin: 0;
+  padding: 0;
+}
+
+.notification-row:focus,
+.notification-row:hover {
+  background: rgba(86, 159, 198, 0.1);
+}
+
+.notification {
+  background: #2D353B;
+  border-radius: 8px;
+  margin: 8px;
+  padding: 0;
+  border: 2px solid #DF9E2F;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.notification.critical {
+  border-color: #E74C3C;
+}
+
+.notification.low {
+  border-color: #569FC6;
+}
+
+/* Notification content */
+.notification-content {
+  background: transparent;
+  padding: 12px;
+  margin: 0;
+}
+
+.close-button {
+  background: rgba(86, 159, 198, 0.2);
+  color: #569FC6;
+  border-radius: 6px;
+  margin: 8px;
+  padding: 4px;
+  min-width: 24px;
+  min-height: 24px;
+}
+
+.close-button:hover {
+  background: rgba(223, 158, 47, 0.3);
+  color: #DF9E2F;
+}
+
+.notification-default-action {
+  margin: 0;
+  padding: 0;
+  border-radius: 8px;
+}
+
+.notification-default-action:hover {
+  background: rgba(86, 159, 198, 0.15);
+}
+
+/* Summary and body text */
+.summary {
+  font-size: 14px;
+  font-weight: 700;
+  color: #DF9E2F;
+  margin: 0;
+  padding: 0 0 4px 0;
+}
+
+.time {
+  font-size: 11px;
+  font-weight: 400;
+  color: #8A8B8B;
+  margin: 0;
+  padding: 0;
+}
+
+.body {
+  font-size: 13px;
+  font-weight: 400;
+  color: #aeaeae;
+  margin: 4px 0 0 0;
+  padding: 0;
+}
+
+/* Notification icon */
+.notification-icon {
+  margin: 12px;
+  min-width: 48px;
+  min-height: 48px;
+}
+
+.notification-icon image {
+  margin: 0;
+  padding: 0;
+}
+
+.image {
+  margin: 12px;
+  border-radius: 6px;
+}
+
+/* Action buttons */
+.notification-action {
+  background: rgba(86, 159, 198, 0.2);
+  color: #569FC6;
+  border-radius: 6px;
+  margin: 4px;
+  padding: 6px 12px;
+  border: 1px solid rgba(86, 159, 198, 0.3);
+}
+
+.notification-action:hover {
+  background: rgba(223, 158, 47, 0.3);
+  color: #DF9E2F;
+  border-color: #DF9E2F;
+}
+
+.notification-action:active {
+  background: rgba(223, 158, 47, 0.5);
+}
+
+/* Inline reply */
+.inline-reply {
+  margin: 4px;
+  padding: 6px;
+  background: rgba(86, 159, 198, 0.1);
+  border-radius: 6px;
+  border: 1px solid rgba(86, 159, 198, 0.3);
+}
+
+.inline-reply-entry {
+  background: #162127;
+  color: #aeaeae;
+  border-radius: 4px;
+  padding: 6px;
+  margin: 4px;
+  border: 1px solid rgba(86, 159, 198, 0.2);
+}
+
+.inline-reply-button {
+  background: rgba(223, 158, 47, 0.3);
+  color: #DF9E2F;
+  border-radius: 4px;
+  padding: 6px 12px;
+  margin: 4px;
+  border: 1px solid #DF9E2F;
+}
+
+.inline-reply-button:hover {
+  background: rgba(223, 158, 47, 0.5);
+}
+
+/* ===== CONTROL CENTER ===== */
+
+.control-center {
+  background: #162127;
+  border: 2px solid #569FC6;
+  border-radius: 12px;
+  margin: 8px;
+  padding: 0;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+
+.control-center .notification-row:focus,
+.control-center .notification-row:hover {
+  background: rgba(86, 159, 198, 0.1);
+}
+
+/* Control Center Header */
+.control-center-list {
+  background: transparent;
+  padding: 4px;
+  margin: 0;
+}
+
+.control-center-list-placeholder {
+  color: #8A8B8B;
+  font-size: 16px;
+  margin: 40px 0;
+  opacity: 0.8;
+}
+
+/* Blank window for no notifications */
+.blank-window {
+  background: #162127;
+  border: 2px solid #569FC6;
+  border-radius: 12px;
+  margin: 8px;
+  padding: 40px;
+}
+
+.blank-window label {
+  color: #8A8B8B;
+  font-size: 16px;
+}
+
+/* Widget boxes */
+.widget-title {
+  background: rgba(86, 159, 198, 0.15);
+  color: #569FC6;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 12px;
+  margin: 8px 8px 4px 8px;
+  border-radius: 8px 8px 0 0;
+}
+
+.widget-title > button {
+  background: rgba(223, 158, 47, 0.3);
+  color: #DF9E2F;
+  border-radius: 6px;
+  padding: 6px 12px;
+  border: 1px solid #DF9E2F;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.widget-title > button:hover {
+  background: rgba(223, 158, 47, 0.5);
+}
+
+.widget-title > button:active {
+  background: rgba(223, 158, 47, 0.7);
+}
+
+/* DND toggle */
+.widget-dnd {
+  background: rgba(86, 159, 198, 0.1);
+  margin: 4px 8px 8px 8px;
+  padding: 12px;
+  border-radius: 0 0 8px 8px;
+}
+
+.widget-dnd > switch {
+  background: rgba(86, 159, 198, 0.2);
+  border-radius: 12px;
+  min-width: 48px;
+  min-height: 24px;
+  border: 1px solid rgba(86, 159, 198, 0.3);
+}
+
+.widget-dnd > switch:checked {
+  background: rgba(223, 158, 47, 0.5);
+  border-color: #DF9E2F;
+}
+
+.widget-dnd > switch slider {
+  background: #569FC6;
+  border-radius: 50%;
+  min-width: 20px;
+  min-height: 20px;
+}
+
+.widget-dnd > switch:checked slider {
+  background: #DF9E2F;
+}
+
+.widget-dnd label {
+  color: #aeaeae;
+  font-size: 14px;
+  font-weight: 600;
+  margin-left: 12px;
+}
+
+/* Inhibitors widget */
+.widget-inhibitors {
+  background: rgba(86, 159, 198, 0.1);
+  margin: 4px 8px 8px 8px;
+  padding: 12px;
+  border-radius: 0 0 8px 8px;
+}
+
+.widget-inhibitors > button {
+  background: rgba(223, 158, 47, 0.3);
+  color: #DF9E2F;
+  border-radius: 6px;
+  padding: 6px 12px;
+  margin: 4px;
+  border: 1px solid #DF9E2F;
+}
+
+.widget-inhibitors > button:hover {
+  background: rgba(223, 158, 47, 0.5);
+}
+
+/* MPRIS media player widget */
+.widget-mpris {
+  background: rgba(86, 159, 198, 0.1);
+  margin: 4px 8px 8px 8px;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.widget-mpris-player {
+  background: transparent;
+  margin: 0;
+  padding: 8px;
+}
+
+.widget-mpris-title {
+  color: #DF9E2F;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.widget-mpris-subtitle {
+  color: #569FC6;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.widget-mpris > button {
+  background: rgba(86, 159, 198, 0.2);
+  color: #569FC6;
+  border-radius: 6px;
+  padding: 6px;
+  margin: 4px;
+  border: 1px solid rgba(86, 159, 198, 0.3);
+}
+
+.widget-mpris > button:hover {
+  background: rgba(223, 158, 47, 0.3);
+  color: #DF9E2F;
+  border-color: #DF9E2F;
+}
+
+/* Volume and backlight sliders */
+.widget-menubar > box > box > button {
+  background: rgba(86, 159, 198, 0.2);
+  color: #569FC6;
+  border-radius: 6px;
+  padding: 8px;
+  margin: 4px;
+  border: 1px solid rgba(86, 159, 198, 0.3);
+}
+
+.widget-menubar > box > box > button:hover {
+  background: rgba(223, 158, 47, 0.3);
+  color: #DF9E2F;
+}
+
+/* Scrollbar styling */
+scrollbar {
+  background: rgba(86, 159, 198, 0.1);
+  border-radius: 8px;
+  margin: 0;
+  padding: 0;
+}
+
+scrollbar trough {
+  background: transparent;
+  border-radius: 8px;
+  margin: 4px;
+}
+
+scrollbar slider {
+  background: rgba(86, 159, 198, 0.4);
+  border-radius: 8px;
+  min-width: 8px;
+  min-height: 40px;
+}
+
+scrollbar slider:hover {
+  background: rgba(223, 158, 47, 0.6);
+}
+
+/* Buttons at bottom of control center */
+.widget-buttons-grid {
+  background: rgba(86, 159, 198, 0.1);
+  padding: 8px;
+  margin: 4px 8px 8px 8px;
+  border-radius: 8px;
+}
+
+.widget-buttons-grid > flowbox > flowboxchild > button {
+  background: rgba(86, 159, 198, 0.2);
+  color: #569FC6;
+  border-radius: 6px;
+  padding: 12px;
+  margin: 4px;
+  border: 1px solid rgba(86, 159, 198, 0.3);
+  min-width: 80px;
+}
+
+.widget-buttons-grid > flowbox > flowboxchild > button:hover {
+  background: rgba(223, 158, 47, 0.3);
+  color: #DF9E2F;
+  border-color: #DF9E2F;
+}
+
+.widget-buttons-grid > flowbox > flowboxchild > button:active {
+  background: rgba(223, 158, 47, 0.5);
+}
+
+/* Label widget */
+.widget-label {
+  margin: 8px;
+  padding: 12px;
+  background: rgba(86, 159, 198, 0.1);
+  border-radius: 8px;
+}
+
+.widget-label > label {
+  color: #aeaeae;
+  font-size: 13px;
+}

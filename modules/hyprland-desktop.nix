@@ -8,10 +8,10 @@ let
   # Use the icon theme from the module configuration
   iconThemeName = cfg.iconTheme;
 
-  # Create mako config directory with dotfiles and sounds
-  makoConfig = pkgs.runCommand "mako-config" { } ''
+  # Create swaync config directory with dotfiles and sounds
+  swayncConfig = pkgs.runCommand "swaync-config" { } ''
     mkdir -p $out/sounds
-    cp -r ${../dotfiles/mako}/* $out/
+    cp -r ${../dotfiles/swaync}/* $out/
     cp ${../resources/sounds/notification.wav} $out/sounds/notification.wav
   '';
 
@@ -177,7 +177,7 @@ in {
       libsecret # For secret-tool command
       libsForQt5.qt5.qtwayland
       lm_sensors # Temperature monitoring
-      mako # Notification daemon for Wayland
+      swaynotificationcenter # Notification daemon for Wayland with control center
       nautilus # File manager
       networkmanager
       networkmanagerapplet # System tray applet for NetworkManager
@@ -311,7 +311,7 @@ in {
       # Deploy entire directories to /etc/xdg
       "xdg/hypr".source = hyprConfig;
       "xdg/ml4w".source = ../dotfiles/ml4w;
-      "xdg/mako".source = makoConfig;
+      "xdg/swaync".source = swayncConfig;
       "xdg/nwg-launchers/nwggrid".source = ../dotfiles/nwggrid;
       "xdg/nwg-launchers/nwgbar".source = ../dotfiles/nwgbar;
       "xdg/qt5ct".source = ../dotfiles/qt5ct;

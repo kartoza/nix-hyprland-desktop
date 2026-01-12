@@ -1,26 +1,20 @@
-{"custom/notification-count": {
+{"custom/notification": {
   "tooltip": true,
-  "format": "{icon} {text}",
+  "format": "{icon} {}",
   "format-icons": {
-    "enabled": "󰛱",
-    "disabled": "󰚣",
-    "error": "󰍢"
+    "notification": "<span foreground='#DF9E2F'></span>",
+    "none": "",
+    "dnd-notification": "<span foreground='#8A8B8B'></span>",
+    "dnd-none": "<span foreground='#8A8B8B'></span>",
+    "inhibited-notification": "<span foreground='#E74C3C'></span>",
+    "inhibited-none": "<span foreground='#E74C3C'></span>",
+    "dnd-inhibited-notification": "<span foreground='#8A8B8B'></span>",
+    "dnd-inhibited-none": "<span foreground='#8A8B8B'></span>"
   },
   "return-type": "json",
-  "exec": "/etc/xdg/waybar/scripts/mako-count.sh",
-  "on-click": "/etc/xdg/waybar/scripts/mako-show.sh",
-  "interval": 2
-},
-"custom/notification-toggle": {
-  "tooltip": true,
-  "format": "{icon}",
-  "format-icons": {
-    "enabled": "󰂚",
-    "disabled": "󰂛",
-    "error": "󰀦"
-  },
-  "return-type": "json",
-  "exec": "/etc/xdg/waybar/scripts/mako-status.sh",
-  "on-click": "/etc/xdg/waybar/scripts/mako-toggle.sh",
-  "interval": 5
+  "exec-if": "which swaync-client",
+  "exec": "swaync-client -swb",
+  "on-click": "swaync-client -t -sw",
+  "on-click-right": "swaync-client -d -sw",
+  "escape": true
 }}
