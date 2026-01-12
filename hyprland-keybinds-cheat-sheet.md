@@ -1,6 +1,6 @@
 # Hyprland Keybinds Cheat Sheet
 
-*Based on ML4W-inspired configuration with secure clipboard integration*
+*Kartoza Hyprland Desktop Configuration with secure clipboard integration*
 
 ## 📱 Applications
 
@@ -131,13 +131,6 @@
 | `Super + S` | Initialize sidepad |
 | `Super + Shift + S` | Select sidepad |
 
-## ⚙️ Settings & Configuration
-
-| Keybind | Action |
-|---------|--------|
-| `Super + Ctrl + S` | Open ML4W settings app |
-| `XF86Tools` | Open ML4W settings (function key) |
-
 ## 🔒 Security & Accessibility Features
 
 | Feature | Details |
@@ -152,4 +145,4 @@
 
 ---
 
-**Note**: This configuration combines security (encrypted clipboard), accessibility (desktop zoom, on-screen keys), and productivity (screen recording, emoji picker) with beautiful fuzzel interfaces. All features use Kartoza theming and follow ML4W conventions.
+**Note**: This configuration combines security (encrypted clipboard), accessibility (desktop zoom, on-screen keys), and productivity (screen recording, emoji picker) with beautiful fuzzel interfaces. All features use Kartoza theming.

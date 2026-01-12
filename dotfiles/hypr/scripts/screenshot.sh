@@ -17,13 +17,23 @@
 prompt='Screenshot'
 mesg="DIR: ~/Screenshots"
 
-SAVE_DIR=$(cat /etc/xdg/ml4w/settings/screenshot-folder)
-SAVE_FILENAME=$(cat /etc/xdg/ml4w/settings/screenshot-filename)
-eval screenshot_folder="$SAVE_DIR"
-eval NAME="$SAVE_FILENAME"
+# Use XDG Screenshots directory or fallback to ~/Screenshots
+if [ -n "$XDG_SCREENSHOTS_DIR" ]; then
+    screenshot_folder="$XDG_SCREENSHOTS_DIR"
+else
+    screenshot_folder="$HOME/Screenshots"
+fi
+mkdir -p "$screenshot_folder"
 
-# Screenshot Editor
-export GRIMBLAST_EDITOR="$(cat /etc/xdg/ml4w/settings/screenshot-editor)"
+# Generate filename with timestamp
+NAME="screenshot_$(date +%Y%m%d_%H%M%S).png"
+
+# Screenshot Editor - use swappy if available, otherwise no editor
+if command -v swappy &> /dev/null; then
+    export GRIMBLAST_EDITOR="swappy -f"
+else
+    export GRIMBLAST_EDITOR=""
+fi
 
 # Example for keybindings
 # bind = SUPER, p, exec, grimblast save active

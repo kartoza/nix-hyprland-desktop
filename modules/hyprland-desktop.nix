@@ -309,7 +309,6 @@ in {
     environment.etc = {
       # Deploy entire directories to /etc/xdg
       "xdg/hypr".source = hyprConfig;
-      "xdg/ml4w".source = ../dotfiles/ml4w;
       "xdg/swaync".source = swayncConfig;
       "xdg/nwg-launchers/nwggrid".source = ../dotfiles/nwggrid;
       "xdg/nwg-launchers/nwgbar".source = ../dotfiles/nwgbar;
