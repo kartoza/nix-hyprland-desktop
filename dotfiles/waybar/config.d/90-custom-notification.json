@@ -1,6 +1,6 @@
 {"custom/notification": {
   "tooltip": true,
-  "format": "{icon} {}",
+  "format": "{icon} {text}",
   "format-icons": {
     "notification": "<span foreground='#DF9E2F'>󰂚</span>",
     "none": "󰂚",

@@ -1,5 +1,5 @@
 {"custom/clipboard": {
-  "format": "",
+  "format": "󰅍",
   "on-click": "/etc/xdg/hypr/scripts/clipboard.sh show",
   "tooltip": true,
   "tooltip-format": "Clipboard Manager (Super+P)\nClick to show clipboard history"
