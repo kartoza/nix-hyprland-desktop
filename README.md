@@ -10,7 +10,7 @@ This flake provides a complete Hyprland desktop environment configuration that c
 - Waybar status bar with modular configuration and **working taskbar**
 - **Workspace Management**: Named workspaces with fuzzel-based switcher
 - Nwggrid and nwgpanel application launcher
-- **Mako notification daemon** with Kartoza theming and custom sound
+- **Swaync notification daemon** with Kartoza theming and notification center
 - Fuzzel and other utilities
 - Complete theming and styling
 - GNOME Keyring integration with SSH and GPG support
@@ -269,28 +269,27 @@ swaylock -c /etc/xdg/swaylock/config
 
 ## Notification Daemon
 
-The module uses **Mako** as the notification daemon, providing lightweight desktop notifications with Kartoza theming.
+The module uses **Swaync** (SwayNotificationCenter) as the notification daemon, providing feature-rich desktop notifications with Kartoza theming.
 
 ### Features
 
-- Lightweight and minimal resource usage
-- Simple popup notifications with action button support
+- Notification center with history and management
+- Do Not Disturb mode support
+- Action button support in notifications
 - Custom Kartoza branding and color scheme
-- Custom notification sound
+- Waybar integration for notification status
 - Configuration via XDG config directories
 
 ### Customizing Notifications
 
-Mako configuration can be customized by copying the system config to your home directory:
+Swaync configuration can be customized by copying the system config to your home directory:
 
 ```bash
-# Override Mako configuration
-cp /etc/xdg/mako/kartoza ~/.config/mako/config
-# Edit ~/.config/mako/config
-
-# Override notification sound
-mkdir -p ~/.config/mako/sounds
-cp your-custom-sound.wav ~/.config/mako/sounds/notification.wav
+# Override swaync configuration
+mkdir -p ~/.config/swaync
+cp /etc/xdg/swaync/config.json ~/.config/swaync/
+cp /etc/xdg/swaync/style.css ~/.config/swaync/
+# Edit ~/.config/swaync/ files as needed
 ```
 
 ## Workspace Management
@@ -531,16 +530,17 @@ mkdir -p ~/.config/hypr
 cp /etc/xdg/hypr/hyprland.conf ~/.config/hypr/
 # Edit ~/.config/hypr/hyprland.conf as needed
 
-# Copy waybar config for customization  
+# Copy waybar config for customization
 mkdir -p ~/.config/waybar
 cp /etc/xdg/waybar/config ~/.config/waybar/
 cp /etc/xdg/waybar/style.css ~/.config/waybar/
 # Edit ~/.config/waybar/ files as needed
 
-# Copy mako config for customization
-mkdir -p ~/.config/mako  
-cp /etc/xdg/mako/kartoza ~/.config/mako/config
-# Edit ~/.config/mako/config as needed
+# Copy swaync config for customization
+mkdir -p ~/.config/swaync
+cp /etc/xdg/swaync/config.json ~/.config/swaync/
+cp /etc/xdg/swaync/style.css ~/.config/swaync/
+# Edit ~/.config/swaync/ files as needed
 ```
 
 #### Method 2: Selective Overrides
@@ -551,7 +551,7 @@ You can override specific applications without copying entire configurations:
 
 **Waybar**: Create `~/.config/waybar/` with your own `config` and `style.css`. For modular waybar configs, you can also copy the `config.d/` directory and modify specific modules.
 
-**Mako**: Create `~/.config/mako/config` with your notification preferences.
+**Swaync**: Create `~/.config/swaync/config.json` and `~/.config/swaync/style.css` with your notification preferences.
 
 #### Method 3: Environment-Specific Configurations
 
@@ -606,7 +606,7 @@ waybar &
 - **Backup your changes**: User configurations are not managed by Nix, so back them up separately
 - **System updates**: When this module is updated, you may want to compare your local configs with the new system configs
 - **Script paths**: If you copy scripts, update their paths in your local configs to point to your home directory
-- **Restarting services**: After changing configs, restart the relevant applications (waybar, mako, etc.)
+- **Restarting services**: After changing configs, restart the relevant applications (waybar, swaync, etc.)
 
 ## Dependencies
 

@@ -38,7 +38,7 @@ This is a **standalone NixOS flake** that provides a complete Hyprland desktop e
    - **hypr/**: Hyprland compositor config with scripts
    - **waybar/**: Modular status bar config system with working taskbar (see Waybar section below)
    - **wofi/**: Application launcher styling
-   - **mako/**: Notification daemon theming (Kartoza branded) with custom notification sound
+   - **swaync/**: Notification daemon theming (Kartoza branded)
    - **fuzzel/**: Additional launcher utilities
 
 ### Waybar Modular Configuration System
@@ -123,9 +123,10 @@ cp /etc/xdg/waybar/style.css ~/.config/waybar/
 mkdir -p ~/.config/waybar/config.d
 cp -r /etc/xdg/waybar/config.d/* ~/.config/waybar/config.d/
 
-# Override notification sound
-mkdir -p ~/.config/mako/sounds
-cp your-custom-sound.wav ~/.config/mako/sounds/notification.wav
+# Override swaync notification settings
+mkdir -p ~/.config/swaync
+cp /etc/xdg/swaync/config.json ~/.config/swaync/
+cp /etc/xdg/swaync/style.css ~/.config/swaync/
 ```
 
 All applications and scripts will automatically use the user's configuration if present.
