@@ -24,21 +24,26 @@ show_history() {
     return 1
   fi
 
-  # Get clipboard entries from clipse
-  clipse_output=$(clipse list 2>/dev/null)
-
-  if [ -z "$clipse_output" ]; then
+  # Read clipboard history directly from JSON file
+  history_file="$HOME/.config/clipse/clipboard_history.json"
+  if [ ! -f "$history_file" ]; then
     notify-send "Clipboard" "No clipboard history found"
     return
+  fi
+
+  # Check if jq is available
+  if ! command -v jq >/dev/null 2>&1; then
+    notify-send "Clipboard Error" "jq not found - clipboard history unavailable"
+    return 1
   fi
 
   # Create a numbered list for fuzzel display
   temp_display="$(mktemp)"
   temp_mapping="$(mktemp)"
 
-  # Process clipboard history from clipse output
+  # Process clipboard history from JSON file
   line_num=1
-  echo "$clipse_output" | while IFS= read -r line; do
+  jq -r '.clipboardHistory[]? | .value' "$history_file" 2>/dev/null | while IFS= read -r line; do
     # Skip empty lines
     [ -z "$line" ] && continue
 
@@ -113,11 +118,12 @@ clear_history() {
 
 # Function to show clipboard stats using clipse
 show_stats() {
-  if command -v clipse >/dev/null 2>&1; then
-    count=$(clipse list 2>/dev/null | wc -l)
+  history_file="$HOME/.config/clipse/clipboard_history.json"
+  if [ -f "$history_file" ] && command -v jq >/dev/null 2>&1; then
+    count=$(jq '.clipboardHistory | length' "$history_file" 2>/dev/null || echo 0)
     notify-send "Clipboard Stats" "$count entries in clipse history"
   else
-    notify-send "Clipboard Error" "Clipse not found"
+    notify-send "Clipboard Error" "Clipboard history not available"
   fi
 }
 
