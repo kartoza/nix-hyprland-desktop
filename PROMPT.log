@@ -7,3 +7,4 @@
 2026-01-16: ok you just need to move the two input boxes down so they do not cover the date
 set up hyprlandPlugins.hyprexpo in my configuration
 After applying the last change to add hyprexpo, hyprland fails to start properly. Please check the deployed config is correct, fixing any issues as needed
+ok commit and deploy
