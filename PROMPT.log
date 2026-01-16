@@ -1,2 +1,7 @@
 2026-01-16: for the sddm login screen we need to be able to select a user too
 2026-01-16: also it should show if capslock is pressed
+2026-01-16: is the sddm hardcoded to my timlinux user
+2026-01-16: when I deployed and rebooted i did not see the arrows just my hard coded user name. running the theme in test mode does show it
+2026-01-16: Add SDDM config to show more users (if you have other accounts that should appear)
+2026-01-16: can it also allow manually typing in a user name
+2026-01-16: ok you just need to move the two input boxes down so they do not cover the date

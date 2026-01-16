@@ -73,7 +73,9 @@ Rectangle {
         // Login container
         Item {
             id: loginContainer
-            anchors.centerIn: parent
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.top: parent.verticalCenter
+            anchors.topMargin: 50
             width: 400
             height: 350
 
@@ -91,7 +93,7 @@ Rectangle {
                 radius: 10
                 color: Qt.rgba(0.086, 0.129, 0.153, 0.8)
                 border.width: 2
-                border.color: primaryBlue
+                border.color: usernameInput.activeFocus ? accentOrange : primaryBlue
 
                 Row {
                     anchors.fill: parent
@@ -120,6 +122,7 @@ Rectangle {
                                 if (userModel.count > 1) {
                                     loginContainer.selectedUserIndex = (loginContainer.selectedUserIndex - 1 + userModel.count) % userModel.count
                                     loginContainer.selectedUsername = userModel.data(userModel.index(loginContainer.selectedUserIndex, 0), 257)
+                                    usernameInput.text = loginContainer.selectedUsername
                                     passwordInput.text = ""
                                     passwordInput.forceActiveFocus()
                                 }
@@ -127,21 +130,39 @@ Rectangle {
                         }
                     }
 
-                    // Username display
+                    // Username input field (editable)
                     Item {
                         width: parent.width - 80
                         height: 40
 
-                        Text {
-                            anchors.centerIn: parent
+                        TextField {
+                            id: usernameInput
+                            anchors.fill: parent
+                            anchors.margins: 2
                             text: loginContainer.selectedUsername
-                            font.pixelSize: 22
+                            font.pixelSize: 20
                             font.family: "Nunito"
                             font.bold: true
                             color: lightText
-                            elide: Text.ElideRight
-                            width: parent.width - 10
                             horizontalAlignment: Text.AlignHCenter
+                            placeholderText: "Username"
+                            placeholderTextColor: Qt.rgba(0.902, 0.969, 0.965, 0.5)
+                            background: Rectangle {
+                                color: "transparent"
+                            }
+
+                            onTextChanged: {
+                                loginContainer.selectedUsername = text
+                            }
+
+                            Keys.onPressed: {
+                                if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                                    passwordInput.forceActiveFocus()
+                                } else if (event.key === Qt.Key_Tab) {
+                                    passwordInput.forceActiveFocus()
+                                    event.accepted = true
+                                }
+                            }
                         }
                     }
 
@@ -168,6 +189,7 @@ Rectangle {
                                 if (userModel.count > 1) {
                                     loginContainer.selectedUserIndex = (loginContainer.selectedUserIndex + 1) % userModel.count
                                     loginContainer.selectedUsername = userModel.data(userModel.index(loginContainer.selectedUserIndex, 0), 257)
+                                    usernameInput.text = loginContainer.selectedUsername
                                     passwordInput.text = ""
                                     passwordInput.forceActiveFocus()
                                 }

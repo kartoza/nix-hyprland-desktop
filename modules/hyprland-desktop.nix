@@ -512,6 +512,17 @@ in {
           CursorTheme = cfg.cursorTheme;
           CursorSize = cfg.cursorSize;
         };
+        Users = {
+          # Show all normal users (UID 1000+)
+          MinimumUid = 1000;
+          MaximumUid = 60000;
+          # Don't hide any users by default
+          HideUsers = "";
+          HideShells = "/run/current-system/sw/bin/nologin";
+          # Remember last logged in user
+          RememberLastUser = true;
+          RememberLastSession = true;
+        };
       };
     };
 
