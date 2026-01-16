@@ -9,3 +9,4 @@ set up hyprlandPlugins.hyprexpo in my configuration
 After applying the last change to add hyprexpo, hyprland fails to start properly. Please check the deployed config is correct, fixing any issues as needed
 ok commit and deploy
 its still not loading - check the logs again - also check the deployment to /etc/xdg matches your expected setup for hyprland plugins
+how can I use those nice vectorised hyprland cursors

@@ -82,8 +82,16 @@ in {
 
       cursorTheme = mkOption {
         type = types.str;
+        default = "rose-pine-hyprcursor";
+        description =
+          "Hyprcursor theme to use (rose-pine-hyprcursor, etc.). Falls back to XCursor for non-supporting apps.";
+      };
+
+      xcursorTheme = mkOption {
+        type = types.str;
         default = "Vanilla-DMZ";
-        description = "Cursor theme to use (Vanilla-DMZ, Adwaita, etc.)";
+        description =
+          "XCursor fallback theme for apps that don't support hyprcursor (GTK apps, etc.)";
       };
 
       cursorSize = mkOption {
@@ -148,7 +156,9 @@ in {
       source-sans # Adobe Source Sans Pro (modern, clean)
       ubuntu-classic # Ubuntu fonts (similar to nunito)
       # Cursor themes
-      vanilla-dmz # Default cursor theme
+      hyprcursor # Hyprland cursor format library and utilities
+      rose-pine-hyprcursor # Vector hyprcursor theme
+      vanilla-dmz # XCursor fallback theme
       adwaita-icon-theme # Includes Adwaita cursor theme
       # GPG integration packages
       gnupg
@@ -212,11 +222,8 @@ in {
       wev # Wayland event viewer for debugging
       hyprpicker # Color picker for Wayland
       xdg-desktop-portal-gtk
-      xdg-desktop-portal-hyprland # For screen sharing in Hyprland
+      # Note: xdg-desktop-portal-hyprland is automatically provided by programs.hyprland.enable
       zenity # GUI dialogs for keyring unlock
-      # Wallpaper and screen management
-      # Cursor theme
-      vanilla-dmz # Default cursor theme
       # Image processing for wallpapers
       imagemagick # For creating default wallpaper
       # Deploy script for system-wide Hyprland config management
@@ -265,8 +272,11 @@ in {
       # XDG environment for finding configs - user configs in ~/.config take precedence
       XDG_CONFIG_DIRS = "/etc/xdg";
       XDG_DATA_DIRS = mkDefault "/etc/xdg:/usr/local/share:/usr/share";
-      # Cursor theme
-      XCURSOR_THEME = cfg.cursorTheme;
+      # Hyprcursor theme (vector cursors for Hyprland)
+      HYPRCURSOR_THEME = cfg.cursorTheme;
+      HYPRCURSOR_SIZE = toString cfg.cursorSize;
+      # XCursor fallback for apps that don't support hyprcursor (GTK, etc.)
+      XCURSOR_THEME = cfg.xcursorTheme;
       XCURSOR_SIZE = toString cfg.cursorSize;
 
       # Environment variables for better Wayland app compatibility
@@ -360,6 +370,11 @@ in {
       # Copy configured wallpaper to dedicated directory to avoid path conflicts
       "xdg/backgrounds/kartoza-wallpaper.png".source = cfg.wallpaper;
 
+      # Deploy hyprcursor theme to /etc/xdg/icons for system-wide availability
+      # Hyprcursor looks in XDG_DATA_DIRS/icons for themes
+      "xdg/icons/rose-pine-hyprcursor".source =
+        "${pkgs.rose-pine-hyprcursor}/share/icons/rose-pine-hyprcursor";
+
       # Deploy SDDM theme
       "sddm/themes/kartoza".source =
         "${sddmThemeKartoza}/share/sddm/themes/kartoza";
@@ -427,10 +442,9 @@ in {
 
     xdg.portal = {
       enable = true;
-      extraPortals = [
-        pkgs.xdg-desktop-portal-gtk
-        pkgs.xdg-desktop-portal-hyprland # For Hyprland screen sharing
-      ];
+      # Note: xdg-desktop-portal-hyprland is automatically added by programs.hyprland.enable = true
+      # via the Hyprland NixOS module (hyprland.nixosModules.default), so we only add gtk here
+      extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
       # Configure portal backends for Hyprland
       config = {
         hyprland = {
@@ -512,7 +526,7 @@ in {
         Theme = {
           Current = "kartoza";
           ThemeDir = "/etc/sddm/themes";
-          CursorTheme = cfg.cursorTheme;
+          CursorTheme = cfg.xcursorTheme; # SDDM uses XCursor, not hyprcursor
           CursorSize = cfg.cursorSize;
         };
         Users = {
