@@ -113,8 +113,8 @@ in {
   config = mkIf cfg.enable {
 
     # Deploy essential Hyprland dotfiles at system level
-    # Enable Hyprland with UWSM (Universal Wayland Session Manager)
-    # UWSM integrates Hyprland properly with systemd for better session management
+    # Hyprland is enabled via the flake's NixOS module (imported in flake.nix)
+    # Configure Hyprland settings
     programs.hyprland = {
       enable = true;
       withUWSM = true; # Recommended for systemd integration (NixOS 24.11+)
@@ -128,8 +128,8 @@ in {
     security.polkit.enable = true;
 
     environment.systemPackages = with pkgs; [
-      # Hyprland plugins
-      hyprlandPlugins.hyprexpo # Workspace overview/exposé plugin
+      # Hyprland plugins - use version-matched plugins from flake overlay
+      hyprlandPluginsFromFlake.hyprexpo # Workspace overview/exposé plugin
 
       # Default icon theme (Papirus) - can be overridden by kartoza.nix or other configs
       papirus-icon-theme
