@@ -75,18 +75,127 @@ Rectangle {
             id: loginContainer
             anchors.centerIn: parent
             width: 400
-            height: 300
+            height: 350
 
-            // User label
-            Text {
-                id: userLabel
+            property int selectedUserIndex: userModel.lastIndex
+            property string selectedUsername: userModel.data(userModel.index(selectedUserIndex, 0), 257) // DisplayRole = 257
+
+            // User selector container
+            Rectangle {
+                id: userSelector
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: passwordContainer.top
-                anchors.bottomMargin: 40
-                font.pixelSize: 28
-                font.family: "Nunito"
-                color: lightText
-                text: userModel.lastUser
+                anchors.bottomMargin: 30
+                width: 300
+                height: 50
+                radius: 10
+                color: Qt.rgba(0.086, 0.129, 0.153, 0.8)
+                border.width: 2
+                border.color: primaryBlue
+
+                Row {
+                    anchors.fill: parent
+                    anchors.margins: 5
+
+                    // Previous user button
+                    Rectangle {
+                        width: 40
+                        height: 40
+                        radius: 5
+                        color: prevUserArea.containsMouse ? Qt.rgba(0.337, 0.624, 0.776, 0.3) : "transparent"
+
+                        Text {
+                            anchors.centerIn: parent
+                            text: "◀"
+                            font.pixelSize: 20
+                            color: userModel.count > 1 ? lightText : Qt.rgba(0.902, 0.969, 0.965, 0.3)
+                        }
+
+                        MouseArea {
+                            id: prevUserArea
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: userModel.count > 1 ? Qt.PointingHandCursor : Qt.ArrowCursor
+                            onClicked: {
+                                if (userModel.count > 1) {
+                                    loginContainer.selectedUserIndex = (loginContainer.selectedUserIndex - 1 + userModel.count) % userModel.count
+                                    loginContainer.selectedUsername = userModel.data(userModel.index(loginContainer.selectedUserIndex, 0), 257)
+                                    passwordInput.text = ""
+                                    passwordInput.forceActiveFocus()
+                                }
+                            }
+                        }
+                    }
+
+                    // Username display
+                    Item {
+                        width: parent.width - 80
+                        height: 40
+
+                        Text {
+                            anchors.centerIn: parent
+                            text: loginContainer.selectedUsername
+                            font.pixelSize: 22
+                            font.family: "Nunito"
+                            font.bold: true
+                            color: lightText
+                            elide: Text.ElideRight
+                            width: parent.width - 10
+                            horizontalAlignment: Text.AlignHCenter
+                        }
+                    }
+
+                    // Next user button
+                    Rectangle {
+                        width: 40
+                        height: 40
+                        radius: 5
+                        color: nextUserArea.containsMouse ? Qt.rgba(0.337, 0.624, 0.776, 0.3) : "transparent"
+
+                        Text {
+                            anchors.centerIn: parent
+                            text: "▶"
+                            font.pixelSize: 20
+                            color: userModel.count > 1 ? lightText : Qt.rgba(0.902, 0.969, 0.965, 0.3)
+                        }
+
+                        MouseArea {
+                            id: nextUserArea
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: userModel.count > 1 ? Qt.PointingHandCursor : Qt.ArrowCursor
+                            onClicked: {
+                                if (userModel.count > 1) {
+                                    loginContainer.selectedUserIndex = (loginContainer.selectedUserIndex + 1) % userModel.count
+                                    loginContainer.selectedUsername = userModel.data(userModel.index(loginContainer.selectedUserIndex, 0), 257)
+                                    passwordInput.text = ""
+                                    passwordInput.forceActiveFocus()
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // User count indicator (shows dots for multiple users)
+            Row {
+                id: userIndicator
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.bottom: userSelector.top
+                anchors.bottomMargin: 10
+                spacing: 8
+                visible: userModel.count > 1
+
+                Repeater {
+                    model: userModel.count
+                    Rectangle {
+                        width: index === loginContainer.selectedUserIndex ? 12 : 8
+                        height: index === loginContainer.selectedUserIndex ? 12 : 8
+                        radius: width / 2
+                        color: index === loginContainer.selectedUserIndex ? accentOrange : Qt.rgba(0.902, 0.969, 0.965, 0.5)
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                }
             }
 
             // Password input container
@@ -123,12 +232,35 @@ Rectangle {
                 }
             }
 
+            // Caps Lock warning
+            Row {
+                id: capsLockWarning
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.top: passwordContainer.bottom
+                anchors.topMargin: 15
+                spacing: 8
+                visible: keyboard.capsLock
+
+                Text {
+                    text: "⚠"
+                    font.pixelSize: 16
+                    color: accentOrange
+                }
+
+                Text {
+                    text: "Caps Lock is on"
+                    font.pixelSize: 14
+                    font.family: "Nunito"
+                    color: accentOrange
+                }
+            }
+
             // Error message
             Text {
                 id: errorMessage
                 anchors.horizontalCenter: parent.horizontalCenter
-                anchors.top: passwordContainer.bottom
-                anchors.topMargin: 20
+                anchors.top: capsLockWarning.visible ? capsLockWarning.bottom : passwordContainer.bottom
+                anchors.topMargin: capsLockWarning.visible ? 10 : 20
                 font.pixelSize: 14
                 font.family: "Nunito"
                 font.italic: true
@@ -141,7 +273,7 @@ Rectangle {
                 id: loginButton
                 visible: false
                 onClicked: {
-                    sddm.login(userModel.lastUser, passwordInput.text, sessionSelect.currentIndex)
+                    sddm.login(loginContainer.selectedUsername, passwordInput.text, sessionSelect.currentIndex)
                 }
             }
 
