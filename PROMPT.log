@@ -5,3 +5,4 @@
 2026-01-16: Add SDDM config to show more users (if you have other accounts that should appear)
 2026-01-16: can it also allow manually typing in a user name
 2026-01-16: ok you just need to move the two input boxes down so they do not cover the date
+set up hyprlandPlugins.hyprexpo in my configuration

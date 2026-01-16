@@ -128,6 +128,9 @@ in {
     security.polkit.enable = true;
 
     environment.systemPackages = with pkgs; [
+      # Hyprland plugins
+      hyprlandPlugins.hyprexpo # Workspace overview/exposé plugin
+
       # Default icon theme (Papirus) - can be overridden by kartoza.nix or other configs
       papirus-icon-theme
       # SDDM display manager and themes (Qt6 for SDDM)
