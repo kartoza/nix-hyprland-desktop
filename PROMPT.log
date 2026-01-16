@@ -10,3 +10,6 @@ After applying the last change to add hyprexpo, hyprland fails to start properly
 ok commit and deploy
 its still not loading - check the logs again - also check the deployment to /etc/xdg matches your expected setup for hyprland plugins
 how can I use those nice vectorised hyprland cursors
+look at screenshot.png for the errors I now get when starting my wayland session
+are our hyprcursor changes in effect now too?
+2

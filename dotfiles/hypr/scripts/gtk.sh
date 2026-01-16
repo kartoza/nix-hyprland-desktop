@@ -41,12 +41,8 @@ gsettings set "$gnome_schema" cursor-theme "$cursor_theme"
 gsettings set "$gnome_schema" font-name "$font_name"
 gsettings set "$gnome_schema" color-scheme "$prefer_dark_theme_value"
 
-# Update cursor for Hyprland
-cursor_conf=/etc/xdg/hypr/conf/cursor.conf
-if [ -f "$cursor_conf" ]; then
-    echo "exec-once = hyprctl setcursor $cursor_theme $cursor_size" >"$cursor_conf"
-    hyprctl setcursor $cursor_theme $cursor_size
-fi
+# Set XCursor fallback for Hyprland (hyprcursor is set via environment variables)
+hyprctl setcursor "$cursor_theme" "$cursor_size"
 
 # Update gsettings for open any terminal
 gsettings set com.github.stunkymonkey.nautilus-open-any-terminal terminal "$terminal"
