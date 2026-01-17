@@ -1,9 +1,9 @@
 {
     "pulseaudio": {
         "scroll-step": 5,
-        "format": "{icon} {volume}%",
-        "format-bluetooth": "󰂯 {icon} {volume}%",
-        "format-muted": "󰖁 muted",
+        "format": "{icon}",
+        "format-bluetooth": "󰂯 {icon}",
+        "format-muted": "󰖁",
         "format-icons": {
             "headphones": "󰋋",
             "handsfree": "󰋎",
@@ -22,6 +22,8 @@
             "medium": 50,
             "high": 100
         },
+        "tooltip": true,
+        "tooltip-format": "Volume: {volume}%\nDevice: {desc}",
         "on-click": "pavucontrol"
     }
 }

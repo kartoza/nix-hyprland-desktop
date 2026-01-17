@@ -47,3 +47,11 @@ And the session time shows 32 hours rather than 32 minutes
 I think it will prefer a neutral colour when the timer is running (kartoza blue) and a warning colour when it is stopped
 can you see why my waybar flashes slightly - is there some kind of cycling colour intensity change happening in the background?
 the timesheet display should only show hours and minutes and polling should be at minute intervals
+I think we can reduce PROD and GSH to a simple P and G icon - could you find some nice little nerdfont icons with a circle with the letter in it for each
+also the screen recorder is there a nerdfont for a video camera we can use rather
+for the battery status, lets move the % level into the tooltip and use nerdfont icons and colours to should the fill status. it should flash when it is below 15%
+for the brightness are there a series of nerdfonts that can show different brightness levels and we move the % indicator into the tooltip
+for the battery lets use different nerdfonts to show the fill levels and move the temperature read out to a tooltip
+fir the memory can we show a little nerdfont pie chard next to it instead of the gb text (whcih can move into the tooltip). The pie chart would show relatice utilisation of the free vs total ram
+those temperature icons should be nerdfonts
+for the volume can you use a series of symbolic nerdfonts to show volume leves and remove the % text after the icon (which can move to the tooltip)

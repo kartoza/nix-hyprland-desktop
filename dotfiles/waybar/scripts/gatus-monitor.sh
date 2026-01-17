@@ -7,11 +7,14 @@
 # Configuration
 INSTANCE_NAME="${1:-PROD}"  # Instance name (PROD or GSH)
 
-# Set URL based on instance
+# Set URL and icon based on instance
+# Icons are Nerd Font circled letters (Material Design Icons)
 if [[ "${INSTANCE_NAME}" == "GSH" ]]; then
     GATUS_URL="https://gsh-gatus.do.kartoza.com"
+    ICON="󰯿"  # nf-md-alpha_g_circle_outline (U+f0bff)
 else
     GATUS_URL="https://gatus.do.kartoza.com"
+    ICON="󰰟"  # nf-md-alpha_p_circle_outline (U+f0c1f)
 fi
 
 API_ENDPOINT="${GATUS_URL}/api/v1/endpoints/statuses"
@@ -83,7 +86,7 @@ NEW_TOOLTIP=""
 if [[ ${CURRENTLY_OFFLINE} -ge 3 ]] || [[ ${SERVICES_WITH_3_CONSECUTIVE_FAILURES} -gt 0 ]]; then
     # Critical: Either 3+ services offline OR any service has 3 consecutive failures
     NEW_STATE="critical"
-    NEW_TEXT="${INSTANCE_NAME}"
+    NEW_TEXT="${ICON}"
     if [[ ${SERVICES_WITH_3_CONSECUTIVE_FAILURES} -gt 0 ]]; then
         NEW_TOOLTIP="Gatus Service Status:\n\n✗ ${SERVICES_WITH_3_CONSECUTIVE_FAILURES} service(s) with 3 consecutive failures\n⚠ ${CURRENTLY_OFFLINE}/${TOTAL_COUNT} services currently offline"
     else
@@ -91,13 +94,13 @@ if [[ ${CURRENTLY_OFFLINE} -ge 3 ]] || [[ ${SERVICES_WITH_3_CONSECUTIVE_FAILURES
     fi
 elif [[ ${CURRENTLY_OFFLINE} -gt 0 ]]; then
     # Warning: Some services offline but not critical threshold
-    NEW_STATE="warning" 
-    NEW_TEXT="${INSTANCE_NAME}"
+    NEW_STATE="warning"
+    NEW_TEXT="${ICON}"
     NEW_TOOLTIP="Gatus Service Status:\n\n⚠ ${CURRENTLY_OFFLINE} service(s) currently offline\n✓ $((TOTAL_COUNT - CURRENTLY_OFFLINE))/${TOTAL_COUNT} services operational\n(Not critical: < 3 services and no consecutive failures)"
 else
     # All good: No services offline
     NEW_STATE="perfect"
-    NEW_TEXT="${INSTANCE_NAME}"
+    NEW_TEXT="${ICON}"
     NEW_TOOLTIP="Gatus Service Status:\n\n✓ All ${TOTAL_COUNT} services online"
 fi
 
@@ -130,7 +133,7 @@ if [[ "${NEW_STATE}" == "${PENDING_STATE}" ]]; then
         output_json "${NEW_TEXT}" "${NEW_TOOLTIP}" "${NEW_STATE}" "${NEW_STATE}"
     else
         # Still pending, show current state with note in tooltip
-        CURRENT_TEXT="${INSTANCE_NAME}"
+        CURRENT_TEXT="${ICON}"
         CURRENT_TOOLTIP=$(cat "${STATE_DIR}/${INSTANCE_NAME}_current_tooltip" 2>/dev/null || echo "${NEW_TOOLTIP}")
         output_json "${CURRENT_TEXT}" "${CURRENT_TOOLTIP}\n\n[Pending state change: ${PENDING_COUNT}/3]" "${CURRENT_STATE}" "${CURRENT_STATE}"
     fi
@@ -142,7 +145,7 @@ else
     echo -e "${NEW_TOOLTIP}" > "${STATE_DIR}/${INSTANCE_NAME}_current_tooltip"
     # Show current state while new state is pending
     if [[ -n "${CURRENT_STATE}" ]]; then
-        CURRENT_TEXT="${INSTANCE_NAME}"
+        CURRENT_TEXT="${ICON}"
         CURRENT_TOOLTIP=$(cat "${STATE_DIR}/${INSTANCE_NAME}_current_tooltip" 2>/dev/null || echo "${NEW_TOOLTIP}")
         output_json "${CURRENT_TEXT}" "${CURRENT_TOOLTIP}\n\n[Pending state change: 1/3]" "${CURRENT_STATE}" "${CURRENT_STATE}"
     else

@@ -1,8 +1,10 @@
 {
-    "memory": {
-        "format": "󰍛 {used:0.1f}GB",
-        "tooltip": true,
-        "tooltip-format": "RAM Usage\n{used:0.1f}GB used / {total:0.1f}GB total ({percentage}%)",
-        "on-click": "kitty -e btop"
-    }
+  "custom/memory": {
+    "format": "{}",
+    "return-type": "json",
+    "interval": 5,
+    "exec": "/etc/xdg/waybar/scripts/memory-status.sh",
+    "on-click": "kitty -e btop",
+    "tooltip": true
+  }
 }

@@ -31,6 +31,7 @@ window#waybar {
 #battery,
 #cpu,
 #memory,
+#custom-memory,
 #idle_inhibitor,
 #custom-notification,
 #temperature,
@@ -68,6 +69,7 @@ window#waybar {
 #battery:hover,
 #cpu:hover,
 #memory:hover,
+#custom-memory:hover,
 #idle_inhibitor:hover,
 #custom-notification:hover,
 #temperature:hover,
@@ -340,7 +342,22 @@ window#waybar {
     color: #DF9E2F;
 }
 
-/* Memory - uses base styling */
+/* Memory usage states */
+#custom-memory.normal {
+    color: #569FC6;  /* Kartoza blue - normal usage */
+}
+
+#custom-memory.moderate {
+    color: #6AAFD6;  /* Light blue - moderate usage */
+}
+
+#custom-memory.high {
+    color: #DF9E2F;  /* Kartoza orange - high usage */
+}
+
+#custom-memory.critical {
+    color: #D32F2F;  /* Red - critical usage */
+}
 
 /* Audio states */
 #pulseaudio.muted {
@@ -383,6 +400,12 @@ window#waybar {
     color: #8A8B8B;
 }
 
+/* Battery flash animation for critical level */
+@keyframes battery-flash {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
 /* Battery states */
 #battery {
     /* Default gray for 50-75% range */
@@ -403,14 +426,15 @@ window#waybar {
     color: #569FC6;
 }
 
-/* 10-25% - Kartoza orange */
+/* 15-25% - Kartoza orange */
 #battery.low:not(.charging) {
     color: #DF9E2F;
 }
 
-/* 0-10% - Kartoza red */
+/* 0-15% - Kartoza red with flashing */
 #battery.critical:not(.charging) {
     color: #D32F2F;
+    animation: battery-flash 1s ease-in-out infinite;
 }
 
 /* Charging state - light blue */

@@ -26,14 +26,17 @@ if [ -f "$AUDIO_PIDFILE" ] && kill -0 "$(cat $AUDIO_PIDFILE)" 2>/dev/null; then
   is_recording=true
 fi
 
+# Video camera icon (nf-md-video U+f057a)
+ICON="󰕺"
+
 if [ "$is_recording" = true ]; then
-  # Recording is active - red glowing dot
-  echo '{"text": "●", "class": "recording", "tooltip": "Click to stop recording (Ctrl+6)"}'
+  # Recording is active - red
+  echo "{\"text\": \"$ICON\", \"class\": \"recording\", \"tooltip\": \"Click to stop recording (Ctrl+6)\"}"
 elif [ -f "$STATUSFILE" ] && [ "$(cat $STATUSFILE)" = "stopped" ]; then
-  # Recently stopped - light gray dot
-  echo '{"text": "●", "class": "stopped", "tooltip": "Click to start recording (Ctrl+6)"}'
+  # Recently stopped - light gray
+  echo "{\"text\": \"$ICON\", \"class\": \"stopped\", \"tooltip\": \"Click to start recording (Ctrl+6)\"}"
 else
-  # Not recording - light gray dot
-  echo '{"text": "●", "class": "idle", "tooltip": "Click to start recording (Ctrl+6)"}'
+  # Not recording - light gray
+  echo "{\"text\": \"$ICON\", \"class\": \"idle\", \"tooltip\": \"Click to start recording (Ctrl+6)\"}"
 fi
 

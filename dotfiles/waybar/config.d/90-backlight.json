@@ -1,8 +1,10 @@
 {
   "backlight": {
-    "format": "{icon} {percent}%",
+    "format": "{icon}",
     "format-icons": [
       "󰃞",
+      "󰃝",
+      "󰃟",
       "󰃟",
       "󰃠"
     ],
@@ -10,9 +12,11 @@
     "on-scroll-up": "brightnessctl -c backlight set 5%+",
     "on-click": "/etc/xdg/waybar/scripts/light.sh $(cat /tmp/SUNSET_CHANGE_STATE_VAR)",
     "states": {
-      "low": 33,
-      "medium": 66,
-      "high": 100
-    }
+      "low": 25,
+      "medium": 50,
+      "high": 75
+    },
+    "tooltip": true,
+    "tooltip-format": "Brightness: {percent}%"
   }
 }

@@ -21,7 +21,7 @@
         "custom/power-profile",
         "custom/temperature",
         "cpu",
-        "memory",
+        "custom/memory",
         "pulseaudio",
         "custom/keyboard-layout",
         "custom/wshowkeys",
