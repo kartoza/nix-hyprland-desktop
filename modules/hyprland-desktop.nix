@@ -96,7 +96,7 @@ in {
 
       cursorSize = mkOption {
         type = types.int;
-        default = 24;
+        default = 32;
         description = "Cursor size in pixels";
       };
 
