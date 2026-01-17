@@ -76,3 +76,7 @@ oh my waybar reload scripts are still not working and the keybind does nothing
 would it not be tidier for them to be in waybar/scripts
 can we make the waybar tooltips appear like beautiful speech bubbles with the triangle pointing down to the widget and a kartoza orange outline
 make the waybar itself also match that style ... make it look like a floating dock with whitespace all around it and the same background and border as the eww widgets have
+look at screenshot.png? Can you achieve something like this for the tooltips such that they appear fused onto the waybar
+the font used for tooltips should also be much bigger and there should be logs of internal padding
+not the padding I was referring to was for the tooltip only
+to be clear I dont want to change anything in the bar itself, only in the tooltup

@@ -21,7 +21,8 @@
       "WebFetch(domain:discourse.nixos.org)",
       "Bash(readlink:*)",
       "Bash(/home/timlinux/dev/nix/nix-hyprland-desktop/PROMPT.log)",
-      "WebFetch(domain:wiki.hypr.land)"
+      "WebFetch(domain:wiki.hypr.land)",
+      "Bash(echo:*)"
     ],
     "deny": [],
     "ask": []
