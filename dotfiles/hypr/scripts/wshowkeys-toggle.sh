@@ -17,8 +17,9 @@ if [ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
 else
   # wshowkeys is not running, start it with Kartoza theming
   # Colors: Orange text (#DF9E2F), Blue special keys (#569FC6), dark background
+  # Font: Open Gorton - keycap style font (MIT licensed)
   wshowkeys \
-    -f "Nurito 24" \
+    -F "Open Gorton 24" \
     -t 2 \
     -m 20 \
     -a top \

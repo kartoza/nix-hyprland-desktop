@@ -70,3 +70,7 @@ can the battery indicator also show when it is on charge
 thats all looking good on the waybar but my timesheet widget is not there
 what is the keybind and command issued for reloading the waybar
 review the launch and toggle scripts to see if they are properly implemented
+please install a font that draws the characters like a chicklet style keyboard and use that font for the waykeys implementation
+please review and explain the logic that is used in my workspace switcher next to the kartoza menu button. In particular I want the user to be able to edit their own workspace - name mapping file by overriding the defaults with a locally managed file
+oh my waybar reload scripts are still not working and the keybind does nothing
+would it not be tidier for them to be in waybar/scripts

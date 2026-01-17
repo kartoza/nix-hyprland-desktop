@@ -31,6 +31,9 @@ let
     wallpaper = cfg.wallpaper;
   };
 
+  # Open Gorton keycap font (MIT licensed)
+  openGortonFont = pkgs.callPackage ../packages/open-gorton-font.nix { };
+
 in {
   options = {
     kartoza.hyprland-desktop = {
@@ -148,6 +151,7 @@ in {
       kdePackages.qtwayland
       # Essential fonts for waybar and hyprland
       font-awesome # For waybar icons (required for waybar symbols)
+      openGortonFont # Keycap style font for wshowkeys (MIT licensed)
       noto-fonts # Good fallback font family
       noto-fonts-cjk-sans # CJK character support
       noto-fonts-color-emoji # Emoji support
