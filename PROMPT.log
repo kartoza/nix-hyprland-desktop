@@ -24,3 +24,11 @@ User prompt: it seems we should be using a new way to start hyprland
 User followup: its something line hyprland start
 User followup: see screenshot.png (shows warning: Hyprland was started without start-hyprland. This is highly not recommended unless you a...)
 User followup: did you make sure it is loading the config from /etc/xdf/hypr/....
+the new timesheet widget I added is not showing on the waybar:
+
+waybar -c /etc/xdg/waybar/config -s /etc/xdg/waybar/style.css 
+[2026-01-17 10:08:06.695] [info] Using configuration file /etc/xdg/waybar/config
+[2026-01-17 10:08:06.702] [info] Using CSS file /etc/xdg/waybar/style.css
+[2026-01-17 10:08:07.162] [info] Bar configured (width: 2560, height: 50) for output: eDP-1
+[2026-01-17 10:08:07.163] [error] Item '': No icon name or pixmap given.
+[2026-01-17 10:08:07.165] [error] Item '': No icon name or pixmap given.
