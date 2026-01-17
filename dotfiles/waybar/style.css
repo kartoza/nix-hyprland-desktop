@@ -7,12 +7,17 @@
     padding: 0px 0px;
 }
 
-/* Main waybar container */
+/* Main waybar container - Floating dock style matching eww widgets */
 window#waybar {
-    background-color: #162127; 
-    border-bottom: 2px solid rgba(86, 159, 198, 0.15);
-    border-top: 2px solid rgba(86, 159, 198, 0.15);
-    opacity: 0.95;
+    background-color: transparent;
+}
+
+window#waybar > box {
+    background-color: rgba(26, 17, 15, 0.95);
+    border: 2px solid #DF9E2F;
+    border-radius: 16px;
+    margin: 8px 16px;
+    padding: 0px 8px;
 }
 
 /* Window title styling */
@@ -516,17 +521,17 @@ window#waybar {
     color: #8A8B8B;
 }
 
-/* ====== TOOLTIPS ====== */
+/* ====== TOOLTIPS - Matching eww widget style ====== */
 
 tooltip {
-    background-color: #0D1A1F;
-    color: #E6F7F6;
-    border: 2px solid #569FC6;
-    border-radius: 2px;
-    padding: 8px 12px;
+    background-color: rgba(26, 17, 15, 0.95);
+    color: #FFFFFF;
+    border: 2px solid #DF9E2F;
+    border-radius: 16px;
+    padding: 12px 16px;
     font-weight: 500;
 }
 
 tooltip label {
-    color: #E6F7F6;
+    color: #FFFFFF;
 }

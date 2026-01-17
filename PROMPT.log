@@ -74,3 +74,5 @@ please install a font that draws the characters like a chicklet style keyboard a
 please review and explain the logic that is used in my workspace switcher next to the kartoza menu button. In particular I want the user to be able to edit their own workspace - name mapping file by overriding the defaults with a locally managed file
 oh my waybar reload scripts are still not working and the keybind does nothing
 would it not be tidier for them to be in waybar/scripts
+can we make the waybar tooltips appear like beautiful speech bubbles with the triangle pointing down to the widget and a kartoza orange outline
+make the waybar itself also match that style ... make it look like a floating dock with whitespace all around it and the same background and border as the eww widgets have
