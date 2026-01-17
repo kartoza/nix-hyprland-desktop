@@ -20,3 +20,7 @@ Config error in file /etc/xdg/hypr/conf/windowrules/default.conf at line 24: inv
 ...
 ok now lets reinstate the hyprexpo plugin integrated again
 lets make the cursor a bit bigger and make sure we are using hyprcursors
+User prompt: it seems we should be using a new way to start hyprland
+User followup: its something line hyprland start
+User followup: see screenshot.png (shows warning: Hyprland was started without start-hyprland. This is highly not recommended unless you a...)
+User followup: did you make sure it is loading the config from /etc/xdf/hypr/....

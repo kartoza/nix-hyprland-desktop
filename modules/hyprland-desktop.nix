@@ -380,6 +380,23 @@ in {
         "${sddmThemeKartoza}/share/sddm/themes/kartoza";
     };
 
+    # Create a custom Hyprland session that uses start-hyprland (UWSM wrapper)
+    # This replaces the default hyprland.desktop to avoid the warning
+    services.displayManager.sessionPackages = let
+      hyprlandSession = pkgs.writeTextDir "share/wayland-sessions/hyprland-uwsm.desktop" ''
+        [Desktop Entry]
+        Name=Hyprland
+        Comment=An intelligent dynamic tiling Wayland compositor (UWSM managed)
+        Exec=start-hyprland -- -c /etc/xdg/hypr/hyprland.conf
+        Type=Application
+        DesktopNames=Hyprland
+      '';
+    in [
+      (hyprlandSession.overrideAttrs (old: {
+        passthru.providedSessions = [ "hyprland-uwsm" ];
+      }))
+    ];
+
     # Required for screen sharing
     services.pipewire = {
       enable = true;
