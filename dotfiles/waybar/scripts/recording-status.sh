@@ -26,8 +26,8 @@ if [ -f "$AUDIO_PIDFILE" ] && kill -0 "$(cat $AUDIO_PIDFILE)" 2>/dev/null; then
   is_recording=true
 fi
 
-# Video camera icon (nf-md-video U+f057a)
-ICON="󰕺"
+# Videocam icon (nf-md-videocam U+f0567)
+ICON="󰕧"
 
 if [ "$is_recording" = true ]; then
   # Recording is active - red

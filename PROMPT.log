@@ -55,3 +55,7 @@ for the battery lets use different nerdfonts to show the fill levels and move th
 fir the memory can we show a little nerdfont pie chard next to it instead of the gb text (whcih can move into the tooltip). The pie chart would show relatice utilisation of the free vs total ram
 those temperature icons should be nerdfonts
 for the volume can you use a series of symbolic nerdfonts to show volume leves and remove the % text after the icon (which can move to the tooltip)
+waybar -c /etc/xdg/waybar/config -s /etc/xdg/waybar/style.css
+[2026-01-17 12:50:59.228] [info] Using configuration file /etc/xdg/waybar/config
+[2026-01-17 12:50:59.236] [info] Using CSS file /etc/xdg/waybar/style.css
+[2026-01-17 12:50:59.241] [error] style.css:405:6Expected closing bracket after keyframes block

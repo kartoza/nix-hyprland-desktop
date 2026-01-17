@@ -400,12 +400,6 @@ window#waybar {
     color: #8A8B8B;
 }
 
-/* Battery flash animation for critical level */
-@keyframes battery-flash {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
-}
-
 /* Battery states */
 #battery {
     /* Default gray for 50-75% range */
@@ -431,10 +425,9 @@ window#waybar {
     color: #DF9E2F;
 }
 
-/* 0-15% - Kartoza red with flashing */
+/* 0-15% - Kartoza red (bright for visibility) */
 #battery.critical:not(.charging) {
-    color: #D32F2F;
-    animation: battery-flash 1s ease-in-out infinite;
+    color: #FF4444;
 }
 
 /* Charging state - light blue */
