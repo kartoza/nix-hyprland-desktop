@@ -1,0 +1,7 @@
+{"custom/timesheet": {
+  "exec": "kartoza-timesheet status",
+  "return-type": "json",
+  "interval": 5,
+  "on-click": "kitty kartoza-timesheet",
+  "tooltip": true
+}}

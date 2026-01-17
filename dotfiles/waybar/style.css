@@ -55,6 +55,7 @@ window#waybar {
 #custom-recorder,
 #custom-workspace-switcher,
 #custom-wshowkeys,
+#custom-timesheet,
 #taskbar{
     /* orange kartoza colour but with some transparency */
     min-height: 12px;
@@ -88,7 +89,8 @@ window#waybar {
 #scratchpad:hover,
 #custom-power:hover,
 #custom-recorder:hover,
-#custom-workspace-switcher:hover {
+#custom-workspace-switcher:hover,
+#custom-timesheet:hover {
     color: #6AAFD6;
 }
 
@@ -266,6 +268,19 @@ window#waybar {
 
 #custom-recorder.idle {
     color: #8A8B8B;
+}
+
+/* Timesheet widget states */
+#custom-timesheet.recording {
+    color: #FF4444;
+}
+
+#custom-timesheet.idle {
+    color: #8A8B8B;
+}
+
+#custom-timesheet.error {
+    color: #DF9E2F;
 }
 
 
