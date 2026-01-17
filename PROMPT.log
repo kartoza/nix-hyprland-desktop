@@ -32,3 +32,4 @@ waybar -c /etc/xdg/waybar/config -s /etc/xdg/waybar/style.css
 [2026-01-17 10:08:07.162] [info] Bar configured (width: 2560, height: 50) for output: eDP-1
 [2026-01-17 10:08:07.163] [error] Item '': No icon name or pixmap given.
 [2026-01-17 10:08:07.165] [error] Item '': No icon name or pixmap given.
+that is looking good in terms of the widget shows on the waybar and I can see the time display, but I cannot see the icon

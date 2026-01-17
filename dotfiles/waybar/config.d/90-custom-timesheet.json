@@ -1,4 +1,5 @@
 {"custom/timesheet": {
+  "format": "{}",
   "exec": "kartoza-timesheet status",
   "return-type": "json",
   "interval": 5,
