@@ -231,6 +231,18 @@ window#waybar {
     margin: 4px 2px;
 }
 
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
+
+#tray > .active {
+    -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+}
+
 /* Idle inhibitor states */
 #idle_inhibitor.activated {
     color: #E74C3C;
@@ -331,15 +343,15 @@ window#waybar {
 
 /* CPU usage states */
 #cpu.moderate {
-    color: #6AAFD6;
+    color: #569FC6;  /* Kartoza blue - moderate usage */
 }
 
 #cpu.high {
-    color: #7FC0E6;
+    color: #DF9E2F;  /* Kartoza orange - high usage */
 }
 
 #cpu.critical {
-    color: #DF9E2F;
+    color: #FF4444;  /* Kartoza red - critical usage */
 }
 
 /* Memory usage states */

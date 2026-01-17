@@ -1,6 +1,8 @@
 {"cpu": {
-  "format": " {usage}%",
+  "format": "󰍛",
   "on-click": "kitty -e btop",
+  "tooltip": true,
+  "tooltip-format": "CPU Usage: {usage}%\nLoad: {load}",
   "states": {
     "moderate": 25,
     "high": 50,
