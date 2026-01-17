@@ -1,6 +1,6 @@
 {"custom/timesheet": {
   "format": "{}",
-  "exec": "kartoza-timesheet status --format short",
+  "exec": "kartoza-timesheet status",
   "return-type": "json",
   "interval": 60,
   "on-click": "kitty kartoza-timesheet",
