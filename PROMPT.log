@@ -68,3 +68,5 @@ the cpu indicator icon needs a nice nerd font
 we can vary the colour based on usage
 can the battery indicator also show when it is on charge
 thats all looking good on the waybar but my timesheet widget is not there
+what is the keybind and command issued for reloading the waybar
+review the launch and toggle scripts to see if they are properly implemented
