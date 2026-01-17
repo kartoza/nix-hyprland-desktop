@@ -15,3 +15,6 @@ are our hyprcursor changes in effect now too?
 2
 address the errors in screenshot.png
 Fix config errors: hyprexpo:expo invalid dispatcher and windowrulev2 deprecated syntax
+Config error in file /etc/xdg/hypr/conf/windowrules/default.conf at line 23: invalid field float: missing a value
+Config error in file /etc/xdg/hypr/conf/windowrules/default.conf at line 24: invalid field pin: missing a value
+...
