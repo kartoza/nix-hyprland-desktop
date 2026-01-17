@@ -33,3 +33,17 @@ waybar -c /etc/xdg/waybar/config -s /etc/xdg/waybar/style.css
 [2026-01-17 10:08:07.163] [error] Item '': No icon name or pixmap given.
 [2026-01-17 10:08:07.165] [error] Item '': No icon name or pixmap given.
 that is looking good in terms of the widget shows on the waybar and I can see the time display, but I cannot see the icon
+[2026-01-17 12:15:20.873] [info] Using configuration file /etc/xdg/waybar/config
+[2026-01-17 12:15:20.880] [info] Using CSS file /etc/xdg/waybar/style.css
+[2026-01-17 12:15:21.278] [info] Bar configured (width: 2560, height: 50) for output: eDP-1
+[2026-01-17 12:15:21.278] [error] Item '': No icon name or pixmap given.
+[2026-01-17 12:15:21.281] [error] Item '': No icon name or pixmap given.
+Failed to load libxkbcommon.xkb_keysym_from_name with error: Failed to find libxkbcommon
+[0.171] Shortcut: winmax has unknown key, ignoring
+[0,450] [PARSE ERROR] CSI code S has unsupported start modifier: S or end modifier: S
+q
+
+And the session time shows 32 hours rather than 32 minutes
+I think it will prefer a neutral colour when the timer is running (kartoza blue) and a warning colour when it is stopped
+can you see why my waybar flashes slightly - is there some kind of cycling colour intensity change happening in the background?
+the timesheet display should only show hours and minutes and polling should be at minute intervals

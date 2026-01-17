@@ -272,15 +272,15 @@ window#waybar {
 
 /* Timesheet widget states */
 #custom-timesheet.recording {
-    color: #FF4444;
+    color: #569FC6;  /* Kartoza blue - timer running */
 }
 
 #custom-timesheet.idle {
-    color: #8A8B8B;
+    color: #DF9E2F;  /* Warning orange - timer stopped */
 }
 
 #custom-timesheet.error {
-    color: #DF9E2F;
+    color: #FF4444;  /* Red for errors */
 }
 
 
