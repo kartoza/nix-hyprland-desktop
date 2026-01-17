@@ -59,3 +59,7 @@ waybar -c /etc/xdg/waybar/config -s /etc/xdg/waybar/style.css
 [2026-01-17 12:50:59.228] [info] Using configuration file /etc/xdg/waybar/config
 [2026-01-17 12:50:59.236] [info] Using CSS file /etc/xdg/waybar/style.css
 [2026-01-17 12:50:59.241] [error] style.css:405:6Expected closing bracket after keyframes block
+the video camera icon is wierd - can you find a better option
+yes that is great
+the red and green of the gatus monitors should be the same as used in the lock and battery levels
+and you could bump up their font sizes a little

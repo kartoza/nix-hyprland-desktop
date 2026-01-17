@@ -373,24 +373,29 @@ window#waybar {
 }
 
 /* Gatus monitoring states */
+#custom-gatus-prod,
+#custom-gatus-gsh {
+    font-size: 16px;
+}
+
 #custom-gatus-prod.perfect,
 #custom-gatus-gsh.perfect {
-    color: #00FF00;
+    color: #4CAF50;  /* Kartoza green - same as battery excellent */
 }
 
 #custom-gatus-prod.recovering,
 #custom-gatus-gsh.recovering {
-    color: #569FC6;
+    color: #569FC6;  /* Kartoza blue */
 }
 
 #custom-gatus-prod.warning,
 #custom-gatus-gsh.warning {
-    color: #DF9E2F;
+    color: #DF9E2F;  /* Kartoza orange */
 }
 
 #custom-gatus-prod.critical,
 #custom-gatus-gsh.critical {
-    color: #CC0403;
+    color: #FF4444;  /* Kartoza red - same as battery critical */
 }
 
 #custom-gatus-prod.unknown,
