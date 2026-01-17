@@ -532,9 +532,6 @@ tooltip {
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
     border-bottom: none;
-    padding: 32px 40px;
-    padding-bottom: 36px;
-    margin-bottom: 80px;
     font-weight: 500;
     font-size: 16px;
 }
@@ -542,4 +539,6 @@ tooltip {
 tooltip label {
     color: #FFFFFF;
     font-size: 16px;
+    padding: 32px 40px;
+    margin-bottom: 80px;
 }
