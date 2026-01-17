@@ -7,7 +7,7 @@
     "low": 15,
     "critical": 0
   },
-  "format-charging": "󰂄",
+  "format-charging": "{icon} 󰚥",
   "format": "{icon}",
   "format-icons": [
     "󰂎",
@@ -23,5 +23,6 @@
     "󰁹"
   ],
   "tooltip": true,
-  "tooltip-format": "Battery: {capacity}%\nTime remaining: {time}\nPower: {power:.1f}W"
+  "tooltip-format": "Battery: {capacity}%\nTime remaining: {time}\nPower: {power:.1f}W",
+  "tooltip-format-charging": "Battery: {capacity}% (Charging)\nTime to full: {time}\nPower: {power:.1f}W"
 }}
