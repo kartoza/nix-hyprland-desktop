@@ -80,3 +80,4 @@ look at screenshot.png? Can you achieve something like this for the tooltips suc
 the font used for tooltips should also be much bigger and there should be logs of internal padding
 not the padding I was referring to was for the tooltip only
 to be clear I dont want to change anything in the bar itself, only in the tooltup
+can you shift the tooltips for the waybar up about 8px and put more generous padding around the interior border of the tooltip
