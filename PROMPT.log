@@ -82,3 +82,5 @@ not the padding I was referring to was for the tooltip only
 to be clear I dont want to change anything in the bar itself, only in the tooltup
 can you shift the tooltips for the waybar up about 8px and put more generous padding around the interior border of the tooltip
 because my waybar is at the bottom of the screen the tooltip needs to be moved in the opposite direction
+I am missing the pipewire sound applet in my system tray - confirm if it is being started in hyprlands autostart
+why are the pasystrau volume meters disabled
