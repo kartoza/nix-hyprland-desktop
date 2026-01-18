@@ -526,19 +526,19 @@ window#waybar > box {
 tooltip {
 
     background-color: rgba(0, 0, 0, 0);
+}
+
+tooltip label {
+    font-size: 20px;
+    padding: 32px 32px;
+    margin-bottom: 18px; /* try to have it align to the top of the waybar */
+    background-color: rgba(26, 17, 15, 0.95);
+    color: #FFFFFF;
+    font-weight: 500;
     border: 2px solid #DF9E2F;
     border-top-left-radius: 16px;
     border-top-right-radius: 16px;
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
     border-bottom: none;
-}
-
-tooltip label {
-    font-size: 20px;
-    padding: 32px 40px;
-    margin-bottom: 18px; /* try to have it align to the top of the waybar */
-    background-color: rgba(26, 17, 15, 0.95);
-    color: #FFFFFF;
-    font-weight: 500;
 }
