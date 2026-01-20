@@ -38,8 +38,17 @@ This is a **standalone NixOS flake** that provides a complete Hyprland desktop e
    - **hypr/**: Hyprland compositor config with scripts
    - **waybar/**: Modular status bar config system with working taskbar (see Waybar section below)
    - **wofi/**: Application launcher styling
-   - **swaync/**: Notification daemon theming (Kartoza branded)
+   - **swaync/**: Notification daemon theming (Kartoza branded) - see important layer config note below
    - **fuzzel/**: Additional launcher utilities
+
+### Swaync Layer Configuration
+
+**IMPORTANT**: The swaync `config.json` uses `"layer": "top"` instead of `"overlay"`. This is intentional:
+
+- `"overlay"` layer creates an invisible input-capturing region on the right side of the screen
+- This blocks mouse clicks on window title bar buttons (close, minimize, maximize) in the upper-right
+- `"top"` layer properly handles input passthrough when the notification panel is closed
+- Notifications still appear above windows but don't block interaction with window controls
 
 ### Waybar Modular Configuration System
 
