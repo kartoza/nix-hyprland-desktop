@@ -85,3 +85,4 @@ because my waybar is at the bottom of the screen the tooltip needs to be moved i
 I am missing the pipewire sound applet in my system tray - confirm if it is being started in hyprlands autostart
 why are the pasystrau volume meters disabled
 i have a persistent issue with my hyperland configuration that is symptomised by not being able to interact with widgets in the upper right of the window, typically where close , etc widgets are
+please clear all rules which specify which workspaces applications should open on
