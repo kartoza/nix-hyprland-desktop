@@ -1,8 +1,17 @@
 #!/usr/bin/env bash
 # -*- coding: utf-8 -*-
-# Waybar recording status widget script
+# Waybar recording status widget script - DEPRECATED
+# This script is kept for backward compatibility only.
+# The preferred method is to use kartoza-video-processor status --waybar
 # Part of Kartoza NixOS configuration
 
+# If kartoza-video-processor is available, use it instead
+if command -v kartoza-video-processor &>/dev/null; then
+  kartoza-video-processor status --waybar
+  exit 0
+fi
+
+# Fallback to legacy PID-based detection
 STATUSFILE="/tmp/wl-screenrec.status"
 VIDEO_PIDFILE="/tmp/wl-screenrec.pid"
 AUDIO_PIDFILE="/tmp/pw-recorder.pid"

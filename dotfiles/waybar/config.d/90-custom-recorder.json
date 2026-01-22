@@ -2,8 +2,8 @@
   "tooltip": true,
   "format": "{}",
   "return-type": "json",
-  "exec": "recording-status.sh",
-  "on-click": "screen-recorder.sh",
+  "exec": "kartoza-video-processor status --waybar",
+  "on-click": "kartoza-video-processor toggle",
   "interval": 2
 }}
 

@@ -86,3 +86,4 @@ I am missing the pipewire sound applet in my system tray - confirm if it is bein
 why are the pasystrau volume meters disabled
 i have a persistent issue with my hyperland configuration that is symptomised by not being able to interact with widgets in the upper right of the window, typically where close , etc widgets are
 please clear all rules which specify which workspaces applications should open on
+we need to fix the integration with the timesheet and video recording apps. please look in their respective repositories and ensure that the waybar applets for them work as expected.

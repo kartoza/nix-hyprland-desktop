@@ -238,3 +238,52 @@ echo "1=Slack" >> ~/.config/hypr/workspace-names.conf
 - PAM integration for keyring unlock on login and screen unlock
 - Environment variables set for proper Wayland app compatibility
 - Windows spawn in floating mode by default (can be toggled to tiling with Super+F)
+
+## External Application Integrations
+
+The waybar configuration includes widgets that integrate with optional external applications. These applications must be installed separately in your NixOS configuration.
+
+### Kartoza Timesheet App
+
+Repository: `github:kartoza/go-timesheets-go`
+
+The timesheet widget shows current time tracking status:
+- **Widget Location**: Left panel, shows timer icon with elapsed time or idle status
+- **Click Action**: Opens timesheet TUI in kitty terminal
+- **Status Command**: `kartoza-timesheet status` (returns waybar-compatible JSON)
+
+Waybar configuration (`90-custom-timesheet.json`):
+```json
+{
+  "custom/timesheet": {
+    "exec": "kartoza-timesheet status",
+    "return-type": "json",
+    "interval": 60,
+    "on-click": "kitty kartoza-timesheet"
+  }
+}
+```
+
+### Kartoza Video Processor
+
+Repository: `github:kartoza/kartoza-video-processor`
+
+The recorder widget shows screen recording status:
+- **Widget Location**: Left panel, shows video camera icon
+- **Click Action**: Toggles recording on/off
+- **Status Command**: `kartoza-video-processor status --waybar` (returns waybar-compatible JSON)
+- **Keybinding**: `Ctrl+6` toggles recording
+
+Waybar configuration (`90-custom-recorder.json`):
+```json
+{
+  "custom/recorder": {
+    "exec": "kartoza-video-processor status --waybar",
+    "return-type": "json",
+    "interval": 2,
+    "on-click": "kartoza-video-processor toggle"
+  }
+}
+```
+
+**Fallback**: If `kartoza-video-processor` is not installed, the `recording-status.sh` script falls back to legacy PID-based detection for `wl-screenrec`/`pw-record`/`webcam-recorder` processes.
