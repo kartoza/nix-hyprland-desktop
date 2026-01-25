@@ -90,3 +90,9 @@ we need to fix the integration with the timesheet and video recording apps. plea
 Fix SDDM theme: 1) Show just 'wayland' for session name instead of full nix store path, 2) Show caps lock status, 3) Show keyboard layout and allow switching
 tell me about any other hyperland things that i am not taking advantage of? and can you tweak the easings for maximum eye candy
 could you also make the notifications from swaync extra bouncy when they arrive on screen and if it is a critival notification / warning do some kinf of crazy wild entrance animation. also swaync fills up the whole screen when opened but ao think it os intended to be a full height panel
+Config error in file /etc/xdg/hypr/conf/misc.conf at line 15: config option <misc:dim_modal> does not exist.
+Config error in file /nix/store/w6idrnd3fyhyb4k5apk563wzl1nhp908-hypr-config/hyprland.conf at line 47: Config error in file /etc/xdg/hypr/conf/misc.conf at line 15: config option <misc:dim_modal> does not exist.
+Config error in file /etc/xdg/hypr/conf/windowrules/default.conf at line 94: invalid field type noscreenshare
+Config error in file /etc/xdg/hypr/conf/windowrules/default.conf at line 95: invalid field type noscreenshare
+Config error in file /etc/xdg/hypr/conf/windowrules/default.conf at line 96: invalid field type noscreenshare
+(143 more...)
