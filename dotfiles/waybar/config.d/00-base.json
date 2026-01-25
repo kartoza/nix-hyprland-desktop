@@ -6,7 +6,6 @@
         "custom/launcher",
         "custom/timesheet",
         "custom/workspace-switcher",
-        "custom/recorder",
         "custom/gatus-prod",
         "custom/gatus-gsh",
         "wlr/taskbar"

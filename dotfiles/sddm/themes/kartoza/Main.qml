@@ -254,35 +254,12 @@ Rectangle {
                 }
             }
 
-            // Caps Lock warning
-            Row {
-                id: capsLockWarning
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.top: passwordContainer.bottom
-                anchors.topMargin: 15
-                spacing: 8
-                visible: keyboard.capsLock
-
-                Text {
-                    text: "⚠"
-                    font.pixelSize: 16
-                    color: accentOrange
-                }
-
-                Text {
-                    text: "Caps Lock is on"
-                    font.pixelSize: 14
-                    font.family: "Nunito"
-                    color: accentOrange
-                }
-            }
-
             // Error message
             Text {
                 id: errorMessage
                 anchors.horizontalCenter: parent.horizontalCenter
-                anchors.top: capsLockWarning.visible ? capsLockWarning.bottom : passwordContainer.bottom
-                anchors.topMargin: capsLockWarning.visible ? 10 : 20
+                anchors.top: passwordContainer.bottom
+                anchors.topMargin: 20
                 font.pixelSize: 14
                 font.family: "Nunito"
                 font.italic: true
@@ -299,16 +276,115 @@ Rectangle {
                 }
             }
 
-            // Keyboard layout indicator
-            Text {
-                id: layoutIndicator
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.top: passwordContainer.bottom
-                anchors.topMargin: 80
-                font.pixelSize: 20
-                font.family: "Nunito"
-                color: lightText
-                text: keyboard.layouts[keyboard.currentLayout]
+        }
+
+        // Bottom center: Keyboard layout indicator and Caps Lock status
+        Row {
+            id: bottomIndicators
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 30
+            spacing: 20
+
+            // Caps Lock indicator
+            Rectangle {
+                id: capsLockIndicator
+                width: 100
+                height: 40
+                radius: 5
+                color: keyboard.capsLock ? Qt.rgba(0.875, 0.620, 0.184, 0.9) : Qt.rgba(0.086, 0.129, 0.153, 0.8)
+                border.color: keyboard.capsLock ? accentOrange : primaryBlue
+                border.width: 2
+
+                Row {
+                    anchors.centerIn: parent
+                    spacing: 6
+
+                    Text {
+                        text: "⇪"
+                        font.pixelSize: 16
+                        color: keyboard.capsLock ? darkBg : lightText
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+
+                    Text {
+                        text: "CAPS"
+                        font.pixelSize: 14
+                        font.family: "Nunito"
+                        font.bold: keyboard.capsLock
+                        color: keyboard.capsLock ? darkBg : lightText
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                }
+            }
+
+            // Keyboard layout selector
+            Rectangle {
+                id: layoutSelector
+                width: 80
+                height: 40
+                radius: 5
+                color: layoutMouseArea.containsMouse ? Qt.rgba(0.337, 0.624, 0.776, 0.5) : Qt.rgba(0.086, 0.129, 0.153, 0.8)
+                border.color: primaryBlue
+                border.width: 2
+
+                // Function to get display name for layout
+                function getLayoutDisplayName(layout) {
+                    if (!layout) return "??"
+                    var l = layout.toString().toLowerCase()
+                    // Common layout mappings
+                    if (l === "us" || l.indexOf("english") !== -1) return "EN"
+                    if (l === "pt" || l.indexOf("portuguese") !== -1) return "PT"
+                    if (l === "de" || l.indexOf("german") !== -1) return "DE"
+                    if (l === "fr" || l.indexOf("french") !== -1) return "FR"
+                    if (l === "es" || l.indexOf("spanish") !== -1) return "ES"
+                    if (l === "it" || l.indexOf("italian") !== -1) return "IT"
+                    if (l === "ru" || l.indexOf("russian") !== -1) return "RU"
+                    if (l === "uk" || l.indexOf("ukrainian") !== -1) return "UA"
+                    if (l === "gb" || l === "en-gb") return "GB"
+                    // Return uppercase first 2 chars as fallback
+                    return layout.toString().substring(0, 2).toUpperCase()
+                }
+
+                Row {
+                    anchors.centerIn: parent
+                    spacing: 6
+
+                    Text {
+                        text: "⌨"
+                        font.pixelSize: 16
+                        color: lightText
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+
+                    Text {
+                        text: keyboard.layouts.length > 0 ? layoutSelector.getLayoutDisplayName(keyboard.layouts[keyboard.currentLayout]) : "??"
+                        font.pixelSize: 14
+                        font.family: "Nunito"
+                        font.bold: true
+                        color: lightText
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                }
+
+                MouseArea {
+                    id: layoutMouseArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: keyboard.layouts.length > 1 ? Qt.PointingHandCursor : Qt.ArrowCursor
+                    onClicked: {
+                        if (keyboard.layouts.length > 1) {
+                            keyboard.currentLayout = (keyboard.currentLayout + 1) % keyboard.layouts.length
+                        }
+                    }
+                }
+
+                // Tooltip showing all available layouts
+                ToolTip {
+                    visible: layoutMouseArea.containsMouse && keyboard.layouts.length > 1
+                    text: "Click to switch layout\nAvailable: " + keyboard.layouts.join(", ")
+                    delay: 500
+                }
             }
         }
 
@@ -327,9 +403,43 @@ Rectangle {
 
             property int currentIndex: sessionModel.lastIndex
 
+            // Function to get a clean session display name
+            function getSessionDisplayName(fullName) {
+                if (!fullName) return "Unknown"
+                // Extract just the session type name from paths like "/nix/store/xxx-wayland-sessions/share/wayland-sessions"
+                // or simple names like "Hyprland" or "hyprland.desktop"
+                var name = fullName.toString()
+
+                // Check for common session types in the path/name
+                var lowerName = name.toLowerCase()
+                if (lowerName.indexOf("hyprland") !== -1) return "Hyprland"
+                if (lowerName.indexOf("sway") !== -1) return "Sway"
+                if (lowerName.indexOf("plasma") !== -1) return "Plasma"
+                if (lowerName.indexOf("gnome") !== -1) return "GNOME"
+                if (lowerName.indexOf("kde") !== -1) return "KDE"
+                if (lowerName.indexOf("xfce") !== -1) return "XFCE"
+                if (lowerName.indexOf("wayland") !== -1) return "Wayland"
+                if (lowerName.indexOf("x11") !== -1) return "X11"
+
+                // If it's a path, try to extract just the filename
+                if (name.indexOf("/") !== -1) {
+                    var parts = name.split("/")
+                    name = parts[parts.length - 1]
+                }
+                // Remove .desktop extension if present
+                if (name.endsWith(".desktop")) {
+                    name = name.slice(0, -8)
+                }
+                // Capitalize first letter
+                if (name.length > 0) {
+                    return name.charAt(0).toUpperCase() + name.slice(1)
+                }
+                return name
+            }
+
             Text {
                 anchors.centerIn: parent
-                text: sessionModel.data(sessionModel.index(sessionSelect.currentIndex, 0), 257) // DisplayRole = 257
+                text: sessionSelect.getSessionDisplayName(sessionModel.data(sessionModel.index(sessionSelect.currentIndex, 0), 257))
                 font.pixelSize: 14
                 font.family: "Nunito"
                 color: lightText

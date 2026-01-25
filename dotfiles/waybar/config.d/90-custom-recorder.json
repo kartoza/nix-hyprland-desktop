@@ -1,9 +1,0 @@
-{"custom/recorder": {
-  "tooltip": true,
-  "format": "{}",
-  "return-type": "json",
-  "exec": "kartoza-video-processor status --waybar",
-  "on-click": "kartoza-video-processor toggle",
-  "interval": 2
-}}
-

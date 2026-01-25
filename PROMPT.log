@@ -87,3 +87,6 @@ why are the pasystrau volume meters disabled
 i have a persistent issue with my hyperland configuration that is symptomised by not being able to interact with widgets in the upper right of the window, typically where close , etc widgets are
 please clear all rules which specify which workspaces applications should open on
 we need to fix the integration with the timesheet and video recording apps. please look in their respective repositories and ensure that the waybar applets for them work as expected.
+Fix SDDM theme: 1) Show just 'wayland' for session name instead of full nix store path, 2) Show caps lock status, 3) Show keyboard layout and allow switching
+tell me about any other hyperland things that i am not taking advantage of? and can you tweak the easings for maximum eye candy
+could you also make the notifications from swaync extra bouncy when they arrive on screen and if it is a critival notification / warning do some kinf of crazy wild entrance animation. also swaync fills up the whole screen when opened but ao think it os intended to be a full height panel
