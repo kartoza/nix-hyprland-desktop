@@ -1,5 +1,11 @@
 # VM configuration for testing Kartoza Hyprland Desktop
-{ config, lib, pkgs, modulesPath, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  modulesPath,
+  ...
+}:
 
 {
   imports = [
@@ -31,8 +37,11 @@
     qtTheme = "gnome"; # Options: gnome, gtk2, kde, fusion
 
     # Keyboard layout configuration (demonstrates customization)
-    keyboardLayouts =
-      [ "us" "de" "fr" ]; # US, German, French (Alt+Shift to toggle)
+    keyboardLayouts = [
+      "us"
+      "de"
+      "fr"
+    ]; # US, German, French (Alt+Shift to toggle)
 
     # Wallpaper configuration (demonstrates unified desktop/lock screen wallpaper)
     # Defaults to Kartoza branded wallpaper, can be overridden with custom image:
@@ -72,7 +81,12 @@
   users.users.testuser = {
     isNormalUser = true;
     password = "test"; # Simple password for VM testing
-    extraGroups = [ "wheel" "networkmanager" "video" "audio" ];
+    extraGroups = [
+      "wheel"
+      "networkmanager"
+      "video"
+      "audio"
+    ];
   };
 
   # Enable sudo for test user
@@ -86,7 +100,11 @@
   };
 
   # Minimal package set for testing
-  environment.systemPackages = with pkgs; [ firefox nautilus gnome-terminal ];
+  environment.systemPackages = with pkgs; [
+    firefox
+    nautilus
+    gnome-terminal
+  ];
 
   # Auto-login disabled to test SDDM theme
   # services.displayManager.autoLogin = {
