@@ -287,3 +287,6 @@ Waybar configuration (`90-custom-recorder.json`):
 ```
 
 **Fallback**: If `kartoza-video-processor` is not installed, the `recording-status.sh` script falls back to legacy PID-based detection for `wl-screenrec`/`pw-record`/`webcam-recorder` processes.
+- whenever you update this repo, always validate is afterwards using:
+
+hyprland --verify-config --config dotfiles/hypr/hyprland.conf

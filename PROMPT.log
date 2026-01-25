@@ -99,3 +99,5 @@ Config error in file /etc/xdg/hypr/conf/windowrules/default.conf at line 96: inv
 invalid field type novrr
 Prompt: why is my gnome keyring not starting at login and prompting me to unlock it then acting as agent for gpg and ssh
 Config error in file /etc/xdg/hypr/conf/windowrules/default.conf at line 118: invalid field type floating
+fix hyprland windowrule syntax error - match:floating:1 should be match:floating 1
+User prompt: check
