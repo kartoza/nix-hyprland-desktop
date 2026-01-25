@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -34,7 +39,8 @@ let
   # Open Gorton keycap font (MIT licensed)
   openGortonFont = pkgs.callPackage ../packages/open-gorton-font.nix { };
 
-in {
+in
+{
   options = {
     kartoza.hyprland-desktop = {
       enable = mkEnableOption "Kartoza Hyprland Desktop Environment";
@@ -54,22 +60,19 @@ in {
       fractionalScaling = mkOption {
         type = types.float;
         default = 1.0;
-        description =
-          "Fractional scaling factor for displays (1.0 = 100%, 1.25 = 125%, 1.5 = 150%, etc.)";
+        description = "Fractional scaling factor for displays (1.0 = 100%, 1.25 = 125%, 1.5 = 150%, etc.)";
       };
 
       qtTheme = mkOption {
         type = types.str;
         default = "qt5ct";
-        description =
-          "Qt platform theme to use for Qt applications (qt5ct, gnome, gtk2, kde, fusion)";
+        description = "Qt platform theme to use for Qt applications (qt5ct, gnome, gtk2, kde, fusion)";
       };
 
       darkTheme = mkOption {
         type = types.bool;
         default = true;
-        description =
-          "Whether to use dark theme for GTK applications (defaults to true)";
+        description = "Whether to use dark theme for GTK applications (defaults to true)";
       };
 
       displayScaling = mkOption {
@@ -79,22 +82,19 @@ in {
           "eDP-1" = 1.5;
           "DP-9" = 1.0;
         };
-        description =
-          "Per-display scaling factors. Use display names as keys (e.g., eDP-1, DP-9) and scaling factors as values.";
+        description = "Per-display scaling factors. Use display names as keys (e.g., eDP-1, DP-9) and scaling factors as values.";
       };
 
       cursorTheme = mkOption {
         type = types.str;
         default = "rose-pine-hyprcursor";
-        description =
-          "Hyprcursor theme to use (rose-pine-hyprcursor, etc.). Falls back to XCursor for non-supporting apps.";
+        description = "Hyprcursor theme to use (rose-pine-hyprcursor, etc.). Falls back to XCursor for non-supporting apps.";
       };
 
       xcursorTheme = mkOption {
         type = types.str;
         default = "Vanilla-DMZ";
-        description =
-          "XCursor fallback theme for apps that don't support hyprcursor (GTK apps, etc.)";
+        description = "XCursor fallback theme for apps that don't support hyprcursor (GTK apps, etc.)";
       };
 
       cursorSize = mkOption {
@@ -105,18 +105,23 @@ in {
 
       keyboardLayouts = mkOption {
         type = types.listOf types.str;
-        default = [ "us" "pt" ];
-        example = [ "us" "de" "fr" ];
-        description =
-          "List of keyboard layouts (first layout is default, others accessible via Alt+Shift toggle)";
+        default = [
+          "us"
+          "pt"
+        ];
+        example = [
+          "us"
+          "de"
+          "fr"
+        ];
+        description = "List of keyboard layouts (first layout is default, others accessible via Alt+Shift toggle)";
       };
 
       wallpaper = mkOption {
         type = types.path;
         default = ../resources/KartozaBackground.png;
         example = literalExpression "/home/user/Pictures/my-wallpaper.jpg";
-        description =
-          "Path to wallpaper image file used for desktop background, SDDM login screen, and hyprlock lock screen. Defaults to Kartoza branded wallpaper.";
+        description = "Path to wallpaper image file used for desktop background, SDDM login screen, and hyprlock lock screen. Defaults to Kartoza branded wallpaper.";
       };
     };
   };
@@ -295,8 +300,7 @@ in {
       QT_QPA_PLATFORMTHEME = cfg.qtTheme;
 
       # Qt scaling and sizing fixes to prevent dialog compression
-      QT_AUTO_SCREEN_SCALE_FACTOR =
-        "0"; # Disable auto-scaling to prevent massive fonts in Wayland
+      QT_AUTO_SCREEN_SCALE_FACTOR = "0"; # Disable auto-scaling to prevent massive fonts in Wayland
       QT_ENABLE_HIGHDPI_SCALING = "0"; # Disable high DPI scaling
       QT_SCALE_FACTOR = toString cfg.fractionalScaling;
       QT_FONT_DPI = "96";
@@ -339,37 +343,38 @@ in {
       "xdg/waybar/scripts".source = ../dotfiles/waybar/scripts;
       "xdg/waybar/config.d".source = ../dotfiles/waybar/config.d;
       "xdg/waybar/config" = {
-        source = pkgs.runCommand "waybar-config-hyprland" {
-          nativeBuildInputs = [ pkgs.jq ];
-        } ''
-          src=${../dotfiles/waybar/config.d}
+        source =
+          pkgs.runCommand "waybar-config-hyprland"
+            {
+              nativeBuildInputs = [ pkgs.jq ];
+            }
+            ''
+              src=${../dotfiles/waybar/config.d}
 
-          # Use generic base config and add all modules including taskbar
-          cat "$src/00-base.json" > config.json
+              # Use generic base config and add all modules including taskbar
+              cat "$src/00-base.json" > config.json
 
-          # Merge all other config fragments except base files
-          for file in "$src"/*.json; do
-            filename=$(basename "$file")
-            # Skip base files
-            if [[ "$filename" != "00-base.json" && "$filename" != "00-base-hyprland.json" ]]; then
-              echo "Merging $filename"
-              jq -s '.[0] * .[1]' config.json "$file" > temp.json
-              mv temp.json config.json
-            fi
-          done
+              # Merge all other config fragments except base files
+              for file in "$src"/*.json; do
+                filename=$(basename "$file")
+                # Skip base files
+                if [[ "$filename" != "00-base.json" && "$filename" != "00-base-hyprland.json" ]]; then
+                  echo "Merging $filename"
+                  jq -s '.[0] * .[1]' config.json "$file" > temp.json
+                  mv temp.json config.json
+                fi
+              done
 
-          # Fix script paths to use /etc/xdg instead of /etc/waybar
-          sed 's|/etc/waybar/scripts/|/etc/xdg/waybar/scripts/|g' config.json > final_config.json
+              # Fix script paths to use /etc/xdg instead of /etc/waybar
+              sed 's|/etc/waybar/scripts/|/etc/xdg/waybar/scripts/|g' config.json > final_config.json
 
-          cp final_config.json $out
-        '';
+              cp final_config.json $out
+            '';
       };
 
       # Resources - waybar logos and start button
-      "xdg/waybar/kartoza-start-button.png".source =
-        ../resources/kartoza-start-button.png;
-      "xdg/waybar/kartoza-start-button-hover.png".source =
-        ../resources/kartoza-start-button-hover.png;
+      "xdg/waybar/kartoza-start-button.png".source = ../resources/kartoza-start-button.png;
+      "xdg/waybar/kartoza-start-button-hover.png".source = ../resources/kartoza-start-button-hover.png;
 
       # Copy configured wallpaper to dedicated directory to avoid path conflicts
       "xdg/backgrounds/kartoza-wallpaper.png".source = cfg.wallpaper;
@@ -380,26 +385,27 @@ in {
         "${pkgs.rose-pine-hyprcursor}/share/icons/rose-pine-hyprcursor";
 
       # Deploy SDDM theme
-      "sddm/themes/kartoza".source =
-        "${sddmThemeKartoza}/share/sddm/themes/kartoza";
+      "sddm/themes/kartoza".source = "${sddmThemeKartoza}/share/sddm/themes/kartoza";
     };
 
     # Create a custom Hyprland session that uses start-hyprland (UWSM wrapper)
     # This replaces the default hyprland.desktop to avoid the warning
-    services.displayManager.sessionPackages = let
-      hyprlandSession = pkgs.writeTextDir "share/wayland-sessions/hyprland-uwsm.desktop" ''
-        [Desktop Entry]
-        Name=Hyprland
-        Comment=An intelligent dynamic tiling Wayland compositor (UWSM managed)
-        Exec=start-hyprland -- -c /etc/xdg/hypr/hyprland.conf
-        Type=Application
-        DesktopNames=Hyprland
-      '';
-    in [
-      (hyprlandSession.overrideAttrs (old: {
-        passthru.providedSessions = [ "hyprland-uwsm" ];
-      }))
-    ];
+    services.displayManager.sessionPackages =
+      let
+        hyprlandSession = pkgs.writeTextDir "share/wayland-sessions/hyprland-uwsm.desktop" ''
+          [Desktop Entry]
+          Name=Hyprland
+          Comment=An intelligent dynamic tiling Wayland compositor (UWSM managed)
+          Exec=start-hyprland -- -c /etc/xdg/hypr/hyprland.conf
+          Type=Application
+          DesktopNames=Hyprland
+        '';
+      in
+      [
+        (hyprlandSession.overrideAttrs (old: {
+          passthru.providedSessions = [ "hyprland-uwsm" ];
+        }))
+      ];
 
     # Required for screen sharing
     services.pipewire = {
@@ -410,7 +416,9 @@ in {
       jack.enable = true;
     };
 
-    services.dbus = { enable = true; };
+    services.dbus = {
+      enable = true;
+    };
 
     # Enable automounting for removable media (USB drives, etc.)
     services.udisks2.enable = true;
@@ -438,8 +446,7 @@ in {
     # Users can override enableSSHSupport to use GPG agent for SSH instead
     programs.gnupg.agent = {
       enable = true;
-      enableSSHSupport =
-        lib.mkDefault false; # SSH handled by gnome-keyring by default
+      enableSSHSupport = lib.mkDefault false; # SSH handled by gnome-keyring by default
       pinentryPackage = pkgs.pinentry-gnome3;
     };
 
@@ -469,7 +476,10 @@ in {
       # Configure portal backends for Hyprland
       config = {
         hyprland = {
-          default = lib.mkForce [ "gtk" "hyprland" ];
+          default = lib.mkForce [
+            "gtk"
+            "hyprland"
+          ];
           "org.freedesktop.impl.portal.FileChooser" = lib.mkForce [ "gtk" ];
           "org.freedesktop.impl.portal.AppChooser" = lib.mkForce [ "gtk" ];
           "org.freedesktop.impl.portal.ScreenCast" = lib.mkForce [ "hyprland" ];
@@ -496,16 +506,18 @@ in {
       application/x-gnome-saved-search=org.gnome.Nautilus.desktop
     '';
 
-    # Configure systemd user services for keyring integration
+    # gnome-keyring-daemon is started by PAM (auto_start) during login with secrets component
+    # We need a systemd service to initialize the SSH component which PAM doesn't start by default
+    # Using --start ensures it connects to the existing daemon rather than replacing it
     systemd.user.services.gnome-keyring-ssh = {
       description = "GNOME Keyring SSH Agent";
-      wantedBy = [ "default.target" ];
+      wantedBy = [ "graphical-session.target" ];
+      after = [ "graphical-session-pre.target" ];
       partOf = [ "graphical-session.target" ];
       serviceConfig = {
-        Type = "simple";
-        ExecStart =
-          "${pkgs.gnome-keyring}/bin/gnome-keyring-daemon --foreground --components=ssh";
-        Restart = "on-failure";
+        Type = "oneshot";
+        RemainAfterExit = true;
+        ExecStart = "${pkgs.gnome-keyring}/bin/gnome-keyring-daemon --start --components=ssh";
       };
     };
 
@@ -515,10 +527,10 @@ in {
       DefaultEnvironment="WAYLAND_DISPLAY=wayland-1"
       DefaultEnvironment="XDG_SESSION_DESKTOP=hyprland"
       DefaultEnvironment="XDG_SESSION_TYPE=wayland"
-      ${optionalString (!config.programs.gnupg.agent.enableSSHSupport)
-      ''DefaultEnvironment="SSH_AUTH_SOCK=%t/keyring/ssh"''}
-      ${optionalString config.programs.gnupg.agent.enableSSHSupport
-      ''DefaultEnvironment="SSH_AUTH_SOCK=%t/gnupg/S.gpg-agent.ssh"''}
+      ${optionalString (
+        !config.programs.gnupg.agent.enableSSHSupport
+      ) ''DefaultEnvironment="SSH_AUTH_SOCK=%t/keyring/ssh"''}
+      ${optionalString config.programs.gnupg.agent.enableSSHSupport ''DefaultEnvironment="SSH_AUTH_SOCK=%t/gnupg/S.gpg-agent.ssh"''}
     '';
 
     # Enable SDDM display manager with Kartoza theme
