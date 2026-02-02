@@ -101,3 +101,4 @@ Prompt: why is my gnome keyring not starting at login and prompting me to unlock
 Config error in file /etc/xdg/hypr/conf/windowrules/default.conf at line 118: invalid field type floating
 fix hyprland windowrule syntax error - match:floating:1 should be match:floating 1
 User prompt: check
+when I plug in an external screen, it should assume it is on the left of my primary screen
